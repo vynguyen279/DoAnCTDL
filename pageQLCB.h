@@ -52,6 +52,15 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
         if (ismouseclick(WM_LBUTTONDOWN))
         { //CLICK trong khi nhap
 
+	        //OUTHOVER
+			setcolor(WHITE);
+		    if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLTIMEY_2 && inputID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC          
+		        rectangle(input.x1 + 1, input.y1 + 28, input.x1 + input.width - 1, input.y1+29);       	  
+			}
+		    else        
+			{
+		        rectangle(input.x1+1, input.y1 +1, input.x1 + input.width -1 , input.y1 + 29);
+		    } 
 			chuanHoaInputQLCB(input,inputID); 
 			setcolor(BLACK);
     		outtextxy(input.x1 + paddingLeft, input.y1 + 5, input.s);			

@@ -9,7 +9,6 @@ bool ktMayBayDaCoChuyenBay(char *soHieuMB, DanhSachChuyenBay &dsCB) {
 }
 
 bool xoaMayBayHopLe(char *soHieuMB, DanhSachMayBay &dsMB, DanhSachChuyenBay &dsCB, char* strErr) {
-	strcpy(strErr, "XOA MAY BAY THANH CONG!");
 	if(dsMB.n == 0) {
 		strcpy(strErr,"DANH SACH MAY BAY RONG!");
 		return false;
@@ -24,34 +23,29 @@ bool xoaMayBayHopLe(char *soHieuMB, DanhSachMayBay &dsMB, DanhSachChuyenBay &dsC
 		return false;
 	}
 	xoaMayBay(dsMB, viTriXoa);
+	strcpy(strErr, "XOA MAY BAY THANH CONG!");
 	return true;
 }
 
 bool themMayBayHopLe(MayBay mb, DanhSachMayBay &dsMB, char* strErr) {
-	strcpy(strErr, "THEM MAY BAY THANH CONG!");
 	if(dsMB.n == MAXMAYBAY) {
 		strcpy(strErr, "DANH SACH DAY!");
 		return false;
 	} 
-	if(mb.soCho < MINSOCHO) {
-		strcpy(strErr, "SO CHO TOI THIEU LA 20!");
-		return false;
-	}
+//	if(mb.soCho < MINSOCHO) {
+//		strcpy(strErr, "SO CHO TOI THIEU LA 20!");
+//		return false;
+//	}
 	if(timKiemMayBay(mb.soHieuMayBay, dsMB) != -1) {
 		strcpy(strErr, "MAY BAY DA TON TAI!");
 		return false;
 	}
 	themMayBay(mb, dsMB);
+	strcpy(strErr, "THEM MAY BAY THANH CONG!");
 	return true;
 }
 
-/*
-	Cho mac dinh soChoMoi = 20;
-	De ngoai tru truong hop user khong cap nhat so cho;
-*/
-
 bool capNhatMayBay(char *soHieuMB, char* loaiMBMoi, int soChoMoi, DanhSachMayBay &dsMB, DanhSachChuyenBay &dsCB, char* strErr) {
-	strcpy(strErr, "CAP NHAT MAY BAY THANH CONG!");
 	int viTri = timKiemMayBay(soHieuMB, dsMB);
 	if(viTri == -1) {
 		strcpy(strErr, "MAY BAY KHONG TON TAI!");
@@ -67,5 +61,6 @@ bool capNhatMayBay(char *soHieuMB, char* loaiMBMoi, int soChoMoi, DanhSachMayBay
 		return false;
 	}
 	capNhatSoCho(soChoMoi, viTri, dsMB);
+	strcpy(strErr, "CAP NHAT MAY BAY THANH CONG!");
 	return true;
 }

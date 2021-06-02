@@ -52,11 +52,14 @@ bool datVe(char *CMND, int soVe, ChuyenBay *cb, DanhSachHanhKhach &dsHK, DanhSac
 	 				* Neu ma ngay gio khoi hanh cua 2 chuyen bay trung nhau thi khong cho dat ve
 	*/
 	else {
+		
 		char maCBTrung[MAXMACB];
 		if(!ktCBTrungGioVoiCBKhac(dsCB,CMND, *cb, maCBTrung)) {
 			return themVeVaoChuyenBay(CMND, soVe, cb, strErr);
 		}
-		strcpy(strErr, strcat("TRUNG GIO KHOI HANH VOI CHUYEN BAY ", maCBTrung));
+		
+		strcat(strErr, "TRUNG GIO KHOI HANH VOI CHUYEN BAY ");
+		strcat(strErr, maCBTrung);
 		return false;
 	}
 }

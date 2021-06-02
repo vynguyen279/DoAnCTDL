@@ -103,7 +103,7 @@ int timKiemVe(char* CMND, DanhSachVe &dsVe) {
 */
 
 bool capNhatDanhSachVe(ChuyenBay *cb, char* CMND, int soVeMoi, char* strErr) {
-	strcpy(strErr, "");
+	strcpy(strErr, "CAP NHAT THANH CONG!");
 	int viTri = timKiemVe(CMND, cb->dsVe);
 	if(cb->trangThai == 2) {
 		strcpy(strErr,"CHUYEN BAY HET VE, KHONG THE THAY DOI SO GHE!");
@@ -215,9 +215,13 @@ ChuyenBay* timKiemChuyenBay(char* maChuyenBay, DanhSachChuyenBay &dsCB) {
 }
 
 bool huyChuyenBay(ChuyenBay *cb, char* strErr) {
-	strcpy(strErr, "HUY THANH CONG!");
+	strcpy(strErr, "HUY CHUYEN BAY THANH CONG!");
 	if(cb->trangThai == 3) {
 		strcpy(strErr, "CHUYEN BAY DA HOAN TAT, KHONG THE HUY!");
+		return false;
+	}
+	if(cb->trangThai == 0) {
+		strcpy(strErr, "CHUYEN BAY DA BI HUY TRUOC DO!");
 		return false;
 	}
 	cb->trangThai = 0;

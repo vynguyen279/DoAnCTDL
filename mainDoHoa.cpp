@@ -20,7 +20,7 @@ void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &d
 		//dia diem	
 
 		dsFill=dsCBvoiSanBayDen(input[3].s,dsCB);
-		cout << dsFill.n ;
+
 		isInvalid = true;
 	}
 	else if(isFillTime){
@@ -248,6 +248,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
     bool unlockChoose = true;                                       //khi dang update thi se khong cho chon may bay nua
     bool isEnter = false;                                           //check enter khi dang input
     bool unlockKeyboardShortcut = true;
+    bool isFill = false;
     int numOfPage = (dsTmp.n - 1) / 10 + 1, presentPage = 1; 		//quan ly so trang
     short maxChoose = 0;                                              //khong cho chon vao o khong co may bay
     outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
@@ -337,7 +338,8 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 			{		
                     addCB(input,isInvalid,dsMB,dsCB,dsTmp); 					                                 
                     if(isInvalid){  		                
-		                outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);	  				
+		                outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+						if(presentPage == numOfPage)	  				
                         presentPage = numOfPage; 
                     	drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
 	                    outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
@@ -418,17 +420,27 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				fillCB(inputFill,isInvalid,dsCB,dsFill);
 				if(isInvalid){
 				presentPage = 1;
+				isFill = true;
                 outNumOfBoardDSCB(numOfPage, presentPage,dsFill);                   
                 drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
-                outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsFill);								
+                outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsFill);	
+											
 				}
 				break;
 			}
 			case ID_BUTTON_UNFILL_CB_2:{  //UNFILL
-				if(chooseID!= -1)
-				{
-//					unfillCB(input,isInvalid,chooseID,dsMB,dsCB,dsTmp);
+				if(isFill){
+				presentPage = 1;
+                outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
+                drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
+                outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
+				for(int i = 0; i <4; i++){
+					inputFill[i].lastL = 0;
+					drawInput(inputFill[i],mapID,ID_INPUT_FILLTIMED_2 + i);
 				}
+				makeBeautiFillInput(inputFill);								
+				}
+
 				break;
 			}
 			case ID_BUTTON_UNFILLTIME_CB_2:{  // UNFILLTIME

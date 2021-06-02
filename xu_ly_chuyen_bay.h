@@ -76,7 +76,6 @@ void themPhanTuVaoDSTmp(ChuyenBay *cb, DanhSachTam &dsTmp) {
 */
 
 bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB, DanhSachTam &dsTmp, char* strErr) {
-	strcpy(strErr, "THEM CHUYEN BAY THANH CONG!");
 	int viTri = timKiemMayBay(nodeCB->chuyenBay.soHieuMayBay, dsMB);
 	if(viTri == -1) {
 		strcpy(strErr, "MAY BAY KHONG TON TAI!");
@@ -97,6 +96,7 @@ bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSach
 	initDSVe(nodeCB->chuyenBay.dsVe);
 	themChuyenBay(nodeCB, dsCB);
 	themPhanTuVaoDSTmp(&(nodeCB->chuyenBay), dsTmp);
+	strcpy(strErr, "THEM CHUYEN BAY THANH CONG!");
 	return true;
 }
 
@@ -300,13 +300,6 @@ DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDenConVe(char *sanBayDen, NgayThangNam ng
 	return dsTmp;
 }
 
-
-void dsVeConTrongCuaCB(DanhSachTam &dsTmp, int viTri) {
-	for(int i = 0; i < dsTmp.cb[viTri]->dsVe.soLuongVe; i++)
-		if(dsTmp.cb[viTri]->dsVe.CMND[i] == NULL)
-			std:: cout << i + 1 << std::endl;
-}
-
 int soLuongVeConTrongCuaCB(ChuyenBay cb) {
 	int cnt = 0;
 	for(int i = 0; i < cb.dsVe.soLuongVe; i++)
@@ -315,13 +308,13 @@ int soLuongVeConTrongCuaCB(ChuyenBay cb) {
 }
 
 bool themVeVaoChuyenBay(char *CMND, int soVe, ChuyenBay *cb, char* strErr) {
-	strcpy(strErr, "THEM VE THANH CONG!");
 	if(!soVeHopLe(soVe, cb->dsVe)) {
 		strcpy(strErr, "SO VE KHONG HOP LE!");
 		return false;
 	}
 	themVe(soVe, CMND, cb->dsVe);
 	capNhatTrangThaiHetVe(*cb);
+	strcpy(strErr, "THEM VE THANH CONG!");
 	return true;
 }
 
@@ -352,7 +345,9 @@ bool ktCBTrungGioVoiCBKhac(DanhSachChuyenBay &dsCB, char* CMND, ChuyenBay cb, ch
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		if(ktTonTaiCMNDTrongDSVe(nodeChay->chuyenBay.dsVe, CMND) 
-			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0) {
+			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0
+			&& nodeChay->chuyenBay.trangThai != 3
+			&& nodeChay->chuyenBay.trangThai != 0) {
 				
 			if(ktCungNgayThangNamGioPhut(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)) {
 				strcpy(maCB, nodeChay->chuyenBay.maChuyenBay);
@@ -375,7 +370,6 @@ bool ktCBTrungGioVoiCBKhac(DanhSachChuyenBay &dsCB, char* CMND, ChuyenBay cb, ch
 */
 
 bool huyVe(ChuyenBay *cb, char *CMND, DanhSachHanhKhach &dsHK, char* strErr) {
-	strcpy(strErr, "HUY VE THANH CONG!");
 	int i = timKiemVe(CMND, cb->dsVe);
 	if(i == -1) {
 		strcpy(strErr, "CMND KHONG TON TAI TRONG DANH SACH VE!");
@@ -385,14 +379,19 @@ bool huyVe(ChuyenBay *cb, char *CMND, DanhSachHanhKhach &dsHK, char* strErr) {
 	cb->dsVe.CMND[i] = NULL;
 	xoaHanhKhach(dsHK, CMND);
 	if(cb->trangThai == 2) cb->trangThai = 1;
+	strcpy(strErr, "HUY VE THANH CONG!");
 	return true;
 }
 
-bool xuatDSHKDuaVaoMaCB(DanhSachChuyenBay &dsCB,DanhSachHanhKhach &dsHK, char* maCB, ListHanhKhachThongKe &listTK, char* strErr) {
+bool dsHanhKhachThuoc1CB(DanhSachChuyenBay &dsCB,DanhSachHanhKhach &dsHK, char* maCB, ListHanhKhachThongKe &listTK, char* strErr) {
 	strcpy(strErr, "");
 	ChuyenBay *cb = timKiemChuyenBay(maCB, dsCB);
 	if(cb == NULL) {
 		strcpy(strErr, "CHUYEN BAY KHONG TON TAI!");
+		return false;
+	}
+	if(soVeDaDat(cb->dsVe) == 0) {
+		strcpy(strErr, "DANH SACH VE RONG!");
 		return false;
 	}
 	HanhKhach *hk;
@@ -417,21 +416,33 @@ bool xuatDSHKDuaVaoMaCB(DanhSachChuyenBay &dsCB,DanhSachHanhKhach &dsHK, char* m
 */
 
 bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt, char* strErr) {
+	if(cb->trangThai == 0) {
+		strcpy(strErr, "CHUYEN BAY DA BI HUY!");
+		return false;
+	}
+	if(cb->trangThai == 3) {
+		strcpy(strErr, "CHUYEN BAY DA HOAN TAT!");
+		return false;
+	}
 	// Xu ly 1 may bay co 2 chuyen bay cung gio khoi hanh sau khi cap nhat lai ngay khoi hanh
-	strcpy(strErr, "CAP NHAT THANH CONG!");
 	NodeChuyenBay* nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		if(stricmp(nodeChay->chuyenBay.soHieuMayBay, cb->soHieuMayBay) == 0 
-			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb->maChuyenBay) != 0) {
+			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb->maChuyenBay) != 0 
+			&& nodeChay->chuyenBay.trangThai != 0
+			&& nodeChay->chuyenBay.trangThai != 3) {
 		
 			if(ktCungNgayThangNamGioPhut(nodeChay->chuyenBay.ngayKhoiHanh, dt)) {
 				char str1[255];
+				char strDay[255];
+				dinhDangNgayThangNam(dt, strDay);
 				strcpy(str1, "");
-				strcat(str1, "CAP NHAT THAT BAI!\n");
 				strcat(str1,"MAY BAY ");
 				strcat(str1,nodeChay->chuyenBay.soHieuMayBay);
 				strcat(str1, " DA CO CHUYEN BAY ");
 				strcat(str1, nodeChay->chuyenBay.maChuyenBay);
+				strcat(str1, " VAO LUC ");
+				strcat(str1, strDay);
 				strcpy(strErr, str1);
 				return false;
 			}
@@ -447,7 +458,7 @@ bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt
 			if(ktCBTrungGioVoiCBKhac(dsCB,cb->dsVe.CMND[i],*cb,maCBTrung)) {
 				char str[255];
 				strcpy(str, "");
-				strcat(str, "CAP NHAT THAT BAI!\nHANH KHACH CO SO CMND");
+				strcat(str, "HANH KHACH CO SO CMND ");
 				strcat(str, cb->dsVe.CMND[i]);
 				strcat(str, " BI TRUNG GIO KHOI HANH VOI CHUYEN BAY ");
 				strcat(str, maCBTrung);
@@ -458,10 +469,11 @@ bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt
 		}
 	}
 	if(!ktNgayThangNamHopLe(dt, strErr) || ktHoanTat(dt)) {
-		strcpy(strErr,"THOI GIAN KHOI HANH KHONG HOP LE!\n");
+		strcpy(strErr,"THOI GIAN KHOI HANH KHONG HOP LE!");
 		return false;
 	}
 	cb->ngayKhoiHanh = dt;
+	strcpy(strErr, "CAP NHAT THANH CONG!");
 	return true;
 }
 

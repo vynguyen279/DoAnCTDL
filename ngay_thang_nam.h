@@ -67,6 +67,47 @@ bool ktHoanTat(NgayThangNam dt) {
 	return false;
 }
 
+//
+//bool isTuongLai(NgayThangNam dt) {
+//	NgayThangNam dtNow = layNgayGioHeThong();
+//	if(dtNow.nam > dt.nam) {
+//		return false;
+//	} else if(dtNow.nam == dt.nam) {
+//		if(dtNow.thang > dt.thang) {
+//			return false;
+//		} else if(dtNow.thang == dt.thang) {
+//			if(dtNow.ngay > dt.ngay) {
+//				return false
+//			} else if(dtNow.ngay == dt.ngay) {
+//				if(dtNow.gio > dt.gio)
+//					return false
+//				else if(dtNow.gio == dt.gio) {
+//					if(dtNow.phut > dt.phut) {
+//						return false;
+//					}
+//				}
+//			}
+//		}
+//	} 
+//	return true;
+//}
+//
+//bool isHoanTat(NgayThangNam dt) {
+//	NgayThangNam dtNow = layNgayGioHeThong();
+//	if(dtNow.nam - dt.nam > 0) {
+//		return true;
+//	} else {
+//		if(dtNow.thang - dt.thang > 0) {
+//			return true;
+//		} else {
+//			if(dtNow.ngay - dt.ngay && dtNow.gio - dt.gio > 4) {
+//				return true;
+//			}
+//		}
+//	}
+//	return false;
+//}
+
 bool ktNgayHopLe(NgayThangNam &dt, int ngayTmp[], char* strErr) {
 	if(dt.thang >= 1 && dt.thang <= 12) {
 		if(dt.ngay >= 1 && dt.ngay <= ngayTmp[dt.thang]) {
@@ -110,3 +151,28 @@ bool ktNgayThangNamHopLe(NgayThangNam dt, char* strErr) {
 	return ktNgayHopLe(dt, ngayTmp, strErr);
 }
 
+void dinhDangNgayThangNam(NgayThangNam ngayKhoiHanh, char* res) {
+	char phut[5], gio[5],ngay[5],thang[5],nam[5],ngayGio[25];
+	itoa(ngayKhoiHanh.phut, phut, 10);
+    itoa(ngayKhoiHanh.gio, gio, 10);
+	 itoa(ngayKhoiHanh.ngay, ngay, 10);
+	 itoa(ngayKhoiHanh.thang, thang, 10);
+	 itoa(ngayKhoiHanh.nam, nam, 10);
+					if(strlen(ngay)==1)  {
+						strcpy(ngayGio,"0");
+						strcat(ngayGio,ngay);
+					}
+					else	strcpy(ngayGio,ngay);
+					strcat(ngayGio,"/");
+					if(strlen(thang) == 1) strcat(ngayGio,"0");
+					strcat(ngayGio,thang);
+					strcat(ngayGio,"/");
+					strcat(ngayGio,nam);
+					strcat(ngayGio," - ");
+					if(strlen(gio) == 1) strcat(ngayGio,"0");
+					strcat(ngayGio,gio);
+					strcat(ngayGio,":");
+					if(strlen(phut) == 1) strcat(ngayGio,"0");
+					strcat(ngayGio,phut);
+	strcpy(res, ngayGio);
+}
