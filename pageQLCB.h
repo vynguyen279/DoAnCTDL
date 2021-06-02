@@ -4,11 +4,11 @@
 //====================PROTOTYPE==================
 void drawPageQLCB(short **, Shape *);
 void checkEventPageQLCB(short **, Shape *, Input *, Button *, Board &);
-void makeBeautiInputNgayGioKH(Input *input, short ** mapID);
-void makeBeautiLockInputNgayGioKH(Input *input, short ** mapID);
+void makeBeautiInputNgayGioKH(Input *input);
+void makeBeautiLockInputNgayGioKH(Input *input);
 void drawInputPageQLCB(Input *input,short **mapID,bool unlockInput );
 void chuanHoaInputQLCB(Input &input,short inputID);
-void fixNgay(Input *input, short **mapID);
+void fixNgay(Input *input);
 void getCBData(Input *input,short ID,short **mapID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID);
 void outNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp);
@@ -18,8 +18,7 @@ void updateCB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB,D
 void cancelCB(short ID,bool &isInvalid,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void addCB(Input *input,bool &isInvalid, DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void getInputPageQLCB(Input &input, short &inputID, bool &isEnter);
-
-
+void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp);
 
 
 //================================================
@@ -29,7 +28,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
 	int paddingLeft = 7;
 	if(isEnter){ //INHOVER
 		setcolor(BLACK);
-        if(ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2){  //NGAY GIO CO KIEU HOVER KHAC          
+        if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLTIMEY_2 && inputID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC          
             rectangle(input.x1 + 1, input.y1 + 28, input.x1 + input.width -1, input.y1+29);       	  
 		}
         else        
@@ -67,7 +66,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
                 
                 //OUTHOVER
 				setcolor(WHITE);
-			    if(ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2){  //NGAY GIO CO KIEU HOVER KHAC          
+			    if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLTIMEY_2 && inputID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC          
 			        rectangle(input.x1 + 1, input.y1 + 28, input.x1 + input.width - 1, input.y1+29);       	  
 				}
 			    else        
@@ -82,7 +81,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
             }
             if (('a' <= c && c <= 'z' || '0' <= c && c <= '9' || (c == ' ' && input.s[input.lastL - 1] != ' ' && input.lastL != 0)) && input.lastL < input.max)
             {
-                if ((((inputID == ID_INPUT_MCB_2 ||inputID == ID_INPUT_SHMB_2)  && c != ' ') || inputID == ID_INPUT_DESTINATION_2)&& input.lastL < input.max - 1 )
+                if ((((inputID == ID_INPUT_MCB_2 ||inputID == ID_INPUT_SHMB_2)  && c != ' ') || inputID == ID_INPUT_DESTINATION_2 || inputID == ID_INPUT_FILLDESTINATION_2)&& input.lastL < input.max - 1 )
                 { //may bay,so hieu,san bay den
                     if ('a' <= c && c <= 'z')
                     {
@@ -97,7 +96,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
                         input.s[input.lastL + 1] = '\0';
                     }
                 }
-                else if (ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2 && '0' <= c && c <= '9')
+                else if ((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) ||(ID_INPUT_FILLTIMED_2 <= inputID && inputID <= ID_INPUT_FILLTIMEY_2)  && '0' <= c && c <= '9')
                 { //ngay-thang-nam
                     
                         input.s[input.lastL] = c;
@@ -194,7 +193,7 @@ void drawUpdateCBFrame(Input *input,short **mapID,Shape *shape){
     }	
 	for(int i = 2; i<=6;i++){
 		drawInput(input[i],mapID,ID_INPUT_DAY_2 + i -2);
-		makeBeautiInputNgayGioKH(input,mapID);
+		makeBeautiInputNgayGioKH(input);
 	}
 }
 
@@ -221,9 +220,8 @@ void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID)
         int x, y;
         getmouseclick(WM_MOUSEMOVE, x, y);
         ID = mapID[x][y];
-        cout <<ID;
         //IN HOVER: MOI HOVER DEU MAU DEN
-        if(ID_INPUT_DAY_2 <= ID && ID <= ID_INPUT_MINUTE_2){  //NGAY GIO CO KIEU HOVER KHAC
+        if((ID_INPUT_DAY_2 <= ID && ID <= ID_INPUT_MINUTE_2) || (ID <= ID_INPUT_FILLTIMEY_2 && ID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC
             setcolor(BLACK);
             rectangle(shape[ID].x1, shape[ID].y1+shape[ID].height, shape[ID].x1 + shape[ID].width, shape[ID].y1+shape[ID].height - 1);       	  
 		}
@@ -235,12 +233,12 @@ void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID)
         //OUT HOVER :VOI INPUT SE TO LAI MAU DEN, VOI BUTTON SE TO LAI MAU BLUE_L
         if (ID != lastID && lastID > 0)
         {	
-	        if(ID_INPUT_DAY_2 <= lastID && lastID <= ID_INPUT_MINUTE_2){ //NGAY GIO CO KIEU HOVER KHAC
+	        if((ID_INPUT_DAY_2 <= lastID && lastID <= ID_INPUT_MINUTE_2) || (lastID <= ID_INPUT_FILLTIMEY_2 && lastID >= ID_INPUT_FILLTIMED_2)){ //NGAY GIO CO KIEU HOVER KHAC
 	            setcolor(WHITE);
 	            rectangle(shape[lastID].x1, shape[lastID].y1+shape[lastID].height, shape[lastID].x1 + shape[lastID].width, shape[lastID].y1+shape[lastID].height - 1);     	
 			}
 			else{
-				if(lastID>=ID_INPUT_FILLTIME_2)
+				if(lastID>=ID_INPUT_FILLTIMED_2)
 					setcolor(WHITE);      	
 	            else
 	                setcolor(BLUE_L);
@@ -251,6 +249,79 @@ void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID)
     }
 }
 
+void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp){
+
+    int x1, y1, x2 = board.x1, y2 = board.y1;
+    for (int line = 0; line <= board.numOfLine && startCB-1 < dsTmp.n; line++)
+    {
+		
+        y1 = y2;
+        y2 += board.heightOfLine;
+        x2 = board.x1;
+        for (int col = 1; col <= board.numOfCol; col++)
+        {
+            x1 = x2;
+            x2 += board.widthOfCol[col - 1];
+            if (line >= 1)
+            {
+                setText();
+                if (col == 1) //MA CB
+                { 
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[startCB - 1]->maChuyenBay),
+                              y1 + (board.heightOfLine) / 2 - 10, dsTmp.cb[startCB - 1]->maChuyenBay);
+                }
+                else if (col == 2) //SO HIEU
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[startCB - 1]->soHieuMayBay),
+                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[startCB - 1]->soHieuMayBay);
+                else if (col == 3)  //NGAY GIO KHOI HANH
+                { 		
+					char phut[5], gio[5],ngay[5],thang[5],nam[5],ngayGio[25];
+					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.phut, phut, 10);
+					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.gio, gio, 10);
+					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.ngay, ngay, 10);
+					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.thang, thang, 10);
+					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.nam, nam, 10);
+					if(strlen(ngay)==1)  {
+						strcpy(ngayGio,"0");
+						strcat(ngayGio,ngay);
+					}
+					else	strcpy(ngayGio,ngay);
+					strcat(ngayGio,"/");
+					if(strlen(thang) == 1) strcat(ngayGio,"0");
+					strcat(ngayGio,thang);
+					strcat(ngayGio,"/");
+					strcat(ngayGio,nam);
+					strcat(ngayGio," - ");
+					if(strlen(gio) == 1) strcat(ngayGio,"0");
+					strcat(ngayGio,gio);
+					strcat(ngayGio,":");
+					if(strlen(phut) == 1) strcat(ngayGio,"0");
+					strcat(ngayGio,phut);
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 2.5 * strlen(ngayGio),
+                              y1 + (board.heightOfLine) / 2 - 10, ngayGio);
+                }
+                else if (col == 4) //SAN BAY DEN
+                { 
+
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(dsTmp.cb[startCB - 1]->sanBayDen),
+                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[startCB - 1]->sanBayDen);
+                }
+                else if (col == 5) //TRANG THAI
+                { 	
+            		char trangThai[15];
+					if(dsTmp.cb[startCB - 1]->trangThai == 0) strcpy(trangThai,"HUY CHUYEN");
+					if(dsTmp.cb[startCB - 1]->trangThai == 1)	strcpy(trangThai,"CON VE");
+					if(dsTmp.cb[startCB - 1]->trangThai == 2)	strcpy(trangThai,"HUY VE");
+					if(dsTmp.cb[startCB - 1]->trangThai == 3)	strcpy(trangThai,"HOAN TAT");
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(trangThai),
+                              y1 + (board.heightOfLine) / 2 - 10, trangThai);						
+                }                
+            }
+        }
+        if (line >= 1)
+            startCB++;
+    }
+}
 void getCBData(Input *input,short ID,short **mapID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
 
 	
@@ -283,26 +354,25 @@ void getCBData(Input *input,short ID,short **mapID,DanhSachChuyenBay &dsCB,DanhS
 	
     for (int i = 0; i < 9; i++){
         input[i].lastL = strlen(input[i].s); 
-	}
-	drawInputPageQLCB(input,mapID,false);
-
-	
+	}	
 }
 
-void fixNgay(Input *input, short **mapID){   //fix ngay sao cho phu hop voi nam do 
+void fixNgay(Input *input){   //fix ngay sao cho phu hop voi nam do 
 	int ngayTmp[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
 	int namInput = atoi(input[4].s);
 	if(namInput % 400 == 0 || namInput % 4 == 0 && namInput % 100 != 0)
 		ngayTmp[2]++;
 	if (atoi(input[2].s) > ngayTmp[atoi(input[3].s)]){
 		itoa(ngayTmp[atoi(input[3].s)],input[2].s,10);
-		makeBeautiInputNgayGioKH(input,mapID);
+		outtextxy(input[2].x1 + 7,input[2].y1 + 5,input[2].s);
+		
 	}	
 }
 
+
 void chuanHoaInputQLCB(Input &input,short inputID){
    //sua lai ngay thang gio phut neu chi co 1 ki tu
-    if (ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2 && inputID != ID_INPUT_YEAR_2 && input.lastL > 0 && input.lastL <=1  )
+    if (((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2 && inputID != ID_INPUT_YEAR_2) ||(ID_INPUT_FILLTIMED_2 <= inputID && inputID < ID_INPUT_FILLTIMEY_2)) && input.lastL == 1  )
     {
         input.lastL = 2;
         input.s[1] = input.s[0];
@@ -310,7 +380,7 @@ void chuanHoaInputQLCB(Input &input,short inputID){
         input.s[2] = '\0';
     }
     //gioi han ngay
-    if(inputID == ID_INPUT_DAY_2 && input.lastL > 0){
+    if((inputID == ID_INPUT_DAY_2 || inputID == ID_INPUT_FILLTIMED_2) && input.lastL > 0){
     	if(atoi(input.s) == 0 ){
     		 input.s[1] ='1';
     	}
@@ -320,7 +390,7 @@ void chuanHoaInputQLCB(Input &input,short inputID){
     	}            		
     }
     //gioi han thang
-    if(inputID == ID_INPUT_MONTH_2 && input.lastL > 0){
+    if((inputID == ID_INPUT_MONTH_2 ||inputID == ID_INPUT_FILLTIMEM_2) && input.lastL > 0){
     	if(atoi(input.s) == 0){
     		 input.s[1] ='1';
     	}       
@@ -365,18 +435,18 @@ void drawInputPageQLCB(Input *input,short **mapID,bool unlockInput ){
     		drawLockInput(input[i],mapID);
     		
     	}
-		makeBeautiInputNgayGioKH(input,mapID);	
+		makeBeautiInputNgayGioKH(input);	
 	}
     else{
     	for(int i = 0; i < 9;i++){
     		drawLockInput(input[i],mapID);
     	}
-		makeBeautiLockInputNgayGioKH(input,mapID);	
+		makeBeautiLockInputNgayGioKH(input);	
     }
 	
 }
 
-void makeBeautiLockInputNgayGioKH(Input *input, short ** mapID){
+void makeBeautiLockInputNgayGioKH(Input *input){
 	setfillstyle(1,15);
 	setText(1, 10, 8, 15);
 	bar(input[2].x1,input[2].y1,input[4].x1+input[4].width,input[4].y1+30);
@@ -392,7 +462,7 @@ void makeBeautiLockInputNgayGioKH(Input *input, short ** mapID){
 		outtextxy(input[i].x1 + 7,input[i].y1 + 5,input[i].s);
 	}
 }
-void makeBeautiInputNgayGioKH(Input *input, short ** mapID){
+void makeBeautiInputNgayGioKH(Input *input){
  
 	setfillstyle(1,15);
 	setText(1, 10);

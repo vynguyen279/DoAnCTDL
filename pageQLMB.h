@@ -717,79 +717,7 @@ void UpdateMB(Input *input,DanhSachMayBay &dsMB)
 }
 
 
-void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp){
 
-    int x1, y1, x2 = board.x1, y2 = board.y1;
-    for (int line = 0; line <= board.numOfLine && startCB-1 < dsTmp.n; line++)
-    {
-		
-        y1 = y2;
-        y2 += board.heightOfLine;
-        x2 = board.x1;
-        for (int col = 1; col <= board.numOfCol; col++)
-        {
-            x1 = x2;
-            x2 += board.widthOfCol[col - 1];
-            if (line >= 1)
-            {
-                setText();
-                if (col == 1) //MA CB
-                { 
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[startCB - 1]->maChuyenBay),
-                              y1 + (board.heightOfLine) / 2 - 10, dsTmp.cb[startCB - 1]->maChuyenBay);
-                }
-                else if (col == 2) //SO HIEU
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[startCB - 1]->soHieuMayBay),
-                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[startCB - 1]->soHieuMayBay);
-                else if (col == 3)  //NGAY GIO KHOI HANH
-                { 		
-					char phut[5], gio[5],ngay[5],thang[5],nam[5],ngayGio[25];
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.phut, phut, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.gio, gio, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.ngay, ngay, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.thang, thang, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.nam, nam, 10);
-					if(strlen(ngay)==1)  {
-						strcpy(ngayGio,"0");
-						strcat(ngayGio,ngay);
-					}
-					else	strcpy(ngayGio,ngay);
-					strcat(ngayGio,"/");
-					if(strlen(thang) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,thang);
-					strcat(ngayGio,"/");
-					strcat(ngayGio,nam);
-					strcat(ngayGio," - ");
-					if(strlen(gio) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,gio);
-					strcat(ngayGio,":");
-					if(strlen(phut) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,phut);
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 2.5 * strlen(ngayGio),
-                              y1 + (board.heightOfLine) / 2 - 10, ngayGio);
-                }
-                else if (col == 4) //SAN BAY DEN
-                { 
-
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(dsTmp.cb[startCB - 1]->sanBayDen),
-                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[startCB - 1]->sanBayDen);
-                }
-                else if (col == 5) //TRANG THAI
-                { 	
-            		char trangThai[15];
-					if(dsTmp.cb[startCB - 1]->trangThai == 0) strcpy(trangThai,"HUY CHUYEN");
-					if(dsTmp.cb[startCB - 1]->trangThai == 1)	strcpy(trangThai,"CON VE");
-					if(dsTmp.cb[startCB - 1]->trangThai == 2)	strcpy(trangThai,"HUY VE");
-					if(dsTmp.cb[startCB - 1]->trangThai == 3)	strcpy(trangThai,"HOAN TAT");
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(trangThai),
-                              y1 + (board.heightOfLine) / 2 - 10, trangThai);						
-                }                
-            }
-        }
-        if (line >= 1)
-            startCB++;
-    }
-}
 
             
 void getMBData(Input *input,short ID,short **mapID,DanhSachMayBay &dsMB)

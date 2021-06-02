@@ -12,7 +12,8 @@ using namespace std;
 #define GREEN 10
 #define RED 12
 #define WHITE 15
-
+#define GRAY 8
+#define SILVER 7
 #define MAX_W 1200
 #define MAX_H 700
 #define DELAY_TO_CHECK_EVENT 0.0001 
@@ -52,17 +53,19 @@ using namespace std;
 #define ID_BUTTON_UNCANCEL_CB_2 15
 #define ID_BUTTON_ACPUPDATE_CB_2 16
 #define ID_BUTTON_UNUPDATE_CB_2 17
-#define ID_INPUT_FILLTIME_2 30
-#define ID_INPUT_FILLDESTINATION_2 31
-#define ID_INPUT_MCB_2 32
-#define ID_INPUT_SHMB_2 33
-#define ID_INPUT_DAY_2 34
-#define ID_INPUT_MONTH_2 35
-#define ID_INPUT_YEAR_2 36
-#define ID_INPUT_HOUR_2 37
-#define ID_INPUT_MINUTE_2 38
-#define ID_INPUT_STATUS_2 39
-#define ID_INPUT_DESTINATION_2 40
+#define ID_INPUT_FILLTIMED_2 30
+#define ID_INPUT_FILLTIMEM_2 31
+#define ID_INPUT_FILLTIMEY_2 32
+#define ID_INPUT_FILLDESTINATION_2 33
+#define ID_INPUT_MCB_2 34
+#define ID_INPUT_SHMB_2 35
+#define ID_INPUT_DAY_2 36
+#define ID_INPUT_MONTH_2 37
+#define ID_INPUT_YEAR_2 38
+#define ID_INPUT_HOUR_2 39
+#define ID_INPUT_MINUTE_2 40
+#define ID_INPUT_STATUS_2 41
+#define ID_INPUT_DESTINATION_2 42
 #define ID_BOARD_DSCB_2 50
 /************************************************
 khai bao o nho cho input nhieu hon maxkitu + 1 de lam con tro nhap nhay nhung van chi duoc nhap maxkitu
@@ -150,7 +153,6 @@ void convertToShape(Input &input,Shape &shape){
 	shape.y1 = 	input.y1+1;
 	shape.width = 	input.width-2;
 	shape.height = 	28;
-	cout <<shape.width << endl;
 }
 
 void setID(short x1, short y1, short width, short height, short ID, short **mapID)
@@ -164,9 +166,9 @@ void drawButton(Button &button, short ID, short **mapID)
 {   
     
     if(button.content[0] == '<' || button.content[0] == '>')
-    	setText(2, 10, 0, BLUE_L);
+    	setText(2, 10, 0, button.fillColor);
 	else 
-		setText(1, 11, 0, BLUE_L); 
+		setText(1, 11, 0, button.fillColor); 
     setfillstyle(1, button.fillColor);
     bar(button.x1, button.y1, button.x1 + button.width, button.y1 + button.height);
     //=========outButtonText===========
@@ -210,7 +212,7 @@ void drawBoard(Board &board, short ID, short **mapID, Shape *shape)
             }
 
             //============in khung
-            rectangle(board.x1, board.y1, x2, y2);
+            rectangle(x1,y1, x2, y2);
         }
 
         //=====SET LINE ID
@@ -255,7 +257,7 @@ void drawLockInput(Input &input, short **mapID)
 {
     setfillstyle(1, 15);
     bar(input.x1, input.y1, input.x1 + input.width, input.y1 + 30);
-	setText(1, 10, 8, 15);
+	setText(1, 10, GRAY, 15);
     rectangle(input.x1, input.y1, input.x1 + input.width, input.y1 + 30); 
     setID(input.x1, input.y1, input.width, 30, -1, mapID);
     if (input.lastL != 0)
