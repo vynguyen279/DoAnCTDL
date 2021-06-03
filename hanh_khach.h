@@ -6,6 +6,7 @@ struct HanhKhach{
 	char CMND[MAXCMND];
 	char ho[MAXHO];
 	char ten[MAXTEN];
+	// 1 la nam, 0 la nu
 	bool phai;
 	// Ham test
 	void toString() {
@@ -235,17 +236,8 @@ HanhKhach* timKiemHanhKhach(DanhSachHanhKhach &dsHK, char* CMND) {
 	return NULL;
 }
 
-void capNhapHanhKhach(HanhKhach *hkCapNhat) {
-	char ho[MAXHO];
-	char ten[MAXTEN];
-	bool phai;
-	std::cout << "HO: "; gets(ho);
-	std::cout << "TEN: "; gets(ten);
-	fflush(stdin);
-	std::cout << "PHAI: "; std::cin >> phai;
-	strcpy(hkCapNhat->ho, ho);
-	strcpy(hkCapNhat->ten, ten);
-	hkCapNhat->phai = phai;
+void capNhapHanhKhach(HanhKhach *hkCanCapNhat, HanhKhach hkCapNhat) {
+	*hkCanCapNhat = hkCapNhat;
 }
 
 void clearDSHK(DanhSachHanhKhach &dsHK) {
@@ -286,5 +278,6 @@ void xuatListHKTK(ListHanhKhachThongKe &list) {
 }
 
 void clearListHKTK(ListHanhKhachThongKe &list) {
+	list.soLuong = 0;
 	delete[] list.hanhKhachTK;
 }

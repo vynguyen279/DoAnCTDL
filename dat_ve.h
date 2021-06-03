@@ -1,6 +1,6 @@
 #include "hanh_khach.h"
 #include "xu_ly_chuyen_bay.h"
-
+//https://paste.ubuntu.com/p/y5xY8xvStc/
 /*
 	Ham tra ve gia tri true or false
 	Neu co hanh khach trong danh sach (hk != NULL) -> true
@@ -11,19 +11,6 @@
 	Ham -> false -> yeu cau nguoi dung nhap du thong tin cac truong
 */
 
-bool ktTonTaiHanhKhach(char* CMND, DanhSachHanhKhach &dsHK) {
-	HanhKhach *hk = timKiemHanhKhach(dsHK, CMND);
-	if(hk == NULL) {
-		HanhKhach hkTmp;
-		strcpy(hkTmp.CMND, CMND);
-		capNhapHanhKhach(&hkTmp);
-		themHanhKhach(dsHK, hkTmp);
-		return false;
-	}
-	// Co the cap nhat hoac khong
-//	capNhapHanhKhach(hk);
-	return true;
-}
 /*
 	Sau khi hanh khach nhap vao thong tin hoac kiem tra thong tin, cap nhat thong tin
 	hanh khach thanh cong thi chuyen layout sang dat ve
@@ -33,8 +20,8 @@ bool ktTonTaiHanhKhach(char* CMND, DanhSachHanhKhach &dsHK) {
 */
 
 bool datVe(char *CMND, int soVe, ChuyenBay *cb, DanhSachHanhKhach &dsHK, DanhSachChuyenBay &dsCB, char* strErr) {
-	bool kt = ktTonTaiHanhKhach(CMND, dsHK);
-	if(!kt) {
+	HanhKhach* hk = timKiemHanhKhach(dsHK, CMND);
+	if(hk == NULL) {
 		return themVeVaoChuyenBay(CMND, soVe, cb, strErr);
 	}
 	strcpy(strErr, "");

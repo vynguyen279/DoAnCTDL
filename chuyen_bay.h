@@ -24,7 +24,7 @@ struct ChuyenBay{
 		std::cout << "Ma chuyen bay: " << maChuyenBay << 
 		" - Ngay khoi hanh: "; 
 		ngayKhoiHanh.toString();
-		std::cout << "San bay den: " << sanBayDen << std::endl;
+		std::cout << " San bay den: " << sanBayDen << std::endl;
 		std::cout << "Trang thai: " << trangThai << 
 		" - So hieu may bay: " << soHieuMayBay << std::endl;
 	}

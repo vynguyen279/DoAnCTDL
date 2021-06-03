@@ -21,6 +21,11 @@ struct DanhSachTam{
 	int n = 0;
 };
 
+void initDanhSachTam(DanhSachTam &dsTmp) {
+	for(int i = 0; i < MAXTMP; i++) 
+		dsTmp.cb[i] = NULL;
+}
+
 /*
 	Input:
 		dsCB: danh sach chuyen bay;
@@ -135,6 +140,7 @@ void capNhatTrangThaiHoanTat(ChuyenBay &chuyenBay) {
 
 DanhSachTam dsNode2DsTmp(DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
@@ -154,6 +160,7 @@ DanhSachTam dsNode2DsTmp(DanhSachChuyenBay &dsCB) {
 
 DanhSachTam dsCBvoiSanBayDen(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
 	if(stricmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmp(dsCB);
 	else {
@@ -178,7 +185,9 @@ DanhSachTam dsCBvoiSanBayDen(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 
 DanhSachTam dsCBvoiNgayKhoiHanh(NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB, char* strErr) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
+	strcpy(strErr, "");
 	if(ktNgayThangNamHopLe(ngayKhoiHanh, strErr)) {
 		for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 			capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
@@ -201,6 +210,7 @@ DanhSachTam dsCBvoiNgayKhoiHanh(NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &ds
 
 DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDen(char *sanBayDen, NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
@@ -221,6 +231,7 @@ DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDen(char *sanBayDen, NgayThangNam ngayKho
 
 DanhSachTam dsNode2DsTmpConVe(DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
@@ -241,6 +252,7 @@ DanhSachTam dsNode2DsTmpConVe(DanhSachChuyenBay &dsCB) {
 
 DanhSachTam dsCBvoiSanBayDenConVe(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
 	if(stricmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmp(dsCB);
 	else {
@@ -265,7 +277,9 @@ DanhSachTam dsCBvoiSanBayDenConVe(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 
 DanhSachTam dsCBvoiNgayKhoiHanhConVe(NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB, char* strErr) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
+	strcpy(strErr, "");
 	if(ktNgayThangNamHopLe(ngayKhoiHanh, strErr)) {
 		for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 			capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
@@ -289,6 +303,7 @@ DanhSachTam dsCBvoiNgayKhoiHanhConVe(NgayThangNam ngayKhoiHanh, DanhSachChuyenBa
 
 DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDenConVe(char *sanBayDen, NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
+	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
@@ -491,5 +506,7 @@ int timKiemChuyenBayTrenDsTmp(char* maCB, DanhSachTam &dsTmp, char* strErr) {
 }
 
 void clearDSTmp(DanhSachTam &dsTmp) {
+	for(int i = 0; i < dsTmp.n; i++) 
+		dsTmp.cb[i] = NULL;
 	dsTmp.n = 0;
 }
