@@ -90,7 +90,7 @@ void drawMainMenu(short **mapID){
 
     setfillstyle(1, BLUE_M);
     bar(0, 0, 250, MAX_H);
-    Shape shape[100];
+    Shape shape[MAX_SHAPE];
     
     Button button[5] = {
         {60, 30, 120, 50, BLUE_M, BLUE_M, ""},
