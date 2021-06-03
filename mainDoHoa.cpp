@@ -190,7 +190,6 @@ void outCB(Board &board,DanhSachTam &dsTmp, short ID){
     }	
 } 
 void outCBUpdated(Board &board,DanhSachTam &dsTmp,short ID){
-	setText();
 	ID-=ID_BOARD_DSCB_2;
     short x1 = board.x1,
 	 y1 = (ID%10 + 1) * board.heightOfLine + board.y1, 
@@ -198,17 +197,19 @@ void outCBUpdated(Board &board,DanhSachTam &dsTmp,short ID){
 	 y2 = y1 +30;
  	setfillstyle(1,WHITE);	
     bar(x1,y1,x1+900,y1 + 30);
+    setcolor(BLACK);
     for(int col = 1; col<=board.numOfCol; col++){
     	x2 += board.widthOfCol[col - 1];
     	rectangle(x1,y1, x2, y2);
     	x1 = x2;
     }
+    outCB(board,dsTmp,ID);
 }
  
 void unChooseCB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, short **mapID){
     setcolor(15);
     setfillstyle(1, 15);
-    fillellipse(shape[chooseID].x1 - 13, shape[chooseID].y1 + 10, 5, 5);
+    fillellipse(shape[chooseID%10 + 50].x1 - 13, shape[chooseID%10 + 50].y1 + 10, 5, 5);
     unlockChoose = true;
     chooseID = -1;
     for(int i = 0; i < 9;i++)
@@ -256,7 +257,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
     bool isEnter = false;                                           //check enter khi dang input
     bool unlockKeyboardShortcut = true;
     bool isFill = false;
-    int numOfPage = (dsTmp.n - 1) / 10 + 1, presentPage = 10; 		//quan ly so trang
+    int numOfPage = (dsTmp.n - 1) / 10 + 1, presentPage = 1; 		//quan ly so trang
     short maxChoose = 0;                                              //khong cho chon vao o khong co may bay
     outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
 
@@ -286,14 +287,16 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 		            setfillstyle(1, 0);
 		            if (ID != chooseID && unlockChoose) //CHON CAI MOI
 		            {
+		            	//to  
 		                setcolor(0);
 		                setfillstyle(1, 0);
-		                fillellipse(shape[ID].x1 - 13, shape[ID].y1 + 10, 5, 5);
+		                fillellipse(shape[ID%10 + 50].x1 - 13, shape[ID%10 + 50].y1 + 10, 5, 5);
 		                if (chooseID != -1)  //BO CHON CAI CU NEU CHON CAI MOI
 		                { 
+		                	//xoa
 		                    setcolor(15);
 		                    setfillstyle(1, 15);
-		                    fillellipse(shape[chooseID].x1 - 13, shape[chooseID].y1 + 10, 5, 5);
+		                    fillellipse(shape[chooseID%10 + 50].x1 - 13, shape[chooseID%10 + 50].y1 + 10, 5, 5);
 		                }
 						chooseID = ID;   
 		                getCBData(input,chooseID,mapID,dsCB,dsTmp);	                	

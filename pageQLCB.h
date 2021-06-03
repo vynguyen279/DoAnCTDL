@@ -230,15 +230,22 @@ void outNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp){
 
 }
 
-void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID)
+void checkHoverPageQLCB(short &newID, short lastID, Shape *shape, short **mapID)
 {
 
     if (ismouseclick(WM_MOUSEMOVE))
     {
         int x, y;
         getmouseclick(WM_MOUSEMOVE, x, y);
-        ID = mapID[x][y];
+        newID = mapID[x][y];
+    
         //IN HOVER: MOI HOVER DEU MAU DEN
+    	short ID = newID;
+    	cout << ID << " " << lastID << endl;
+        if(ID >= 60) //HOVER CHO BOARD
+           	ID = ID%10 + 50;	
+		if(lastID >= 60)
+		   lastID = lastID%10 + 50;
         if((ID_INPUT_DAY_2 <= ID && ID <= ID_INPUT_MINUTE_2) || (ID <= ID_INPUT_FILLTIMEY_2 && ID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC
             setcolor(BLACK);
             rectangle(shape[ID].x1, shape[ID].y1+shape[ID].height, shape[ID].x1 + shape[ID].width, shape[ID].y1+shape[ID].height - 1);       	  
@@ -256,6 +263,7 @@ void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID)
 	            rectangle(shape[lastID].x1, shape[lastID].y1+shape[lastID].height, shape[lastID].x1 + shape[lastID].width, shape[lastID].y1+shape[lastID].height - 1);     	
 			}
 			else{
+				
 				if(lastID>=ID_INPUT_FILLTIMED_2)
 					setcolor(WHITE);      	
 	            else

@@ -220,12 +220,12 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *Butto
 	                {
 	                    setcolor(0);
 	                    setfillstyle(1, 0);
-	                    fillellipse(shape[ID].x1 - 13, shape[ID].y1 + 10, 5, 5);
+	                    fillellipse(shape[ID%10 + 50].x1 - 13, shape[ID%10 + 50].y1 + 10, 5, 5);
 	                    if (chooseID != -1)  //BO CHON CAI CU NEU CHON CAI MOI
 	                    { 
 	                        setcolor(15);
 	                        setfillstyle(1, 15);
-	                        fillellipse(shape[chooseID].x1 - 13, shape[chooseID].y1 + 10, 5, 5);
+	                        fillellipse(shape[chooseID%10 + 50].x1 - 13, shape[chooseID%10 + 50].y1 + 10, 5, 5);
 	                    }                                   
 	                    chooseID = ID;
 	                    getMBData(input,chooseID,mapID,dsMB);
@@ -236,7 +236,7 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *Butto
 	                { 
 	                    setcolor(15);
 	                    setfillstyle(1, 15);
-	                    fillellipse(shape[ID].x1 - 13, shape[ID].y1 + 10, 5, 5);
+	                    fillellipse(shape[ID%10 + 50].x1 - 13, shape[ID%10 + 50].y1 + 10, 5, 5);
 	                    chooseID = -1;
 	                    for (int i = 0; i <= 2; i++)
 	                    {
@@ -506,15 +506,22 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *Butto
     clearDSMB(dsMB);
     clearDSCB(dsCB);
 }
-void checkHoverPageQLMB(short &ID, short lastID, Shape *shape, short **mapID)
+void checkHoverPageQLMB(short &newID, short lastID, Shape *shape, short **mapID)
 {
 	
     if (ismouseclick(WM_MOUSEMOVE))
     {	
- 
+ 			
 		int x, y;
         getmouseclick(WM_MOUSEMOVE, x, y);
-        ID = mapID[x][y]; 
+        newID = mapID[x][y];
+        short ID = newID;
+        
+        if(ID >= 60) //HOVER CHO BOARD
+           	ID = ID%10 + 50;	
+		if(lastID >= 60)
+		   lastID = lastID%10 + 50;
+		   
         //IN HOVER: MOI HOVER DEU MAU DEN
         if (ID > 0 && ID != lastID)
         {
@@ -530,6 +537,7 @@ void checkHoverPageQLMB(short &ID, short lastID, Shape *shape, short **mapID)
                 setcolor(BLUE_L);
             rectangle(shape[lastID].x1, shape[lastID].y1, shape[lastID].x1 + shape[lastID].width, shape[lastID].y1 + shape[lastID].height);
         }
+
     }
 }
 

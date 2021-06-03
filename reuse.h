@@ -17,7 +17,7 @@ using namespace std;
 #define MAX_W 1200
 #define MAX_H 700
 #define DELAY_TO_CHECK_EVENT 0.0001 
-#define MAX_SHAPE 1000
+#define MAX_SHAPE 100
 #define DEFAULT_ID -1
 
 #define ID_BUTTON_PAGE_MAIN 0
@@ -184,7 +184,7 @@ void drawButton(Button &button, short ID, short **mapID)
 
 void drawBoard(Board &board, short ID, short **mapID, Shape *shape)
 {
-    int x1, y1, x2 = board.x1, y2 = board.y1;
+    int x1, y1, x2 = board.x1, y2 = board.y1,x = 50;
     setfillstyle(1,15);
 	bar(252,130,1176,460);
     for (int line = 0; line <= board.numOfLine; line++)
@@ -216,7 +216,7 @@ void drawBoard(Board &board, short ID, short **mapID, Shape *shape)
         }
 
         //=====SET LINE ID
-        if (line > 0)
+        if (line >= 1)
         {
             for (int y = y1; y <= y2; y++)
                 for (int x = board.x1; x <= x2; x++)
@@ -224,10 +224,14 @@ void drawBoard(Board &board, short ID, short **mapID, Shape *shape)
                         
 
             //=====ADD TO SHAPE
-            shape[line + ID - 1].x1 = board.x1 + 1;
-            shape[line + ID - 1].y1 = y1 + 1;
-            shape[line + ID - 1].width = x2 - board.x1 - 2;
-            shape[line + ID - 1].height = y2 - y1 - 2;
+            if(ID<=59){
+            	
+		        shape[line + x - 1].x1 = board.x1 + 1;
+		        shape[line + x - 1].y1 = y1 + 1;
+		        shape[line + x - 1].width = x2 - board.x1 - 2;
+		        shape[line + x - 1].height = y2 - y1 - 2;           	
+            }
+
         }
     }
 }
