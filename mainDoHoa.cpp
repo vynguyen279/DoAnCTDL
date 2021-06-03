@@ -16,15 +16,14 @@ void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &d
         dsFill = dsCBvoiNgayKhoiHanhVaSanBayDen(input[3].s, dtFill,dsCB);
 		isInvalid = true;
 	}
-	else if(isFillDestination){
-		//dia diem	
-
+	else if(isFillDestination){//dia diem	
+	
 		dsFill=dsCBvoiSanBayDen(input[3].s,dsCB);
 
 		isInvalid = true;
 	}
-	else if(isFillTime){
-		//thoi gian
+	else if(isFillTime){ //thoi gian
+		
 		char alert[40] = ""; 
 		NgayThangNam dtFill = newNgayThangNam(atoi(input[0].s), atoi(input[1].s), atoi(input[2].s));	
 		dsFill = dsCBvoiNgayKhoiHanh(dtFill, dsCB,alert);
