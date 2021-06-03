@@ -105,7 +105,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
                         input.s[input.lastL + 1] = '\0';
                     }
                 }
-                else if ((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) ||(ID_INPUT_FILLTIMED_2 <= inputID && inputID <= ID_INPUT_FILLTIMEY_2)  && '0' <= c && c <= '9')
+                else if (((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) ||(ID_INPUT_FILLTIMED_2 <= inputID && inputID <= ID_INPUT_FILLTIMEY_2))  && '0' <= c && c <= '9')
                 { //ngay-thang-nam
                     
                         input.s[input.lastL] = c;
@@ -141,11 +141,20 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
 
 void addCB(Input *input,bool &isInvalid, DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp)
 {	
+	isInvalid = true;	
 	char alert[40];
+	for(int i = 0; i < 9;i++){
+		if(input[i].lastL ==0 ){
+			isInvalid = false;
+			strcpy(alert,"BAN CHUA NHAP DU THONG TIN!");
+		}
+	}
+	if(isInvalid){
 	NgayThangNam ngayKH = newNgayThangNam(atoi(input[2].s), atoi(input[3].s), atoi(input[4].s), atoi(input[5].s), atoi(input[6].s));
 	ChuyenBay newCB = newChuyenBay(input[0].s,ngayKH, input[8].s, input[1].s);
 	NodeChuyenBay *newNodeCB = newNodeChuyenBay(newCB);
-	isInvalid = themChuyenBayHopLe(newNodeCB,dsCB, dsMB, dsTmp, alert);
+	isInvalid = themChuyenBayHopLe(newNodeCB,dsCB, dsMB, dsTmp, alert);		
+	}
 	if(isInvalid) {
 		luuDSChuyenBay(dsCB);
 		outAlert(GREEN,alert);
