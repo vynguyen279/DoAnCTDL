@@ -8,7 +8,12 @@
 #include "io.h"
 #include "hash_table.h"
 
+
+#define MAX_RANMB 30
+#define MAX_RANCB 30
 using namespace std;
+
+
 
 void int2str(int s, char* res) {
   itoa(s,res,10);
@@ -23,7 +28,7 @@ void giaLapMayBay(DanhSachMayBay &dsMB) {
 	char tmp[255];
 	int soCho = 5;
 	char strErr[255];
-	for(int i = 1; i <= 300; i++) {
+	for(int i = 1; i <= MAX_RANMB;i++) {
 	    strcpy(str, "MB");
 	    int2str(i, tmp);
 	    strcat(str, tmp);
@@ -50,7 +55,7 @@ void giaLapChuyenBay(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB, DanhSachTam 
 	int ranSoHieu;
 	int ngay, thang, nam, gio, phut;
 	NgayThangNam dt;
-	for(int i = 1; i <= 600; i++) { 
+	for(int i = 1; i <= MAX_RANCB; i++) { 
 		// random thoi gian khoi hanh
 		nam = 2021;
 		thang = rand() % (12 - 6 + 1) + 6;
@@ -64,7 +69,7 @@ void giaLapChuyenBay(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB, DanhSachTam 
 		strcpy(str, "MB");
 		strcpy(str2, "CB");
 		
-		ranSoHieu = rand() % (300 - 1 + 1) + 1;
+		ranSoHieu = rand() % (MAX_RANMB - 1 + 1) + 1;
 	    int2str(ranSoHieu, tmp);
 	    strcat(str, tmp);
 	    

@@ -107,30 +107,6 @@ void outCB(Board &board,DanhSachTam &dsTmp, short ID){
 					else	strcpy(ngayGio,ngay);
 					strcat(ngayGio,"/");
 					if(strlen(thang) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,thang);              setText();
-                if (col == 1) //MA CB
-                { 
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[ID]->maChuyenBay),
-                              y1 + (board.heightOfLine) / 2 - 10, dsTmp.cb[ID]->maChuyenBay);
-                }
-                else if (col == 2) //SO HIEU
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[ID]->soHieuMayBay),
-                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[ID]->soHieuMayBay);
-                else if (col == 3)  //NGAY GIO KHOI HANH
-                { 		
-					char phut[5], gio[5],ngay[5],thang[5],nam[5],ngayGio[25];
-					itoa(dsTmp.cb[ID]->ngayKhoiHanh.phut, phut, 10);
-					itoa(dsTmp.cb[ID]->ngayKhoiHanh.gio, gio, 10);
-					itoa(dsTmp.cb[ID]->ngayKhoiHanh.ngay, ngay, 10);
-					itoa(dsTmp.cb[ID]->ngayKhoiHanh.thang, thang, 10);
-					itoa(dsTmp.cb[ID]->ngayKhoiHanh.nam, nam, 10);
-					if(strlen(ngay)==1)  {
-						strcpy(ngayGio,"0");
-						strcat(ngayGio,ngay);
-					}
-					else	strcpy(ngayGio,ngay);
-					strcat(ngayGio,"/");
-					if(strlen(thang) == 1) strcat(ngayGio,"0");
 					strcat(ngayGio,thang);
 					strcat(ngayGio,"/");
 					strcat(ngayGio,nam);
@@ -140,13 +116,13 @@ void outCB(Board &board,DanhSachTam &dsTmp, short ID){
 					strcat(ngayGio,":");
 					if(strlen(phut) == 1) strcat(ngayGio,"0");
 					strcat(ngayGio,phut);
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 2.5 * strlen(ngayGio),
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3 * strlen(ngayGio),
                               y1 + (board.heightOfLine) / 2 - 10, ngayGio);
                 }
                 else if (col == 4) //SAN BAY DEN
                 { 
 
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(dsTmp.cb[ID]->sanBayDen),
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[ID]->sanBayDen),
                               y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[ID]->sanBayDen);
                 }
                 else if (col == 5) //TRANG THAI
@@ -156,36 +132,10 @@ void outCB(Board &board,DanhSachTam &dsTmp, short ID){
 					if(dsTmp.cb[ID]->trangThai == 1)	strcpy(trangThai,"CON VE");
 					if(dsTmp.cb[ID]->trangThai == 2)	strcpy(trangThai,"HUY VE");
 					if(dsTmp.cb[ID]->trangThai == 3)	strcpy(trangThai,"HOAN TAT");
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(trangThai),
+                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4 * strlen(trangThai),
                               y1 + (board.heightOfLine) / 2 - 10, trangThai);						
                 }
-					strcat(ngayGio,"/");
-					strcat(ngayGio,nam);
-					strcat(ngayGio," - ");
-					if(strlen(gio) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,gio);
-					strcat(ngayGio,":");
-					if(strlen(phut) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,phut);
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 2.5 * strlen(ngayGio),
-                              y1 + (board.heightOfLine) / 2 - 10, ngayGio);
-                }
-                else if (col == 4) //SAN BAY DEN
-                { 
-
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(dsTmp.cb[ID]->sanBayDen),
-                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[ID]->sanBayDen);
-                }
-                else if (col == 5) //TRANG THAI
-                { 	
-            		char trangThai[15];
-					if(dsTmp.cb[ID]->trangThai == 0) strcpy(trangThai,"HUY CHUYEN");
-					if(dsTmp.cb[ID]->trangThai == 1)	strcpy(trangThai,"CON VE");
-					if(dsTmp.cb[ID]->trangThai == 2)	strcpy(trangThai,"HUY VE");
-					if(dsTmp.cb[ID]->trangThai == 3)	strcpy(trangThai,"HOAN TAT");
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(trangThai),
-                              y1 + (board.heightOfLine) / 2 - 10, trangThai);						
-                }  	
+                	
     		 x1 = x2;
     }	
 } 
@@ -215,7 +165,6 @@ void unChooseCB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, 
     for(int i = 0; i < 9;i++)
     	input[i].lastL = 0;
 	drawInputPageQLCB(input,mapID,true);
-	
 } 
 
 void fixNgayFill(Input *input){   //fix ngay sao cho phu hop voi nam do 
@@ -259,7 +208,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
     bool isFill = false;
     int numOfPage = (dsTmp.n - 1) / 10 + 1, presentPage = 1; 		//quan ly so trang
     short maxChoose = 0;                                              //khong cho chon vao o khong co may bay
-    outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+    UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
 
 	drawBoard(board_DSCB,ID_BOARD_DSCB_2,mapID,shape);
 	outDSCB(board_DSCB, 1, 10,dsTmp);
@@ -327,7 +276,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
                 if (presentPage > 1)
                 {
                     presentPage--;         			               
-                   	outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+                   	UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
                     drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                     outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
                     
@@ -340,8 +289,8 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
                 {
                 	
                     presentPage++;  	                			               
-                   	outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);					         					                                       
-                    outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
+                   	UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);					         					                                       
+                    UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                     drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                     outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
 				}
@@ -350,12 +299,12 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 			case ID_BUTTON_ADD_CB_2: //THEM CB
 			{		
 
-                    addCB(input,isInvalid,dsMB,dsCB,dsDefault); 					                                 
+                    addCB(input,isInvalid,dsMB,dsCB,dsDefault); 
+										                                 
                     if(isInvalid){
-                    	
+                    	dsTmp = dsDefault;
 						if(isFill){ 
 							//huy fill
-							dsTmp = dsDefault;
 							isFill = false;
 							presentPage = 1;	
 							for(int i = 0; i <4; i++){
@@ -365,17 +314,17 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 							makeBeautiFillInput(inputFill);							
 						}
 												 		                
-		                outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
-						if(presentPage == numOfPage){
-							//in ra chuyen bay moi them vao cuoi danh sach
-							
-							
+		                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+		                
+						if(presentPage == numOfPage){  //neu cung trang thi in ra cb moi them vao cuoi ds
+							outCB(board_DSCB,dsTmp,dsTmp.n -1);
 						}
 						else{
 		                    presentPage = numOfPage; 
 		                	drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
 		                    outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
-							outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);								
+							UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);	
+							cout << "ko";							
 						} 	  				
 
 						for(int i = 0; i < 9; i++)
@@ -411,7 +360,8 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 			}
 			case ID_BUTTON_ACPCANCEL_CB_2:{  //XAC NHAN HUY
 				cancelCB(chooseID,isInvalid,dsCB,dsTmp);		
-                if(isInvalid){  		                
+                if(isInvalid){
+				  		                
 		            unlockKeyboardShortcut = true;
                     outCBUpdated(board_DSCB,dsTmp,chooseID);                  
 		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
@@ -457,7 +407,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				presentPage = 1;
 				isFill = true;
 				dsTmp = dsFill;
-                outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
+                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                 outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);	
 											
@@ -469,7 +419,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				presentPage = 1;
 				isFill = false;
 				dsTmp = dsDefault;	
-                outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
+                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                 outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
 				for(int i = 0; i <4; i++){

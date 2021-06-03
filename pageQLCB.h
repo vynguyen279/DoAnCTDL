@@ -11,7 +11,7 @@ void chuanHoaInputQLCB(Input &input,short inputID);
 void fixNgay(Input *input);
 void getCBData(Input *input,short ID,short **mapID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID);
-void outNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp);
+void UpdateNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp);
 void drawUpdateCBFrame(Input *input,short **mapID,Shape *shape);
 void drawCancelCBFrame(short **mapID, Shape *shape);
 void updateCB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
@@ -19,7 +19,7 @@ void cancelCB(short ID,bool &isInvalid,DanhSachChuyenBay &dsCB,DanhSachTam &dsTm
 void addCB(Input *input,bool &isInvalid, DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void getInputPageQLCB(Input &input, short &inputID, bool &isEnter);
 void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp);
-
+void outCB(Board &board,DanhSachTam &dsTmp, short ID);
 
 //================================================
 
@@ -215,7 +215,7 @@ void drawUpdateCBFrame(Input *input,short **mapID,Shape *shape){
 	}
 }
 
-void outNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp){
+void UpdateNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp){
 
     numOfPage = (dsTmp.n - 1) / 10 + 1;
     char toChar[5];
@@ -289,60 +289,8 @@ void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp){
             x1 = x2;
             x2 += board.widthOfCol[col - 1];
             if (line >= 1)
-            {
-                setText();
-                if (col == 1) //MA CB
-                { 
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[startCB - 1]->maChuyenBay),
-                              y1 + (board.heightOfLine) / 2 - 10, dsTmp.cb[startCB - 1]->maChuyenBay);
-                }
-                else if (col == 2) //SO HIEU
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 4.5 * strlen(dsTmp.cb[startCB - 1]->soHieuMayBay),
-                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[startCB - 1]->soHieuMayBay);
-                else if (col == 3)  //NGAY GIO KHOI HANH
-                { 		
-					char phut[5], gio[5],ngay[5],thang[5],nam[5],ngayGio[25];
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.phut, phut, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.gio, gio, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.ngay, ngay, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.thang, thang, 10);
-					itoa(dsTmp.cb[startCB - 1]->ngayKhoiHanh.nam, nam, 10);
-					if(strlen(ngay)==1)  {
-						strcpy(ngayGio,"0");
-						strcat(ngayGio,ngay);
-					}
-					else	strcpy(ngayGio,ngay);
-					strcat(ngayGio,"/");
-					if(strlen(thang) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,thang);
-					strcat(ngayGio,"/");
-					strcat(ngayGio,nam);
-					strcat(ngayGio," - ");
-					if(strlen(gio) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,gio);
-					strcat(ngayGio,":");
-					if(strlen(phut) == 1) strcat(ngayGio,"0");
-					strcat(ngayGio,phut);
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 2.5 * strlen(ngayGio),
-                              y1 + (board.heightOfLine) / 2 - 10, ngayGio);
-                }
-                else if (col == 4) //SAN BAY DEN
-                { 
-
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(dsTmp.cb[startCB - 1]->sanBayDen),
-                              y1 + (board.heightOfLine) / 2 - 10, 	dsTmp.cb[startCB - 1]->sanBayDen);
-                }
-                else if (col == 5) //TRANG THAI
-                { 	
-            		char trangThai[15];
-					if(dsTmp.cb[startCB - 1]->trangThai == 0) strcpy(trangThai,"HUY CHUYEN");
-					if(dsTmp.cb[startCB - 1]->trangThai == 1)	strcpy(trangThai,"CON VE");
-					if(dsTmp.cb[startCB - 1]->trangThai == 2)	strcpy(trangThai,"HUY VE");
-					if(dsTmp.cb[startCB - 1]->trangThai == 3)	strcpy(trangThai,"HOAN TAT");
-                    outtextxy(x1 + board.widthOfCol[col - 1] / 2 - 3.5 * strlen(trangThai),
-                              y1 + (board.heightOfLine) / 2 - 10, trangThai);						
-                }                
-            }
+               outCB(board,dsTmp,startCB -1);
+			
         }
         if (line >= 1)
             startCB++;
