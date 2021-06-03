@@ -241,8 +241,9 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 	layDSMayBay(dsMB);
 	DanhSachChuyenBay dsCB = NULL;
 	layDSChuyenBay(dsCB);
-	DanhSachTam dsTmp = dsNode2DsTmp(dsCB);
 	DanhSachTam dsFill; 
+	DanhSachTam dsDefault = dsNode2DsTmp(dsCB);
+	DanhSachTam dsTmp = dsDefault;
     short ID = -1, lastID = -1, chooseID = -1;
     bool isInvalid = true;                                          //check xem du lieu can them,xoa,sua co hop le hay khong
     bool unlockChoose = true;                                       //khi dang update thi se khong cho chon may bay nua
@@ -272,7 +273,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 			//xu ly chon            
             if (ID >= ID_BOARD_DSCB_2)  
             {	
-            	maxChoose = dsTmp.n - 1 + ID_BOARD_DSCB_2 ;
+                maxChoose = dsTmp.n - 1 + ID_BOARD_DSCB_2 ;
             	if(ID <= maxChoose){
             	
 		            setcolor(0);
@@ -288,7 +289,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 		                    setfillstyle(1, 15);
 		                    fillellipse(shape[chooseID].x1 - 13, shape[chooseID].y1 + 10, 5, 5);
 		                }
-						chooseID = ID;           
+						chooseID = ID;   
 		                getCBData(input,chooseID,mapID,dsCB,dsTmp);	                	
 		                drawInputPageQLCB(input,mapID,false);
 		                lockPageQLCB(pre_next_Board,buttonFill,mapID);	
@@ -307,6 +308,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				clearDSCB(dsCB);
 				clearDSTmp(dsTmp);
 				clearDSTmp(dsFill);
+				clearDSTmp(dsDefault);
             	return;
             }		
 			
@@ -315,8 +317,8 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
             {
                 if (presentPage > 1)
                 {
-                    presentPage--;                     			               
-                    outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+                    presentPage--;         			               
+                   	outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
                     drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                     outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
                     
@@ -327,7 +329,8 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
             {
                 if (presentPage < numOfPage)
                 {
-                    presentPage++;           					                                       
+                    presentPage++;  	                			               
+                   	outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);					         					                                       
                     outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                     drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                     outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
@@ -376,10 +379,10 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				break;
 			}
 			case ID_BUTTON_ACPCANCEL_CB_2:{  //XAC NHAN HUY
-				cancelCB(chooseID,isInvalid,dsCB,dsTmp);
+				cancelCB(chooseID,isInvalid,dsCB,dsTmp);		
                 if(isInvalid){  		                
 		            unlockKeyboardShortcut = true;
-					outCBUpdated(board_DSCB,dsTmp,chooseID);                  
+                    outCBUpdated(board_DSCB,dsTmp,chooseID);                  
 		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
 					unChooseCB(input,chooseID,unlockChoose,shape,mapID);  		            
                     resetButtonFrame(mapID); 
@@ -390,10 +393,11 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				break;
 			}			
 			case ID_BUTTON_ACPUPDATE_CB_2:{  //XAC NHAN CAP NHAT
+				
 				updateCB(input,isInvalid,chooseID,dsMB,dsCB,dsTmp);
                 if(isInvalid){
-					  		                
-		            unlockKeyboardShortcut = true;
+
+                    outCBUpdated(board_DSCB,dsTmp,chooseID);  		            
 		            outCBUpdated(board_DSCB,dsTmp,chooseID);
 		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
 					unChooseCB(input,chooseID,unlockChoose,shape,mapID);     
@@ -421,9 +425,10 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				if(isInvalid){
 				presentPage = 1;
 				isFill = true;
-                outNumOfBoardDSCB(numOfPage, presentPage,dsFill);                   
+				dsTmp = dsFill;
+                outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
-                outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsFill);	
+                outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);	
 											
 				}
 				break;
@@ -431,6 +436,8 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 			case ID_BUTTON_UNFILL_CB_2:{  //UNFILL
 				if(isFill){
 				presentPage = 1;
+				isFill = false;
+				dsTmp = dsDefault;	
                 outNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                 outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
@@ -444,13 +451,17 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				break;
 			}
 			case ID_BUTTON_UNFILLTIME_CB_2:{  // UNFILLTIME
-				
+				for(int i = 0; i < 3; i++){					
+					inputFill[i].lastL = 0;
+				}
+				makeBeautiFillInput(inputFill);	
 				break;
 			}
 			case ID_BUTTON_UNFILLDESTINATION_CB_2:{  //UNFILLDES
-				if(chooseID!= -1)
+				if(inputFill[3].lastL != 0)
 				{
-					//fillCB(input,isInvalid,chooseID,dsMB,dsCB,dsTmp);
+					inputFill[3].lastL = 0;
+					drawInput(inputFill[3],mapID,ID_INPUT_FILLDESTINATION_2);
 				}
 				break;
 			}
