@@ -143,8 +143,8 @@ int main() {
 	dsTmp = dsNode2DsTmp(dsCB);
 //	cout << dsTmp.n << endl;
 	
-//	giaLapMayBay(dsMB);
-//	giaLapChuyenBay(dsCB, dsMB, dsTmp);
+	giaLapMayBay(dsMB);
+	giaLapChuyenBay(dsCB, dsMB, dsTmp);
 //	giaLapDSHK(dsHK);
 
 //	xuatDSMB(dsMB);
