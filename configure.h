@@ -11,6 +11,14 @@
 #define MAXSOCHO 300
 #define MAXTMP 1000
 
+// DIST thoi gian chech lech giua 2 chuyen bay (5h)
+#define DIST 5
+// Trang thai cua chuyen bay
+#define HUYCHUYEN 0
+#define CONVE 1
+#define HETVE 2
+#define HOANTAT 3
+
 // load fator = 0.75, MAXHASH = 300/0.75
 #define MAXHASH 400
 
