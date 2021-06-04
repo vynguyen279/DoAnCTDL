@@ -51,10 +51,10 @@ void themMayBay(MayBay mb, DanhSachMayBay &dsMayBay) {
 }
 
 void xoaMayBay(DanhSachMayBay &dsMB, int viTriXoa) {
-		delete dsMB.mayBay[viTriXoa];
-		for(int i = viTriXoa + 1; i < dsMB.n; i++)
-			dsMB.mayBay[i - 1] = dsMB.mayBay[i];
-		dsMB.n--;
+	delete dsMB.mayBay[viTriXoa];
+	for(int i = viTriXoa + 1; i < dsMB.n; i++)
+		dsMB.mayBay[i - 1] = dsMB.mayBay[i];
+	dsMB.n--;
 }
 
 void capNhatLoaiMB(char *loaiMB, int viTri, DanhSachMayBay &dsMB) {
@@ -69,4 +69,3 @@ void clearDSMB(DanhSachMayBay &dsMB) {
 	while(dsMB.n != 0) 
 		xoaMayBay(dsMB, dsMB.n - 1);
 } 
-
