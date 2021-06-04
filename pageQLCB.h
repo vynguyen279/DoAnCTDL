@@ -14,8 +14,8 @@ void drawUpdateCBFrame(Input *input,short **mapID,Shape *shape);
 void drawCancelCBFrame(short **mapID, Shape *shape);
 void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &dsFill);
 void fixNgay(Input *input);
-void fixNgayFill(Input *input) ;
-void getCBData(Input *input,short ID,short **mapID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
+void fixNgayFill(Input *input);
+void getCBData(Input *input,short chooseID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void getInputPageQLCB(Input &input, short &inputID, bool &isEnter);
 void lockPageQLCB(Button *pre_next_Board, Button *fill,short **mapID);
 void makeBeautiInputNgayGioKH(Input *input);
@@ -45,7 +45,6 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
     bool isInvalid = true;                                          //check xem du lieu can them,xoa,sua co hop le hay khong
     bool unlockChoose = true;                                       //khi dang update thi se khong cho chon may bay nua
     bool isEnter = false;                                           //check enter khi dang input
-    bool unlockKeyboardShortcut = true;
     bool isFill = false;
     int numOfPage = (dsTmp.n - 1) / 10 + 1, presentPage = 1; 		//quan ly so trang
     short maxChoose = 0;                                              //khong cho chon vao o khong co may bay
@@ -53,7 +52,6 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 
 	drawBoard(board_DSCB,ID_BOARD_DSCB_2,mapID,shape);
 	outDSCB(board_DSCB, 1, 10,dsTmp);
-
 
 
 
@@ -89,7 +87,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 		                    fillellipse(shape[chooseID%10 + 50].x1 - 13, shape[chooseID%10 + 50].y1 + 10, 5, 5);
 		                }
 						chooseID = ID;   
-		                getCBData(input,chooseID,mapID,dsCB,dsTmp);	                	
+		                getCBData(input,chooseID,dsCB,dsTmp);	                	
 		                drawInputPageQLCB(input,mapID,false);
 		                lockPageQLCB(pre_next_Board,buttonFill,mapID);	
 		                    
@@ -131,116 +129,11 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
                 	
                     presentPage++;  	                			               
                    	UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);					         					                                       
-                    UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                     drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
                     outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
 				}
                 break;
             }
-			case ID_BUTTON_ADD_CB_2: //THEM CB
-			{		
-
-                    addCB(input,isInvalid,dsMB,dsCB,dsDefault); 
-										                                 
-                    if(isInvalid){
-                    	dsTmp = dsDefault;
-						if(isFill){ 
-							//huy fill
-							isFill = false;
-							presentPage = 1;	
-							for(int i = 0; i <4; i++){
-								inputFill[i].lastL = 0;
-								drawInput(inputFill[i],mapID,ID_INPUT_FILLTIMED_2 + i);
-							}
-							makeBeautiFillInput(inputFill);							
-						}
-												 		                
-		                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
-		                
-						if(presentPage == numOfPage){  //neu cung trang thi in ra cb moi them vao cuoi ds
-							outCB(board_DSCB,dsTmp,dsTmp.n -1);
-						}
-						else{
-		                    presentPage = numOfPage; 
-		                	drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
-		                    outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
-							UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);							
-						} 	  				
-
-						for(int i = 0; i < 9; i++)
-		            	 input[i].lastL = 0;
-						drawInputPageQLCB(input,mapID,true);							                    	
-					}
-
-				break;
-			}
-			case ID_BUTTON_CANCEL_CB_2: {	//HUY CB
-				if(chooseID != -1){
-					//cap nhat
-					unlockChoose = false;					
-					drawCancelCBFrame(mapID,shape);					
-				}
-				else{
-					outAlert(RED,"BAN CHUA CHON CHUYEN BAY!");
-				}
-				break;
-			}
-						
-			case ID_BUTTON_UPDATE_CB_2:{  //CAP NHAT 
-				if(chooseID!= -1)
-				{
-					unlockChoose = false;
-					drawUpdateCBFrame(input,mapID,shape);
-				}
-				else{
-					outAlert(RED,"BAN CHUA CHON CHUYEN BAY!");					
-				}
-				
-				break;
-			}
-			case ID_BUTTON_ACPCANCEL_CB_2:{  //XAC NHAN HUY
-				cancelCB(chooseID,isInvalid,dsCB,dsTmp);		
-                if(isInvalid){
-				  		                
-		            unlockKeyboardShortcut = true;
-                    outCBUpdated(board_DSCB,dsTmp,chooseID);                  
-		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
-					unChooseCB(input,chooseID,unlockChoose,shape,mapID);  		            
-                    resetButtonFrame(mapID); 
-		            for(int i = 0; i < 3; i++){
-						drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
-		            }                    					                    	
-				}				
-				break;
-			}			
-			case ID_BUTTON_ACPUPDATE_CB_2:{  //XAC NHAN CAP NHAT
-				
-				updateCB(input,isInvalid,chooseID,dsMB,dsCB,dsTmp);
-                if(isInvalid){
-
-                    outCBUpdated(board_DSCB,dsTmp,chooseID);  		            
-		            outCBUpdated(board_DSCB,dsTmp,chooseID);
-		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
-					unChooseCB(input,chooseID,unlockChoose,shape,mapID);     
-                    resetButtonFrame(mapID);
-		            for(int i = 0; i < 3; i++){
-						drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
-		            }  						                    	
-				}
-				break;
-			}
-			case ID_BUTTON_UNCANCEL_CB_2: //HUY HUY CB
-			case ID_BUTTON_UNUPDATE_CB_2:{//HUY CAP NHAT
-                unlockChoose = true;
-                unlockKeyboardShortcut = true;
-                
-                resetButtonFrame(mapID);
-				for(int i = 0; i <3;i++)
-					drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);
-                drawInputPageQLCB(input,mapID,false);                        			
-				break;
-			}
-						
 			case ID_BUTTON_FILL_CB_2:{  //FILL
 				fillCB(inputFill,isInvalid,dsCB,dsFill);
 				if(isInvalid){
@@ -285,7 +178,109 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 					drawInput(inputFill[3],mapID,ID_INPUT_FILLDESTINATION_2);
 				}
 				break;
+			}            
+			case ID_BUTTON_ADD_CB_2: //THEM CB
+			{		
+
+                    addCB(input,isInvalid,dsMB,dsCB,dsDefault); 
+										                                 
+                    if(isInvalid){
+                    	dsTmp = dsDefault;
+						if(isFill){ 
+							//huy fill
+							isFill = false;
+							presentPage = 1;	
+							for(int i = 0; i <4; i++){
+								inputFill[i].lastL = 0;
+								drawInput(inputFill[i],mapID,ID_INPUT_FILLTIMED_2 + i);
+							}
+							makeBeautiFillInput(inputFill);							
+						}
+												 		                
+		                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+		                
+						if(presentPage == numOfPage){  //neu cung trang thi in ra cb moi them vao cuoi ds
+							outCB(board_DSCB,dsTmp,dsTmp.n -1);
+						}
+						else{
+		                    presentPage = numOfPage; 
+		                	drawBoard(board_DSCB, (presentPage - 1) * 10 + ID_BOARD_DSCB_2, mapID, shape);
+		                    outDSCB(board_DSCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
+							UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);							
+						} 	  				
+
+						for(int i = 0; i < 9; i++)
+		            		input[i].lastL = 0;
+						drawInputPageQLCB(input,mapID,true);							                    	
+					}
+
+				break;
 			}
+			case ID_BUTTON_CANCEL_CB_2: {	//HUY CB
+				if(chooseID != -1){
+					unlockChoose = false;					
+					drawCancelCBFrame(mapID,shape);					
+				}
+				else{
+					outAlert(RED,"BAN CHUA CHON CHUYEN BAY!");
+				}
+				break;
+			}
+						
+			case ID_BUTTON_UPDATE_CB_2:{  //CAP NHAT 
+				if(chooseID!= -1)
+				{
+					unlockChoose = false;
+					drawUpdateCBFrame(input,mapID,shape);
+				}
+				else{
+					outAlert(RED,"BAN CHUA CHON CHUYEN BAY!");					
+				}
+				
+				break;
+			}
+			case ID_BUTTON_ACPCANCEL_CB_2:{  //XAC NHAN HUY
+				cancelCB(chooseID,isInvalid,dsCB,dsTmp);		
+                if(isInvalid){
+				  		                
+                    outCBUpdated(board_DSCB,dsTmp,chooseID);                  
+		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
+					unChooseCB(input,chooseID,unlockChoose,shape,mapID);  		            
+                    resetButtonFrame(mapID); 
+		            for(int i = 0; i < 3; i++){
+						drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
+		            }                    					                    	
+				}				
+				break;
+			}			
+			case ID_BUTTON_ACPUPDATE_CB_2:{  //LUU CAP NHAT
+				
+				updateCB(input,isInvalid,chooseID,dsMB,dsCB,dsTmp);
+                if(isInvalid){
+
+                    outCBUpdated(board_DSCB,dsTmp,chooseID);  		            
+		            outCBUpdated(board_DSCB,dsTmp,chooseID);
+		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
+					unChooseCB(input,chooseID,unlockChoose,shape,mapID);     
+                    resetButtonFrame(mapID);
+  						                    	
+				}
+				break;
+			}
+			case ID_BUTTON_UNCANCEL_CB_2: //HUY HUY CB
+			case ID_BUTTON_UNUPDATE_CB_2:{//HUY CAP NHAT
+                unlockChoose = true;
+                
+                resetButtonFrame(mapID);
+				for(int i = 0; i <3;i++)
+					drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);
+				getCBData(input,chooseID,dsCB,dsTmp);				            
+                if(chooseID != -1)
+                    getCBData(input,chooseID,dsCB,dsTmp);
+                drawInputPageQLCB(input,mapID,false);                        			
+				break;
+			}
+						
 			case ID_INPUT_FILLTIMED_2:{  //FILL DAY
 				getInputPageQLCB(inputFill[0],ID,isEnter);
 				if(inputFill[0].lastL * inputFill[1].lastL * inputFill[2].lastL !=0)   //fix lai ngay trong fill neu nguoi dung nhap nam nhuan
@@ -650,10 +645,10 @@ void addCB(Input *input,bool &isInvalid, DanhSachMayBay &dsMB,DanhSachChuyenBay 
 			
 }
 
-void cancelCB(short ID,bool &isInvalid,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
+void cancelCB(short chooseID,bool &isInvalid,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
 	char alert[40];
-
-	ID-= ID_BOARD_DSCB_2;  //lay ra ID cua CB trong dsCB
+    
+	short ID=chooseID - ID_BOARD_DSCB_2;  //lay ra ID cua CB trong dsCB
 	isInvalid = huyChuyenBay(dsTmp.cb[ID],alert);	
 	if(isInvalid){
 		luuDSChuyenBay(dsCB);
@@ -784,10 +779,10 @@ void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp){
             startCB++;
     }
 }
-void getCBData(Input *input,short ID,short **mapID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
+void getCBData(Input *input,short chooseID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
 
-	
-  	ID -= ID_BOARD_DSCB_2; //lay ra ID cua CB trong dsCB
+
+  	short ID = chooseID - ID_BOARD_DSCB_2; //lay ra ID cua CB trong dsCB
 	strcpy(input[0].s,dsTmp.cb[ID]->maChuyenBay); //ma cb
 	strcpy(input[1].s,dsTmp.cb[ID]->soHieuMayBay); //so hieu
 	//ngay gio kh
@@ -918,8 +913,8 @@ void unlockPageQLCB(Button *pre_next_Board, Button *fill,short **mapID){
 
 
 
-void outCBUpdated(Board &board,DanhSachTam &dsTmp,short ID){
-	ID-=ID_BOARD_DSCB_2;
+void outCBUpdated(Board &board,DanhSachTam &dsTmp,short chooseID){
+	short ID=chooseID - ID_BOARD_DSCB_2;
     short x1 = board.x1,
 	 y1 = (ID%10 + 1) * board.heightOfLine + board.y1, 
 	 x2 = x1, 

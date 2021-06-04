@@ -32,7 +32,7 @@ void checkEventMainPage(short **mapID, Shape *shape)
         	}
             case 1:
             {	
-                drawPageQLMB(mapID, shape, true);
+                drawPageQLMB(mapID, shape);
                 
                 break;
             }

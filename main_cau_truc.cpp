@@ -9,8 +9,8 @@
 #include "hash_table.h"
 
 
-#define MAX_RANMB 300
-#define MAX_RANCB 300
+#define MAX_RANMB 50
+#define MAX_RANCB 50
 using namespace std;
 
 
@@ -26,9 +26,12 @@ void int2str(int s, char* res) {
 void giaLapMayBay(DanhSachMayBay &dsMB) {
 	char str[255];
 	char tmp[255];
-	int soCho = 5;
+	int soCho = 0;
 	char strErr[255];
+	srand(time(NULL));
 	for(int i = 1; i <= MAX_RANMB;i++) {
+		
+		soCho = rand() % (280)+ 20;
 	    strcpy(str, "MB");
 	    int2str(i, tmp);
 	    strcat(str, tmp);

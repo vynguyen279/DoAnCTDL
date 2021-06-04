@@ -8,7 +8,7 @@
 #define MAXTEN 15
 #define MAXLOAIMB 40
 #define MINSOCHO 20
-#define MAXSOCHO 20
+#define MAXSOCHO 300
 #define MAXTMP 1000
 
 // load fator = 0.75, MAXHASH = 300/0.75
