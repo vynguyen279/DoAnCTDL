@@ -111,13 +111,19 @@ struct Input{
 
 
 //====================PROTOTYPE==================
-void drawInput(Input &, short **, short);
-void drawLockInput(Input &, short **);
-void drawBoard(Board &, short, short **, Shape *);
-void drawButton(Button &, short, short **);
-void getIDMouseClick(short &, short **);
-void setID(short, short, short, short, short, short **);
-void setDefaultRightFrame(short **);
+void convertToShape(Input &input,Shape &shape);
+void convertToShape(Button &button,Shape &shape);
+void drawLockInput(Input &input, short **mapID);
+void drawInput(Input &input, short **mapID, short ID);
+void drawBoard(Board &board, short ID, short **mapID, Shape *shape);
+void drawButton(Button &button, short ID, short **mapID);
+void getIDMouseClick(short &ID, short **mapID);
+void setID(short x1, short y1, short width, short height, short ID, short **mapID);
+void setText(short size, short font,int textColor,int bkColor);
+void setDefaultRightFrame(short **mapID);
+void resetButtonFrame(short **mapID);
+void outAlert(int color, char *alert);
+void openGraph();
 //=================================================
 void openGraph(){
 	initwindow(MAX_W,MAX_H);	
@@ -126,7 +132,7 @@ void openGraph(){
 	setbkcolor(15);
 }
 
-void setText(short size = 1, short font= 11,int textColor = 0,int bkColor = 15){
+void setText(short size = 1, short font= 11,int textColor = BLACK,int bkColor = WHITE){
 	settextstyle(font,0,size);
 	setcolor(textColor);                   
 	setbkcolor(bkColor);
@@ -181,6 +187,24 @@ void drawButton(Button &button, short ID, short **mapID)
     rectangle(button.x1, button.y1, button.x1 + button.width, button.y1 + button.height);
     setID(button.x1, button.y1, button.width, button.height, ID, mapID);
 }
+void drawLockButton(Button &button,short **mapID){
+
+    if(button.content[0] == '<' || button.content[0] == '>')
+    	setText(2, 10, 0, SILVER);
+	else 
+		setText(1, 11, 0, SILVER); 
+    setfillstyle(1, SILVER);
+    bar(button.x1, button.y1, button.x1 + button.width, button.y1 + button.height);
+    //=========outButtonText===========
+    
+    if (strlen(button.content) < 8 || strlen(button.content) >= 13)
+        outtextxy(button.x1 + button.width / 2 - 4.3 * strlen(button.content), button.y1 + (button.height) / 2 - 10, button.content);
+    else if (strlen(button.content) < 13)
+        outtextxy(button.x1 + button.width / 2 - 3.9 * strlen(button.content), button.y1 + (button.height) / 2 - 10, button.content);
+    setcolor(SILVER);
+    rectangle(button.x1, button.y1, button.x1 + button.width, button.y1 + button.height);
+    setID(button.x1, button.y1, button.width, button.height, -1, mapID);			
+}
 
 void drawBoard(Board &board, short ID, short **mapID, Shape *shape)
 {
@@ -224,8 +248,7 @@ void drawBoard(Board &board, short ID, short **mapID, Shape *shape)
                         
 
             //=====ADD TO SHAPE
-            if(ID<=59){
-            	
+            if(ID<=59){          	
 		        shape[line + x - 1].x1 = board.x1 + 1;
 		        shape[line + x - 1].y1 = y1 + 1;
 		        shape[line + x - 1].width = x2 - board.x1 - 2;
@@ -235,6 +258,7 @@ void drawBoard(Board &board, short ID, short **mapID, Shape *shape)
         }
     }
 }
+
 
 void drawInput(Input &input, short **mapID, short ID)
 {
@@ -267,6 +291,7 @@ void drawLockInput(Input &input, short **mapID)
     if (input.lastL != 0)
         outtextxy(input.x1 + 10, input.y1 + 5, input.s);
 }
+
 void resetButtonFrame(short **mapID){ 
     setfillstyle(1, 15);
     bar(280, 475, 1175, 525);

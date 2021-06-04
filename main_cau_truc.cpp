@@ -9,8 +9,8 @@
 #include "hash_table.h"
 
 
-#define MAX_RANMB 30
-#define MAX_RANCB 30
+#define MAX_RANMB 300
+#define MAX_RANCB 300
 using namespace std;
 
 
