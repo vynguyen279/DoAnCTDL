@@ -603,17 +603,9 @@ void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &d
 	}
 	else if(isFillTime){ //thoi gian
 		
-		char alert[40] = ""; 
 		NgayThangNam dtFill = newNgayThangNam(atoi(input[0].s), atoi(input[1].s), atoi(input[2].s));	
-		dsFill = dsCBvoiNgayKhoiHanh(dtFill, dsCB,alert);
-		if(strlen(alert) == 0){
-			isInvalid = true;
-		}
-		else if (strlen(alert) == 0){
-			isInvalid = false;
-			clearDSTmp(dsFill);
-			outAlert(RED,alert);
-		}
+		dsFill = dsCBvoiNgayKhoiHanh(dtFill, dsCB);
+		isInvalid = true;
 		
 	}
 	else{

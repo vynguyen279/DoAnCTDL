@@ -524,7 +524,7 @@ void delMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB,Danh
     
 	short ID=chooseID - ID_BOARD_DSMB_1;//lay ra vi tri cua MB trong ds
 	char alert[40];
-    isInvalid = xoaMayBayHopLe(input[0].s, dsMB, dsCB,alert);
+    isInvalid = xoaMayBayHopLe(input[0].s, dsMB, dsCB,ID,alert);
 	if(isInvalid) {
 		luuDSMayBay(dsMB);
 		luuDSChuyenBay(dsCB);
