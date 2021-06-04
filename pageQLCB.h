@@ -257,13 +257,14 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				
 				updateCB(input,isInvalid,chooseID,dsMB,dsCB,dsTmp);
                 if(isInvalid){
-
-                    outCBUpdated(board_DSCB,dsTmp,chooseID);  		            
+ 		            
 		            outCBUpdated(board_DSCB,dsTmp,chooseID);
 		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
 					unChooseCB(input,chooseID,unlockChoose,shape,mapID);     
                     resetButtonFrame(mapID);
-  						                    	
+  		            for(int i = 0; i < 3; i++){
+						drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
+		            }  						                    	
 				}
 				break;
 			}
