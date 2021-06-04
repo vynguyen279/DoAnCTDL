@@ -79,8 +79,8 @@ void quick_sort_so_hieu(HashTable table, int left, int right) {
 	int i = left;
 	int j = right;
 	while(i <= j) {
-		while(stricmp(table[i].soHieu, item.soHieu) == -1 ) i++;
-		while(stricmp(table[j].soHieu, item.soHieu) == 1 ) j--;
+		while(stricmp(table[i].soHieu, item.soHieu) == -1  || stricmp(table[i].soHieu, "") == 0) i++;
+		while(stricmp(table[j].soHieu, item.soHieu) == 1 || stricmp(table[j].soHieu, "") == 0) j--;
 		if(i <= j) {
 			itemTmp = table[i];
 			table[i] = table[j];

@@ -16,13 +16,49 @@ void initDanhSachTam(DanhSachTam &dsTmp) {
 		dsTmp.cb[i] = NULL;
 }
 
-bool ktTonTaiChuyenBay(DanhSachChuyenBay &dsCB, char* maChuyenBay) {
-	NodeChuyenBay* nodeChay = dsCB;
-	for(;nodeChay != NULL; nodeChay = nodeChay->next) {
-		if(stricmp(nodeChay->chuyenBay.maChuyenBay, maChuyenBay) == 0)
-			return true;
+void themPhanTuVaoDSTmp(ChuyenBay *cb, DanhSachTam &dsTmp) {
+	dsTmp.cb[dsTmp.n++] = cb;
+}
+
+void xuatDSTmp(DanhSachTam &dsTmp) {
+	if(dsTmp.n == 0) {
+		std::cout << "DANH SACH RONG!\n";
+		return;
 	}
-	return false;
+	for(int i = 0; i < dsTmp.n; i++) {
+		dsTmp.cb[i]->toString();
+		xuatDSVe(dsTmp.cb[i]->dsVe);
+		std::cout << std::endl;
+	}
+		
+}
+
+void clearDSTmp(DanhSachTam &dsTmp) {
+	for(int i = 0; i < dsTmp.n; i++) 
+		dsTmp.cb[i] = NULL;
+	dsTmp.n = 0;
+}
+
+bool kt2CBHonNhauDISTGio(DanhSachChuyenBay &dsCB, char* CMND, ChuyenBay cb, char* strErr) {
+	NodeChuyenBay *nodeChay = dsCB;
+	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
+		if(
+			stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0
+			&& nodeChay->chuyenBay.trangThai != HUYCHUYEN
+			&& nodeChay->chuyenBay.trangThai != HOANTAT
+		) {
+			if(ktTonTaiCMNDTrongDSVe(nodeChay->chuyenBay.dsVe, CMND)) {
+				if(
+					!ktDt2LonHonDISTGioDt(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)
+					&& !ktDt2LonHonDISTGioDt(cb.ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh)
+				) {
+					strcpy(strErr, nodeChay->chuyenBay.maChuyenBay);
+					return false;		
+				}
+			}
+		}
+	}
+	return true;
 }
 
 bool kt2CBTrenMBHonNhauDISTGio(ChuyenBay cb, DanhSachChuyenBay &dsCB, char* strErr) {
@@ -64,17 +100,13 @@ bool kt2CBTrenMBHonNhauDISTGio(ChuyenBay cb, DanhSachChuyenBay &dsCB, char* strE
 	return true;
 }
 
-void themPhanTuVaoDSTmp(ChuyenBay *cb, DanhSachTam &dsTmp) {
-	dsTmp.cb[dsTmp.n++] = cb;
-}
-
 bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB, DanhSachTam &dsTmp, char* strErr) {
 	int viTri = timKiemMayBay(nodeCB->chuyenBay.soHieuMayBay, dsMB);
 	if(viTri == -1) {
 		strcpy(strErr, "MAY BAY KHONG TON TAI!");
 		return false;
 	}
-	if(ktTonTaiChuyenBay(dsCB, nodeCB->chuyenBay.maChuyenBay)) {
+	if(timKiemChuyenBay(nodeCB->chuyenBay.maChuyenBay, dsCB) != NULL) {
 		strcpy(strErr, "CHUYEN BAY DA TON TAI!");
 		return false;
 	}
@@ -91,19 +123,6 @@ bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSach
 	themPhanTuVaoDSTmp(&(nodeCB->chuyenBay), dsTmp);
 	strcpy(strErr, "THEM CHUYEN BAY THANH CONG!");
 	return true;
-}
-
-void xuatDSTmp(DanhSachTam &dsTmp) {
-	if(dsTmp.n == 0) {
-		std::cout << "DANH SACH RONG!\n";
-		return;
-	}
-	for(int i = 0; i < dsTmp.n; i++) {
-		dsTmp.cb[i]->toString();
-		xuatDSVe(dsTmp.cb[i]->dsVe);
-		std::cout << std::endl;
-	}
-		
 }
 
 // Cap nhat trang thai het ve luc them ve vao chuyen bay
@@ -221,13 +240,6 @@ DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDenConVe(char *sanBayDen, NgayThangNam ng
 	return dsTmp;
 }
 
-int soLuongVeConTrongCuaCB(ChuyenBay cb) {
-	int cnt = 0;
-	for(int i = 0; i < cb.dsVe.soLuongVe; i++)
-		if(cb.dsVe.CMND[i] == NULL) cnt++;
-	return cnt;
-}
-
 bool themVeVaoChuyenBay(char *CMND, int soVe, ChuyenBay *cb, char* strErr) {
 	if(!soVeHopLe(soVe, cb->dsVe)) {
 		strcpy(strErr, "SO VE KHONG HOP LE!");
@@ -249,42 +261,6 @@ void xuatDSCB(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB) {
 		xuatDSVe(nodeChuyenBay->chuyenBay.dsVe);
 		std::cout << std::endl;
 	}
-}
-
-bool kt2CBHonNhauDISTGio(DanhSachChuyenBay &dsCB, char* CMND, ChuyenBay cb, char* strErr) {
-	NodeChuyenBay *nodeChay = dsCB;
-	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
-		if(
-			stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0
-			&& nodeChay->chuyenBay.trangThai != HUYCHUYEN
-			&& nodeChay->chuyenBay.trangThai != HOANTAT
-		) {
-			if(ktTonTaiCMNDTrongDSVe(nodeChay->chuyenBay.dsVe, CMND)) {
-				if(
-					!ktDt2LonHonDISTGioDt(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)
-					&& !ktDt2LonHonDISTGioDt(cb.ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh)
-				) {
-					strcpy(strErr, nodeChay->chuyenBay.maChuyenBay);
-					return false;		
-				}
-			}
-		}
-	}
-	return true;
-}
-
-bool huyVe(ChuyenBay *cb, char *CMND, DanhSachHanhKhach &dsHK, char* strErr) {
-	int i = timKiemVe(CMND, cb->dsVe);
-	if(i == -1) {
-		strcpy(strErr, "CMND KHONG TON TAI TRONG DANH SACH VE!");
-		return false;
-	}
-	delete []cb->dsVe.CMND[i];
-	cb->dsVe.CMND[i] = NULL;
-	xoaHanhKhach(dsHK, CMND);
-	if(cb->trangThai == 2) cb->trangThai = 1;
-	strcpy(strErr, "HUY VE THANH CONG!");
-	return true;
 }
 
 bool dsHanhKhachThuoc1CB(DanhSachChuyenBay &dsCB,DanhSachHanhKhach &dsHK, char* maCB, ListHanhKhachThongKe &listTK, char* strErr) {
@@ -350,8 +326,3 @@ bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt
 	return true;
 }
 
-void clearDSTmp(DanhSachTam &dsTmp) {
-	for(int i = 0; i < dsTmp.n; i++) 
-		dsTmp.cb[i] = NULL;
-	dsTmp.n = 0;
-}
