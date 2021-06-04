@@ -95,7 +95,7 @@ bool ktDt2LonHonDISTGioDt(NgayThangNam dt, NgayThangNam dt2) {
 		if(dt2.thang - dt.thang > 0) {
 			return true;
 		} else if(dt2.thang == dt.thang){
-			if(((dt2.ngay - dt.ngay) * 24 + dt2.gio - dt.gio ) >= DIST) {
+			if((dt2.ngay - dt.ngay) * 24 + dt2.gio - dt.gio >= DIST) {
 				return true;
 			}		
 		}
@@ -122,44 +122,8 @@ bool ktHoanTat(NgayThangNam dt) {
 	return false;
 }
 
-bool ktNgayHopLe(NgayThangNam &dt, int ngayTmp[], char* strErr) {
-	if(dt.thang >= 1 && dt.thang <= 12) {
-		if(dt.ngay >= 1 && dt.ngay <= ngayTmp[dt.thang]) {
-			if(dt.gio >= 0 && dt.gio <= 23) {
-				if(dt.phut >= 0 && dt.phut <= 59) {
-					return true;
-				} else {
-					strcpy(strErr, "PHUT KHONG HOP LE!");
-					return false;
-				}
-			} else {
-				strcpy(strErr, "GIO KHONG HOP LE!");
-				return false;
-			}
-		} else {
-			strcpy(strErr, "NGAY KHONG HOP LE!");
-			return false;
-		}
-	} else {
-		strcpy(strErr, "THANG KHONG HOP LE!");
-		return false;
-	}
-	
-}
 bool ktCungNgayThangNam(NgayThangNam dt1, NgayThangNam dt2) {
 	return dt1.nam == dt2.nam && dt1.thang == dt2.thang && dt1.ngay == dt2.ngay;
-}
-
-bool ktCungNgayThangNamGioPhut(NgayThangNam dt1, NgayThangNam dt2) {
-	return dt1.nam == dt2.nam && dt1.thang == dt2.thang && dt1.ngay == dt2.ngay 
-		&& dt1.gio == dt2.gio && dt1.phut == dt2.phut;
-}
-
-bool ktNgayThangNamHopLe(NgayThangNam dt, char* strErr) {
-	int ngayTmp[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
-	if(dt.nam % 400 == 0 || dt.nam % 4 == 0 && dt.nam % 100 != 0)
-		ngayTmp[2]++;
-	return ktNgayHopLe(dt, ngayTmp, strErr);
 }
 
 void dinhDangNgayThangNam(char* res, NgayThangNam dt) {

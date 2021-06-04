@@ -204,7 +204,6 @@ void xoaNodeKhongPhaiGoc(DanhSachHanhKhach &dsHK, char* CMND) {
 }
 
 void xoaHanhKhach(DanhSachHanhKhach &dsHK, char* CMND) {
-		
 	if(dsHK == NULL) {
 		std::cout << "DANH SACH RONG!\n";
 		return;
@@ -232,7 +231,6 @@ HanhKhach* timKiemHanhKhach(DanhSachHanhKhach &dsHK, char* CMND) {
 	if(nodeChay != NULL) {
 		return &(nodeChay->hanhKhach);
 	}
-	std::cout << "KHONG TON TAI HANH KHACH VOI SO CMND: " << CMND << std::endl;
 	return NULL;
 }
 
