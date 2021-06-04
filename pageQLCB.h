@@ -617,7 +617,7 @@ void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &d
 void addCB(Input *input,bool &isInvalid, DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp)
 {	
 	isInvalid = true;	
-	char alert[40];
+	char alert[255];
 	for(int i = 0; i < 9;i++){
 		if(input[i].lastL ==0 ){
 			isInvalid = false;
@@ -639,7 +639,7 @@ void addCB(Input *input,bool &isInvalid, DanhSachMayBay &dsMB,DanhSachChuyenBay 
 }
 
 void cancelCB(short chooseID,bool &isInvalid,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
-	char alert[40];
+	char alert[255];
     
 	short ID=chooseID - ID_BOARD_DSCB_2;  //lay ra ID cua CB trong dsCB
 	isInvalid = huyChuyenBay(dsTmp.cb[ID],alert);	
@@ -651,16 +651,6 @@ void cancelCB(short chooseID,bool &isInvalid,DanhSachChuyenBay &dsCB,DanhSachTam
 	
 }
 
-void updateCB(Input *input,bool &isInvalid,short ID,DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
-	char alert[40];
-	NgayThangNam dtUpdate = newNgayThangNam(atoi(input[2].s), atoi(input[3].s), atoi(input[4].s), atoi(input[5].s), atoi(input[6].s));
-	isInvalid = capNhatNgayThangNam(dsCB, dsTmp.cb[ID - ID_BOARD_DSCB_2], dtUpdate, alert);
-	if(isInvalid) {
-		luuDSChuyenBay(dsCB);
-		outAlert(GREEN,alert);
-	}
-	else outAlert(RED,alert);	
-} 
 
 
 void drawCancelCBFrame(short **mapID, Shape *shape)
@@ -934,6 +924,16 @@ void unChooseCB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, 
 	drawInputPageQLCB(input,mapID,true);
 } 
 
+void updateCB(Input *input,bool &isInvalid,short ID,DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
+	char alert[255];
+	NgayThangNam dtUpdate = newNgayThangNam(atoi(input[2].s), atoi(input[3].s), atoi(input[4].s), atoi(input[5].s), atoi(input[6].s));
+	isInvalid = capNhatNgayThangNam(dsCB, dsTmp.cb[ID - ID_BOARD_DSCB_2], dtUpdate, alert);
+	if(isInvalid) {
+		luuDSChuyenBay(dsCB);
+		outAlert(GREEN,alert);
+	}
+	else outAlert(RED,alert);	
+} 
 void fixNgayFill(Input *input){   //fix ngay sao cho phu hop voi nam do 
 	int ngayTmp[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
 	int namInput = atoi(input[2].s);

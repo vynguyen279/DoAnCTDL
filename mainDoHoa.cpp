@@ -1,5 +1,6 @@
 #include "MainPage.h"
 
+
 int main(){	
 	drawMainPage();
 	getch();

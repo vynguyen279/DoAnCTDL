@@ -494,7 +494,7 @@ void addMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB)
     newMB.soCho = atoi(input[1].s);
     strcpy(newMB.loaiMayBay, input[2].s);
 	short ID=chooseID - ID_BOARD_DSMB_1;//lay ra vi tri cua MB trong ds
-	char alert[40];
+	char alert[255];
     isInvalid = themMayBayHopLe(newMB, dsMB,alert);
 	if(isInvalid) {
 		luuDSMayBay(dsMB);
@@ -523,7 +523,7 @@ void delMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB,Danh
 {			
     
 	short ID=chooseID - ID_BOARD_DSMB_1;//lay ra vi tri cua MB trong ds
-	char alert[40];
+	char alert[255];
     isInvalid = xoaMayBayHopLe(input[0].s, dsMB, dsCB,ID,alert);
 	if(isInvalid) {
 		luuDSMayBay(dsMB);
@@ -557,7 +557,7 @@ void drawUpdateMBFrame(Input *input,short **mapID,Shape *shape,DanhSachChuyenBay
 void updateMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB)
 {	
 	short ID=chooseID - ID_BOARD_DSMB_1;//lay ra vi tri cua MB trong ds
-	char alert[40];
+	char alert[255];
 	isInvalid = capNhatMayBay(input[2].s, atoi(input[1].s),dsMB,ID,alert);
 	if(isInvalid) {
 		luuDSMayBay(dsMB);
