@@ -294,7 +294,7 @@ bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt
 		strcpy(strErr, "CHUYEN BAY DA HOAN TAT!");
 		return false;
 	}
-	if(!ktTuongLai(cb->ngayKhoiHanh)) {
+	if(!ktTuongLai(dt)) {
     	strcpy(strErr, "NGAY KHOI HANH PHAI LA MOT NGAY TRONG TUONG LAI!");
     	return false;
 	}
