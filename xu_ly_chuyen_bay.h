@@ -3,18 +3,8 @@
 #include "may_bay.h"
 #include "ngay_thang_nam.h"
 #include "hanh_khach.h"
+#include "configure.h"
 #include <cstring>
-
-/*
-	* Mang con tro tro toi cac chuyen bay trong danh sach chuyen bay
-	* Tra ve danh sach nay khi nguoi dung muon tim mot chuyen bay thong qua
-	* san bay den va thoi gian khoi hanh (1 san bay den -> nhieu chuyen bay) -> danh sach
-	* 1 thoi gian khoi hanh -> nhieu chuyen bay -> danh sach
-	* Tra ve con tro de thuan tien trong viec chinh sua cac truong
-	
-	Note: DanhSachTam khong tao moi cac vung nho cho cac con tro ma cac con tro nay tro toi
-		di chi cua chuyen bay thoa man dieu kien san bay den hay thoi gian khoi hanh -> khong can giai phong vung nho
-*/
 
 struct DanhSachTam{
 	ChuyenBay *cb[MAXTMP];
@@ -26,15 +16,6 @@ void initDanhSachTam(DanhSachTam &dsTmp) {
 		dsTmp.cb[i] = NULL;
 }
 
-/*
-	Input:
-		dsCB: danh sach chuyen bay;
-		maChuyenBay: ma cua chuyen bay can kiem tra;
-	Output:
-		false: khong ton tai chuyen bay voi ma chuyen bay la maChuyenBay;
-		true: ton tai chuyen bay voi ma chuyen bay la maChuyenBay;
-*/
-
 bool ktTonTaiChuyenBay(DanhSachChuyenBay &dsCB, char* maChuyenBay) {
 	NodeChuyenBay* nodeChay = dsCB;
 	for(;nodeChay != NULL; nodeChay = nodeChay->next) {
@@ -44,41 +25,48 @@ bool ktTonTaiChuyenBay(DanhSachChuyenBay &dsCB, char* maChuyenBay) {
 	return false;
 }
 
-/*
-	Input:
-		cb: chuyen bay can kiem tra;
-		dsCB: danh sach chuyen bay;
-	Output:
-		false: chuyen bay cb khong bi trung gio khoi hanh voi chuyen bay khac tren cung mot may bay;
-		true: chuyen bay cb bi trung gio khoi hanh voi chuyen bay khac tren cung mot may bay;
-*/
-
-bool kt2CBTrenMBTrungGioKH(ChuyenBay cb, DanhSachChuyenBay &dsCB) {
+bool kt2CBTrenMBHonNhauDISTGio(ChuyenBay cb, DanhSachChuyenBay &dsCB, char* strErr) {
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
-		if(stricmp(nodeChay->chuyenBay.soHieuMayBay, cb.soHieuMayBay) == 0) {
-			if(ktCungNgayThangNamGioPhut(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)) 
-				return true;
+		if(
+            stricmp(nodeChay->chuyenBay.soHieuMayBay, cb.soHieuMayBay) == 0 
+			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0 
+			&& nodeChay->chuyenBay.trangThai != HUYCHUYEN
+			&& nodeChay->chuyenBay.trangThai != HOANTAT
+        ) {
+            if(
+                !ktDt2LonHonDISTGioDt(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)
+                && !ktDt2LonHonDISTGioDt(cb.ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh)
+            ) {
+                if(ktDt2LonHonDt(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)) {
+                    strcpy(strErr, "TRONG THOI GIAN THUC HIEN BAY CUA CHUYEN BAY ");
+                    strcat(strErr, nodeChay->chuyenBay.maChuyenBay);
+                    strcat(strErr, " THUOC MAY BAY ");
+                    strcat(strErr, cb.soHieuMayBay);
+                    strcat(strErr, "!");
+                    return false;
+                }
+                if(ktDt2LonHonDt(cb.ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh)) {
+                    char strDay[100];
+                    dinhDangNgayThangNam(strDay, nodeChay->chuyenBay.ngayKhoiHanh);
+                    strcpy(strErr, "KHONG DU THOI GIAN DE THUC HIEN CHUYEN BAY, MAY BAY ");
+                    strcat(strErr, cb.soHieuMayBay);
+                    strcat(strErr, " CO CHUYEN BAY ");
+                    strcat(strErr, nodeChay->chuyenBay.maChuyenBay);
+                    strcat(strErr, " VAO LUC ");
+                    strcat(strErr, strDay);
+                    strcat(strErr, "!");
+                    return false;
+                }
+            }
 		}
 	}
-	return false;
+	return true;
 }
 
 void themPhanTuVaoDSTmp(ChuyenBay *cb, DanhSachTam &dsTmp) {
 	dsTmp.cb[dsTmp.n++] = cb;
 }
-
-/*
-	Input:
-		*nodeCB: con tro node chuyen bay;
-		dsCB: danh sach chuyen bay can them *nodeCB;
-		dsMB: danh sach may bay de kiem tra ngoai le;
-		dsTmp: danh sach tam de truy xuat theo index;
-		*strErr: chuoi loi;
-	Output:
-		false: khong the them chuyen bay vao dsCB, strErr tra ve chuoi loi;
-		true: them chuyen bay vao dsCB thanh cong, strErr rong;
-*/
 
 bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB, DanhSachTam &dsTmp, char* strErr) {
 	int viTri = timKiemMayBay(nodeCB->chuyenBay.soHieuMayBay, dsMB);
@@ -90,11 +78,11 @@ bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSach
 		strcpy(strErr, "CHUYEN BAY DA TON TAI!");
 		return false;
 	}
-	if(ktNgayThangNamHopLe(nodeCB->chuyenBay.ngayKhoiHanh, strErr) == 0) return false;
-	if(kt2CBTrenMBTrungGioKH(nodeCB->chuyenBay, dsCB) || ktHoanTat(nodeCB->chuyenBay.ngayKhoiHanh)) {
-		strcpy(strErr, "THOI GIAN KHOI HANH KHONG HOP LE!");
-		return false;
+    if(!ktTuongLai(nodeCB->chuyenBay.ngayKhoiHanh)) {
+    	strcpy(strErr, "NGAY KHOI HANH PHAI LA MOT NGAY TRONG TUONG LAI!");
+    	return false;
 	}
+	if(!kt2CBTrenMBHonNhauDISTGio(nodeCB->chuyenBay, dsCB, strErr)) return false;
 	// Khoi tao danh sach ve
 	nodeCB->chuyenBay.dsVe.soLuongVe = dsMB.mayBay[viTri]->soCho;
 	nodeCB->chuyenBay.dsVe.CMND = new char*[nodeCB->chuyenBay.dsVe.soLuongVe];
@@ -121,22 +109,14 @@ void xuatDSTmp(DanhSachTam &dsTmp) {
 // Cap nhat trang thai het ve luc them ve vao chuyen bay
 void capNhatTrangThaiHetVe(ChuyenBay &chuyenBay) {
 	if(chuyenBay.dsVe.soLuongVe == soVeDaDat(chuyenBay.dsVe)) 
-		chuyenBay.trangThai = 2;
+		chuyenBay.trangThai = HETVE;
 } 
 
 // Cap nhat trang thai hoan tat khi lay tu file ra hay duyet danh sach chuyen bay
 void capNhatTrangThaiHoanTat(ChuyenBay &chuyenBay) {
 	if(ktHoanTat(chuyenBay.ngayKhoiHanh))	
-		chuyenBay.trangThai = 3;
+		chuyenBay.trangThai = HOANTAT;
 }
-
-/*
-	Input:
-		dsCB: danh sach chuyen bay;
-	Output:
-		dsTmp: danh sach tam (truy xuat thong qua index) ma moi phan tu trong danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay;
-*/
 
 DanhSachTam dsNode2DsTmp(DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
@@ -148,15 +128,6 @@ DanhSachTam dsNode2DsTmp(DanhSachChuyenBay &dsCB) {
 	}
 	return dsTmp;
 }
-
-/*
-	Input:
-		sanBayDen: san bay den cua chuyen bay;
-		dsCB: danh sach chuyen bay;
-	Output:
-		dsTmp: danh sach tam (truy xuat qua index) ma moi phan tu cua danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay qua dieu kien co san bay den la sanBayDen;
-*/
 
 DanhSachTam dsCBvoiSanBayDen(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
@@ -173,40 +144,17 @@ DanhSachTam dsCBvoiSanBayDen(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 	return dsTmp;
 }
 
-/*
-	Input:
-		ngayKhoiHanh: ngay khoi hanh cua chuyen bay;
-		dsCB: danh sach chuyen bay;
-		*strErr: chuoi loi;
-	Output:
-		dsTmp: danh sach tam (truy xuat qua index) ma moi phan tu cua danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay qua dieu kien co ngay khoi hanh la ngayKhoiHanh;
-*/
-
-DanhSachTam dsCBvoiNgayKhoiHanh(NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB, char* strErr) {
+DanhSachTam dsCBvoiNgayKhoiHanh(NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
 	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
-	strcpy(strErr, "");
-	if(ktNgayThangNamHopLe(ngayKhoiHanh, strErr)) {
-		for(; nodeChay != NULL; nodeChay = nodeChay->next) {
-			capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
-			if(ktCungNgayThangNam(ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh))
-				themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
-		}
+	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
+		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
+		if(ktCungNgayThangNam(ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh))
+			themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
 	}
 	return dsTmp;
 }
-
-/*
-	Input:
-		sanBayDen: san bay den cua chuyen bay;
-		ngayKhoiHanh: ngay khoi hanh cua chuyen bay;
-		dsCB: danh sach chuyen bay;
-	Output:
-		dsTmp: danh sach tam (truy xuat qua index) ma moi phan tu cua danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay qua dieu kien co san bay den la sanBayDen va ngay khoi hanh la ngayKhoiHanh;
-*/
 
 DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDen(char *sanBayDen, NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
@@ -221,85 +169,44 @@ DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDen(char *sanBayDen, NgayThangNam ngayKho
 	return dsTmp;
 }
 
-/*
-	Input:
-		dsCB: danh sach chuyen bay;
-	Output:
-		dsTmp: danh sach tam (truy xuat thong qua index) ma moi phan tu trong danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay voi dieu kien trang thai cua chuyen bay == 1;
-*/
-
 DanhSachTam dsNode2DsTmpConVe(DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
 	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
-		if(nodeChay->chuyenBay.trangThai == 1)
+		if(nodeChay->chuyenBay.trangThai == CONVE)
 			themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
 	}
 	return dsTmp;
 }
 
-/*
-	Input:
-		sanBayDen: san bay den cua chuyen bay;
-		dsCB: danh sach chuyen bay;
-	Output:
-		dsTmp: danh sach tam (truy xuat qua index) ma moi phan tu cua danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay qua dieu kien trang thai cua chuyen bay == 1 va co san bay den la sanBayDen;
-*/
-
 DanhSachTam dsCBvoiSanBayDenConVe(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
 	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
-	if(stricmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmp(dsCB);
+	if(stricmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmpConVe(dsCB);
 	else {
 		for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 			capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
-			if(stricmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0 && nodeChay->chuyenBay.trangThai == 1) 
+			if(stricmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0 && nodeChay->chuyenBay.trangThai == CONVE) 
 				themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
 		}
 	}
 	return dsTmp;
 }
 
-/*
-	Input:
-		ngayKhoiHanh: ngay khoi hanh cua chuyen bay;
-		dsCB: danh sach chuyen bay;
-		*strErr: chuoi loi;
-	Output:
-		dsTmp: danh sach tam (truy xuat qua index) ma moi phan tu cua danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay qua dieu kien trang thai cua chuyen bay == 1 va co ngay khoi hanh la ngayKhoiHanh;
-*/
-
-DanhSachTam dsCBvoiNgayKhoiHanhConVe(NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB, char* strErr) {
+DanhSachTam dsCBvoiNgayKhoiHanhConVe(NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
 	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
-	strcpy(strErr, "");
-	if(ktNgayThangNamHopLe(ngayKhoiHanh, strErr)) {
-		for(; nodeChay != NULL; nodeChay = nodeChay->next) {
-			capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
-			if(ktCungNgayThangNam(ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh) && nodeChay->chuyenBay.trangThai == 1)
-				themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
-		}
+	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
+		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
+		if(ktCungNgayThangNam(ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh) && nodeChay->chuyenBay.trangThai == CONVE)
+			themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
 	}
 	return dsTmp;
 }
-
-/*
-	Input:
-		sanBayDen: san bay den cua chuyen bay;
-		ngayKhoiHanh: ngay khoi hanh cua chuyen bay;
-		dsCB: danh sach chuyen bay;
-	Output:
-		dsTmp: danh sach tam (truy xuat qua index) ma moi phan tu cua danh sach tro den moi chuyen bay
-			trong danh sach chuyen bay qua dieu kien trang thai cua chuyen bay == 1,
-			co san bay den la sanBayDen va ngay khoi hanh la ngayKhoiHanh;
-*/
 
 DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDenConVe(char *sanBayDen, NgayThangNam ngayKhoiHanh, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
@@ -308,8 +215,7 @@ DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDenConVe(char *sanBayDen, NgayThangNam ng
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
 		if(ktCungNgayThangNam(ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh) 
-			&& strcmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0 && nodeChay->chuyenBay.trangThai == 1)
-			
+			&& strcmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0 && nodeChay->chuyenBay.trangThai == CONVE)
 			themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
 	}
 	return dsTmp;
@@ -345,44 +251,27 @@ void xuatDSCB(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB) {
 	}
 }
 
-/*
-	Input:
-		dsCB: danh sach chuyen bay;
-		CMND: so chung minh nhan dan;
-		cb : chuyen bay;
-		maCB: ma chuyen bay bi trung gio khoi hanh;
-	Output:
-		false: chuyen bay cb khong bi trung gio khoi hanh voi chuyen bay khac, tham bien maCB la rong;
-		true: chuyen bay cb bi trung gio khoi hanh voi chuyen bay khac, tham bien maCB la ma chuyen bay trung;
-*/
-
-bool ktCBTrungGioVoiCBKhac(DanhSachChuyenBay &dsCB, char* CMND, ChuyenBay cb, char* maCB) {
+bool kt2CBHonNhauDISTGio(DanhSachChuyenBay &dsCB, char* CMND, ChuyenBay cb, char* strErr) {
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
-		if(ktTonTaiCMNDTrongDSVe(nodeChay->chuyenBay.dsVe, CMND) 
-			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0
-			&& nodeChay->chuyenBay.trangThai != 3
-			&& nodeChay->chuyenBay.trangThai != 0) {
-				
-			if(ktCungNgayThangNamGioPhut(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)) {
-				strcpy(maCB, nodeChay->chuyenBay.maChuyenBay);
-				return true;
+		if(
+			stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0
+			&& nodeChay->chuyenBay.trangThai != HUYCHUYEN
+			&& nodeChay->chuyenBay.trangThai != HOANTAT
+		) {
+			if(ktTonTaiCMNDTrongDSVe(nodeChay->chuyenBay.dsVe, CMND)) {
+				if(
+					!ktDt2LonHonDISTGioDt(nodeChay->chuyenBay.ngayKhoiHanh, cb.ngayKhoiHanh)
+					&& !ktDt2LonHonDISTGioDt(cb.ngayKhoiHanh, nodeChay->chuyenBay.ngayKhoiHanh)
+				) {
+					strcpy(strErr, nodeChay->chuyenBay.maChuyenBay);
+					return false;		
+				}
 			}
 		}
 	}
-	return false;
+	return true;
 }
-
-/*
-	Input:
-		*cb: con tro chuyen bay can huy ve;
-		*CMND: chuoi chung minh nhan dan;
-		dsHK: danh sach hanh khach de cap nhat lai hanh khach;
-		*strErr: chuoi loi;
-	Output:
-		false: huy ve khong thanh cong, strErr tra ve loi;
-		true: huy ve thanh cong, strErr rong;
-*/
 
 bool huyVe(ChuyenBay *cb, char *CMND, DanhSachHanhKhach &dsHK, char* strErr) {
 	int i = timKiemVe(CMND, cb->dsVe);
@@ -419,90 +308,46 @@ bool dsHanhKhachThuoc1CB(DanhSachChuyenBay &dsCB,DanhSachHanhKhach &dsHK, char* 
 	}
 	return true;
 }
-/*
-	Input:
-		dsCB : danh sach chuyen bay
-		cb : chuyen bay lay tu su kien lick cua user
-		dt: ngay thang nam muon cap nhat
-		strErr: chuoi loi tra ra sau khi goi ham
-	Output:
-		false: cap nhat that bai, chuoi loi strErr co gia tri;
-		true: cap nhat thanh cong, chuoi loi strErr rong;
-*/
 
 bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt, char* strErr) {
-	if(cb->trangThai == 0) {
+	if(cb->trangThai == HUYCHUYEN) {
 		strcpy(strErr, "CHUYEN BAY DA BI HUY!");
 		return false;
 	}
-	if(cb->trangThai == 3) {
+	if(cb->trangThai == HOANTAT) {
 		strcpy(strErr, "CHUYEN BAY DA HOAN TAT!");
 		return false;
 	}
+	if(!ktTuongLai(cb->ngayKhoiHanh)) {
+    	strcpy(strErr, "NGAY KHOI HANH PHAI LA MOT NGAY TRONG TUONG LAI!");
+    	return false;
+	}
+	NgayThangNam dtTmp = cb->ngayKhoiHanh;
+	cb->ngayKhoiHanh = dt;
 	// Xu ly 1 may bay co 2 chuyen bay cung gio khoi hanh sau khi cap nhat lai ngay khoi hanh
-	NodeChuyenBay* nodeChay = dsCB;
-	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
-		if(stricmp(nodeChay->chuyenBay.soHieuMayBay, cb->soHieuMayBay) == 0 
-			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb->maChuyenBay) != 0 
-			&& nodeChay->chuyenBay.trangThai != 0
-			&& nodeChay->chuyenBay.trangThai != 3) {
-		
-			if(ktCungNgayThangNamGioPhut(nodeChay->chuyenBay.ngayKhoiHanh, dt)) {
-				char str1[255];
-				char strDay[255];
-				dinhDangNgayThangNam(dt, strDay);
-				strcpy(str1, "");
-				strcat(str1,"MAY BAY ");
-				strcat(str1,nodeChay->chuyenBay.soHieuMayBay);
-				strcat(str1, " DA CO CHUYEN BAY ");
-				strcat(str1, nodeChay->chuyenBay.maChuyenBay);
-				strcat(str1, " VAO LUC ");
-				strcat(str1, strDay);
-				strcpy(strErr, str1);
-				return false;
-			}
-		}
+	if(!kt2CBTrenMBHonNhauDISTGio(*cb, dsCB, strErr)) {
+		cb->ngayKhoiHanh = dtTmp;
+		return false;
 	}
 	// Xu ly 1 trong cac hanh khach tren chuyen bay chinh sua ngay khoi hanh trung voi ngay khoi hanh cua
 	// chuyen bay ma hanh khach dat truoc do
-	char maCBTrung[MAXMACB];
-	NgayThangNam dtTmp = cb->ngayKhoiHanh;
-	cb->ngayKhoiHanh = dt;
 	for(int i = 0; i < cb->dsVe.soLuongVe; i++) {
 		if(cb->dsVe.CMND[i] != NULL) {
-			if(ktCBTrungGioVoiCBKhac(dsCB,cb->dsVe.CMND[i],*cb,maCBTrung)) {
+			if(!kt2CBHonNhauDISTGio(dsCB,cb->dsVe.CMND[i],*cb,strErr)) {
+				cb->ngayKhoiHanh = dtTmp;
 				char str[255];
-				strcpy(str, "");
-				strcat(str, "HANH KHACH CO SO CMND ");
+				strcpy(str, "HANH KHACH CO SO CMND ");
 				strcat(str, cb->dsVe.CMND[i]);
 				strcat(str, " BI TRUNG GIO KHOI HANH VOI CHUYEN BAY ");
-				strcat(str, maCBTrung);
+				strcat(str, strErr);
+				strcat(str, "!");
 				strcpy(strErr, str);
-				cb->ngayKhoiHanh = dtTmp;
 				return false;
 			}
 		}
 	}
-	if(!ktNgayThangNamHopLe(dt, strErr) || ktHoanTat(dt)) {
-		strcpy(strErr,"THOI GIAN KHOI HANH KHONG HOP LE!");
-		return false;
-	}
-	cb->ngayKhoiHanh = dt;
 	strcpy(strErr, "CAP NHAT THANH CONG!");
 	return true;
-}
-
-int timKiemChuyenBayTrenDsTmp(char* maCB, DanhSachTam &dsTmp, char* strErr) {
-	strcpy(strErr, "CHUYEN BAY KHONG TON TAI!");
-	int viTri = -1;
-	for(int i = 0; i < dsTmp.n; i++) {
-		if(stricmp(dsTmp.cb[i]->maChuyenBay, maCB) == 0) {
-			viTri = i;
-			strcpy(strErr, "");
-			break;
-		}
-	}
-	return viTri;
 }
 
 void clearDSTmp(DanhSachTam &dsTmp) {
