@@ -128,8 +128,8 @@ bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSach
 	nodeCB->chuyenBay.dsVe.soLuongVe = dsMB.mayBay[viTri]->soCho;
 	nodeCB->chuyenBay.dsVe.CMND = new char*[nodeCB->chuyenBay.dsVe.soLuongVe];
 	initDSVe(nodeCB->chuyenBay.dsVe);
-	themChuyenBayCoThuTu(nodeCB, dsCB);
-	themPhanTuVaoDSTmpCoThuTu(&(nodeCB->chuyenBay), dsTmp);
+	themChuyenBay(nodeCB, dsCB);
+	themPhanTuVaoDSTmp(&(nodeCB->chuyenBay), dsTmp);
 	strcpy(strErr, "THEM CHUYEN BAY THANH CONG!");
 	return true;
 }
