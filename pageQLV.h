@@ -303,5 +303,3 @@ void drawPageSeatMap(short **mapID,Shape *shape,bool unlockCheck){
 	outtextxy(858,625,"PHAI:");
 	
 }
-
-
