@@ -1,4 +1,4 @@
-#include <iostream>
+s#include <iostream>
 #include <cstring>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,12 +8,7 @@
 #include "io.h"
 #include "hash_table.h"
 
-
-#define MAX_RANMB 5
-#define MAX_RANCB 5
 using namespace std;
-
-
 
 void int2str(int s, char* res) {
   itoa(s,res,10);
@@ -26,12 +21,9 @@ void int2str(int s, char* res) {
 void giaLapMayBay(DanhSachMayBay &dsMB) {
 	char str[255];
 	char tmp[255];
-	int soCho = 0;
+	int soCho = 20;
 	char strErr[255];
-	srand(time(NULL));
-	for(int i = 1; i <= MAX_RANMB;i++) {
-		
-		soCho = rand() % (280)+ 20;
+	for(int i = 1; i <= 10; i++) {
 	    strcpy(str, "MB");
 	    int2str(i, tmp);
 	    strcat(str, tmp);
@@ -58,7 +50,7 @@ void giaLapChuyenBay(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB, DanhSachTam 
 	int ranSoHieu;
 	int ngay, thang, nam, gio, phut;
 	NgayThangNam dt;
-	for(int i = 1; i <= MAX_RANCB; i++) { 
+	for(int i = 1; i <= 20; i++) { 
 		// random thoi gian khoi hanh
 		nam = 2021;
 		thang = rand() % (12 - 6 + 1) + 6;
@@ -72,7 +64,7 @@ void giaLapChuyenBay(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB, DanhSachTam 
 		strcpy(str, "MB");
 		strcpy(str2, "CB");
 		
-		ranSoHieu = rand() % (MAX_RANMB - 1 + 1) + 1;
+		ranSoHieu = rand() % (10 - 1 + 1) + 1;
 	    int2str(ranSoHieu, tmp);
 	    strcat(str, tmp);
 	    
@@ -143,22 +135,53 @@ int main() {
 	DanhSachHanhKhach dsHK = NULL;
 	DanhSachTam dsTmp;
 	HashTable table;
+	ListHanhKhachThongKe list;
 
 	layDSMayBay(dsMB);
 	layDSChuyenBay(dsCB);
 	layDSHK(dsHK);
 	
 	dsTmp = dsNode2DsTmp(dsCB);
-//	cout << dsTmp.n << endl;
 	
+	NgayThangNam dt = newNgayThangNam(20,6,2021,15,00);
+	
+	//24 - 23  + 1 = 2
+	char strErr[255];
+	
+	
+//	datVe("036263053514", 5, dsTmp.cb[1], dsHK, dsCB, strErr);
+//	capNhatNgayThangNam(dsCB, dsTmp.cb[0], dt, strErr);
+//	dsHanhKhachThuoc1CB(dsCB, dsHK, "CB900", list, strErr);
+//	cout << strErr << endl;
+//	xuatListHKTK(lisdt);
+//	cout << dsTmp.n << endl;	
 	giaLapMayBay(dsMB);
 	giaLapChuyenBay(dsCB, dsMB, dsTmp);
 //	giaLapDSHK(dsHK);
 
+//	initHashTable(table);
+//	dsMBToHashTable(dsMB, table);
+//	thongKeMBThucHienCB(table, dsCB);
+//	quick_sort_so_hieu(table,0,MAXHASH - 1);
+//	printHashTable(table);
+
+//	NgayThangNam dt = newNgayThangNam(5,6,2021,19,00);
+//	cout << ktTuongLai(dt) << endl;
+//	datVe("011153052884", 1, dsTmp.cb[2], dsHK, dsCB, strErr);
+//	huyChuyenBay(dsTmp.cb[29], strErr);
+//	capNhatNgayThangNam(dsCB, dsTmp.cb[2],dt,strErr);
+//	datVe("011153052884", 1, dsTmp.cb[0], dsHK, dsCB, strErr);
+//	huyVe(dsTmp.cb[0], "12345678", dsHK, strErr);
+//	themChuyenBayHopLe(
+//			newNodeChuyenBay(
+//				newChuyenBay("CB2222",dt,"TAN SON NHAT","MB009")
+//			), dsCB, dsMB, dsTmp, strErr);
 //	xuatDSMB(dsMB);
-//	xuatDSCB(dsCB, dsMB);
+//	huyChuyenBay(dsTmp.cb[27], strErr);
+	cout << strErr << endl;
+	xuatDSCB(dsCB, dsMB);
 //	xuatDSHK(dsHK);
-	xuatDSTmp(dsTmp);
+//	xuatDSTmp(dsTmp);
 
 //	initHashTable(table);
 //	dsMBToHashTable(dsMB, table);
@@ -174,7 +197,7 @@ int main() {
 	clearDSCB(dsCB);
 	clearDSMB(dsMB);
 	clearDSTmp(dsTmp);
+	clearListHKTK(list);
 
-	
 	return 0;
 }
