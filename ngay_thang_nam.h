@@ -76,7 +76,7 @@ bool ktTuongLai(NgayThangNam dt) {
 				if(dtNow.gio > dt.gio)
 					return false;
 				else if(dtNow.gio == dt.gio) {
-					if(dtNow.phut > dt.phut) {
+					if(dtNow.phut >= dt.phut) {
 						return false;
 					}
 				}
