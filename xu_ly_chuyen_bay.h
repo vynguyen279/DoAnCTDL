@@ -20,6 +20,15 @@ void themPhanTuVaoDSTmp(ChuyenBay *cb, DanhSachTam &dsTmp) {
 	dsTmp.cb[dsTmp.n++] = cb;
 }
 
+void themPhanTuVaoDSTmpCoThuTu(ChuyenBay *cb, DanhSachTam &dsTmp) {
+	int i = 0;
+	for(; i < dsTmp.n && ktDt2LonHonDt(dsTmp.cb[i]->ngayKhoiHanh, cb->ngayKhoiHanh); i++);
+	dsTmp.n++;
+	for(int j = dsTmp.n - 1; j > i; j--) dsTmp.cb[j] = dsTmp.cb[j - 1];
+	dsTmp.cb[i] = cb;
+	
+}
+
 void xuatDSTmp(DanhSachTam &dsTmp) {
 	if(dsTmp.n == 0) {
 		std::cout << "DANH SACH RONG!\n";
@@ -119,8 +128,8 @@ bool themChuyenBayHopLe(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB, DanhSach
 	nodeCB->chuyenBay.dsVe.soLuongVe = dsMB.mayBay[viTri]->soCho;
 	nodeCB->chuyenBay.dsVe.CMND = new char*[nodeCB->chuyenBay.dsVe.soLuongVe];
 	initDSVe(nodeCB->chuyenBay.dsVe);
-	themChuyenBay(nodeCB, dsCB);
-	themPhanTuVaoDSTmp(&(nodeCB->chuyenBay), dsTmp);
+	themChuyenBayCoThuTu(nodeCB, dsCB);
+	themPhanTuVaoDSTmpCoThuTu(&(nodeCB->chuyenBay), dsTmp);
 	strcpy(strErr, "THEM CHUYEN BAY THANH CONG!");
 	return true;
 }
@@ -322,6 +331,13 @@ bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt
 			}
 		}
 	}
+	// Lam cho danh sach sau khi cap nhap co thu tu
+	NodeChuyenBay* nodeChay = dsCB;
+	while(nodeChay->next != NULL && ktDt2LonHonDt(nodeChay->next->chuyenBay.ngayKhoiHanh, cb->ngayKhoiHanh))
+		nodeChay = nodeChay->next;
+	ChuyenBay cbTmp = *cb;
+	*cb = nodeChay->chuyenBay;
+	nodeChay->chuyenBay = cbTmp;
 	strcpy(strErr, "CAP NHAT THANH CONG!");
 	return true;
 }

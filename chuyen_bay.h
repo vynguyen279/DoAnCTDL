@@ -160,6 +160,25 @@ void themChuyenBay(NodeChuyenBay* nodeCB, DanhSachChuyenBay &dsCB) {
 	nodeChay->next = nodeCB;
 }
 
+///
+
+void themChuyenBayCoThuTu(NodeChuyenBay *nodeCB, DanhSachChuyenBay &dsCB) {
+	if(dsCB == NULL || !ktDt2LonHonDt(dsCB->chuyenBay.ngayKhoiHanh, nodeCB->chuyenBay.ngayKhoiHanh)) {
+		themDauDanhSach(nodeCB, dsCB);
+		return;
+	}
+	NodeChuyenBay* nodeChay = dsCB;
+	while(nodeChay->next != NULL && ktDt2LonHonDt(nodeChay->next->chuyenBay.ngayKhoiHanh, nodeCB->chuyenBay.ngayKhoiHanh))
+		nodeChay = nodeChay->next;
+	if(nodeChay->next != NULL) 
+		nodeCB->next = nodeChay->next;
+	nodeChay->next = nodeCB;
+}
+
+
+
+///
+
 ChuyenBay* timKiemChuyenBay(char* maChuyenBay, DanhSachChuyenBay &dsCB) {
 		for(NodeChuyenBay *nodeChay = dsCB; nodeChay != NULL ; nodeChay = nodeChay->next) 
 			if(stricmp(nodeChay->chuyenBay.maChuyenBay, maChuyenBay) == 0)
