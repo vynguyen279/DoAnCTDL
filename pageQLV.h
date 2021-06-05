@@ -1,21 +1,64 @@
 #pragma once
 #include "reuse.h"
+#include <math.h>
 
-//====================PROTOTYPE==================
-void drawPageQLV(short **, Shape *, bool);
-void drawPageSeatMap(short **mapID,Shape *shape,bool unlockCheck);
-void drawPageVe(short **mapID,Shape *shape,bool unlockCheckMouse);
-void drawPageQLV(short **mapID,Shape *shape,bool unlockCheck);
-void checkEventPageQLV(short **mapID, Shape *shape, Input *input, Board &board_DSCB);
-void checkHoverPageQLV(short &ID, short lastID, Shape *shape, short **mapID);
-//=================================================
+#define GRAY COLOR(156, 156, 156)
+//===============ID DSCB================
+#define ID_DSCB_BOARD_3 50
+#define ID_DSCB_PRE_BUTTON_3 5 
+#define ID_DSCB_NEXT_BUTTON_3 6
+#define ID_ENTER_BUTTON_3 7
+#define ID_MA_CB_INPUT_3 30
+//===============ID DSVE================
+#define ID_DS_VE_BOARD_3 50
+#define ID_DS_Ve_PRE_BUTTON_3 8
+#define ID_DS_Ve_NEXT_BUTTON_3 9
+#define ID_ORDER_TICKET_BUTTON_3 10
+#define ID_CANCEL_TICKET_BUTTON_3 11
+#define ID_DSCB_BOARD_BUTTON_3 12
+#define ID_NAME_INPUT_3 31
+#define ID_SEAT_NUMBER_INPUT_3 32
+#define ID_CMND_INPUT_3 33
+#define ID_GENDER_INPUT_3 34
+//===============ID SEAT MAP================
+#define ID_SEAT_MAP_PRE_BUTTON 13
+#define ID_SEAT_MAP_NEXT_BUTTON 14
+#define ID_CONFIRM_TICKET_BUTTON 15
+#define ID_CANCEL_BUTTON 16
+
+
+//===========================SET ID SEAT======================================
+void colorNotWorkingSeat(Button *button,Shape *shape,short **mapID){
+	int  inputSeat = 59; //dung ham get input
+	int So_ghe_khong_hd = 72-inputSeat; 
+	float n = So_ghe_khong_hd/6.0;
+	int j = ceil(n)*6 - So_ghe_khong_hd;
+	int i= 12-floor((So_ghe_khong_hd/6));
+	if(inputSeat%6!=0)
+	i--;
+	short x,y;
+	for( i ;i <12;i++){
+		 x=450+40*i;
+		for( j;j<6;j++){
+			 y=175+45*j;
+			 button[i].x1= x;
+			button[i].y1 = y;
+		    button[i].width = 35;
+			button[i].height = 35;
+			button[i].fillColor = GRAY;
+			button[i].borderColor = GRAY; 
+			drawButton(button[i],-1,mapID);
+		    convertToShape(button[i], shape[-1]);
+		}
+		j=0;
+	}
+}
+
+//==========================Page DS CB======================================
 
 void checkHoverPageQLV(short &ID, short lastID, Shape *shape, short **mapID){
+	
 }
-
-void checkEventPageQLV(short **mapID, Shape *shape, Input *input, Board &board_DSCB){
-}
-
 
 void drawPageQLV(short **mapID,Shape *shape,bool unlockCheck){
 	setDefaultRightFrame(mapID);	
@@ -34,33 +77,35 @@ void drawPageQLV(short **mapID,Shape *shape,bool unlockCheck){
 	Button pre_next_Board[2] = {{640,90,25,25,BLUE_L,15,"<"},{720,90,25,25,BLUE_L,15,">"}};
 	for(int i = 0;i <2;i++){
 		setText(2,10,0,BLUE_L);
-		drawButton(pre_next_Board[i],5+i,mapID);///////////////////ID
-		convertToShape(pre_next_Board[i],shape[i+5]);///////////////////ID
+		drawButton(pre_next_Board[i],ID_DSCB_PRE_BUTTON_3+i,mapID);///////////////////ID
+		convertToShape(pre_next_Board[i],shape[i+ID_DSCB_PRE_BUTTON_3]);///////////////////ID
 	}
 
 		
 	Board board_DSCB_conve = {275,130,10,30,5,{125,125,180,350,120},{"MA CB","SO HIEU MB","NGAY GIO KHOI HANH","SAN BAY DEN","TRANG THAI"}};
-	drawBoard(board_DSCB_conve,70,mapID,shape);///////////////////ID
+	drawBoard(board_DSCB_conve,ID_DSCB_BOARD_3,mapID,shape);///////////////////ID
 	
 	setcolor(0);
-    rectangle(275, 470, 1175, MAX_H-20);  
+    rectangle(275, 470, 1175, MAX_H);     
     
 
-	Input input[1] = {660,570,15,0,0};
+	Input input[1] = {625,569,15,250,0};
 	input[0].s = new char[input[0].max+2];	
-    drawInput(input[0], mapID,7);///////////////////ID
-    convertToShape(input[0], shape[7]);///////////////////ID
-	
+    drawInput(input[0], mapID,ID_MA_CB_INPUT_3);///////////////////ID
+    convertToShape(input[0], shape[ID_MA_CB_INPUT_3]);///////////////////ID
+	setText();
 	outtextxy(500,575,"MA CHUYEN BAY:");
-	if(unlockCheck)
- 	checkEventPageQLV(mapID,shape,input,board_DSCB_conve);
- 	
+	
+	Button Enter_button[1] ={890,568,50,30,BLUE_L,0,">>"} ;
+ 	setText(2, 10, 0, BLUE_L);
+    drawButton(Enter_button[0], ID_ENTER_BUTTON_3 , mapID);
+    convertToShape(Enter_button[0], shape[ID_ENTER_BUTTON_3]);
 }
 
 //===========================Page Ds Hanh Khach TrongCB==========================
 
-void drawPageVe(short **mapID,Shape *shape,bool unlockCheckMouse){
-	setDefaultRightFrame(mapID);	
+void drawPageQLVe(short **mapID,Shape *shape,bool unlockCheckMouse){
+		setDefaultRightFrame(mapID);	
 	
 	//chuc nang phim tat
 	setText(5, 2, 0, BLUE_M);
@@ -71,18 +116,31 @@ void drawPageVe(short **mapID,Shape *shape,bool unlockCheckMouse){
     outtextxy(70, 640, "F1   : HIEU CHINH");
 	rectangle(65,635,85,655);
 	
-	setText(6,10);
-	outtextxy(560,30,"DANH SACH VE");
-	Button pre_next_Board[2] = {{700,90,25,25,BLUE_L,15,"<"},{760,90,25,25,BLUE_L,15,">"}};
-	for(int i = 0;i <2;i++){
-		setText(2,10,0,BLUE_L);
-		drawButton(pre_next_Board[i],8+i,mapID);///////////////////ID
-		convertToShape(pre_next_Board[i],shape[i+8]);///////////////////ID
-	}
+	setText(5,10);
+	outtextxy(550,0,"DANH SACH VE");
+	Button pre_next_Board[2] = {{640, 90, 25, 25, BLUE_L, 15, "<"}, {720, 90, 25, 25, BLUE_L, 15, ">"}};
+    for (int i = 0; i < 2; i++)
+    {
+        setText(2, 10, 0, BLUE_L);
+        drawButton(pre_next_Board[i], ID_DS_Ve_PRE_BUTTON_3 + i, mapID);//////////ID
+        convertToShape(pre_next_Board[i], shape[i + ID_DS_Ve_PRE_BUTTON_3]);//////////ID
+    }
 
+	setcolor(0);
+    rectangle(270, 45, 270+900, 45+40);
+    setText(1,10,0,15);
+	outtextxy(280, 55,"Ma CB:");
+	setText(4,10,0,15);
+	outtextxy(522, 47,"|");
+	setText(1,10,0,15);
+	outtextxy(538, 55,"Ngay Gio KH:");
+	setText(4,10,0,15);
+	outtextxy(857, 47,"|");
+	setText(1,10,0,15);
+	outtextxy(870, 55,"San Bay Den:");
 		
-	Board boardDsCB = {275,130,10,30,4,{150,330,120,300},{"SO VE","HO VA TEN","PHAI","CMND"}};
-	drawBoard(boardDsCB,50,mapID,shape);///////////////////ID
+	Board boardDsCB = {275,130,10,30,5,{60,110,330,100,300},{"STT","SO VE","HO VA TEN","PHAI","CMND"}};
+	drawBoard(boardDsCB,ID_DS_VE_BOARD_3,mapID,shape);///////////////////ID
 	
 	setcolor(0);
     rectangle(275, 470, 1175, MAX_H);  
@@ -95,27 +153,26 @@ void drawPageVe(short **mapID,Shape *shape,bool unlockCheckMouse){
 		Button_Order_Cancel[i].width = 160;
 	    Button_Order_Cancel[i].height = 40;
 	    Button_Order_Cancel[i].fillColor = BLUE_L;
-	    Button_Order_Cancel[i].borderColor = 15;
-        drawButton(Button_Order_Cancel[i], 10 + i, mapID);///////////////////ID
-        convertToShape(Button_Order_Cancel[i], shape[10+i]);///////////////////ID
+	    Button_Order_Cancel[i].borderColor = BLUE_L;
+        drawButton(Button_Order_Cancel[i], ID_ORDER_TICKET_BUTTON_3 + i, mapID);///////////////////ID
+        convertToShape(Button_Order_Cancel[i], shape[ID_ORDER_TICKET_BUTTON_3+i]);///////////////////ID
 	}
-
 	Input input_page_ve[4] = {
-	{500, 570, 25, 0, 0},  // ho ten
-	{930,570,4,0,0},	//so cho
-	{440,625,20,0,0},	//cmnd
-	{910,625,4,0,0}	//phai
+	{475, 570, 25, 350, 0},  // ho ten
+	{920,570,4,70,0},	//so cho
+	{440,620,20,300,0},	//cmnd
+	{920,620,4,70,0}	//phai
 	};
 	for(int i = 0; i< 4;i++){
 	input_page_ve[i].s = new char[input_page_ve[i].max+2];	
-    drawInput(input_page_ve[i], mapID, i + 12);///////////////////ID
-    convertToShape(input_page_ve[i], shape[i + 12]);///////////////////ID
+    drawInput(input_page_ve[i], mapID, i + ID_NAME_INPUT_3);///////////////////ID
+    convertToShape(input_page_ve[i], shape[i + ID_NAME_INPUT_3]);///////////////////ID
 	}
-	
-	outtextxy(380,575,"HO VA TEN:");
-	outtextxy(850,575,"SO CHO:");
-	outtextxy(380,630,"CMND:");
-	outtextxy(850,630,"PHAI:");
+		setText();
+	outtextxy(388,575,"HO VA TEN:");
+	outtextxy(858,575,"SO CHO:");
+	outtextxy(388,625,"CMND:");
+	outtextxy(875,625,"PHAI:");
  	
 }
 
@@ -135,84 +192,116 @@ void drawPageSeatMap(short **mapID,Shape *shape,bool unlockCheck){
 	
 	setText(6,10);
 	outtextxy(500,5,"SO DO CHO NGOI");
-	
-	Button pre_next_Board[2] = {{680,70,25,25,BLUE_L,15,"<"},{740,70,25,25,BLUE_L,15,">"}};
-	for(int i = 0;i <2;i++){
-		setText(2,10,0,BLUE_L);
-		drawButton(pre_next_Board[i],13+i,mapID);///////////////////ID
-		convertToShape(pre_next_Board[i],shape[i+13]);///////////////////ID
-	}
 	setcolor(0);
-    rectangle(270, 120, 270+900, 120+50);
+    rectangle(270, 85, 270+900, 85+50);
     setText(1,10,0,15);
-	outtextxy(280, 132,"Ma CB:");
+	outtextxy(280, 101,"Ma CB:");
 	setText(4,10,0,15);
-	outtextxy(522, 126,"|");
+	outtextxy(522, 94,"|");
 	setText(1,10,0,15);
-	outtextxy(538, 132,"Ngay Gio KH:");
+	outtextxy(538, 101,"Ngay Gio KH:");
 	setText(4,10,0,15);
-	outtextxy(857, 126,"|");
+	outtextxy(857, 94,"|");
 	setText(1,10,0,15);
-	outtextxy(870, 132,"San Bay Den:");
+	outtextxy(870, 101,"San Bay Den:");
 	setText(3,10,0,15);
-	outtextxy(456, 230,"A");
-    outtextxy(456, 230+45, "B");
-    outtextxy(456, 230+46*2, "C");
-    outtextxy(456, 230+46*3, "D");
-     outtextxy(456, 230+46*4, "E");
+	outtextxy(420, 179,"A");
+    outtextxy(420, 179+45, "B");
+    outtextxy(420, 177+46*2, "C");
+    outtextxy(420, 177+46*3, "D");
+    outtextxy(420, 177+46*4, "E");
+    outtextxy(420, 177+46*5, "F");
     
-    Button button_seat[60];
-    for(int i = 0;i<60;i++){
-    	button_seat[i]={0,0,0,0,0,0};
+    outtextxy(460, 150, "1");
+    outtextxy(460+40, 150, "2");
+    outtextxy(460+40*2, 150, "3");
+    outtextxy(460+40*3, 150, "4");
+    outtextxy(460+40*4, 150, "5");
+    outtextxy(460+40*5, 150, "6");
+    outtextxy(460+40*6, 150, "7");
+    outtextxy(460+40*7, 150, "8");
+    outtextxy(460+40*8, 150, "9");
+    outtextxy(460+40*9-3, 150, "10");
+    outtextxy(460+40*10-3, 150, "11");
+    outtextxy(460+40*11-3, 150, "12");
+    Button button_seat[72];
+    for(int i = 0;i<72;i++){
+      	button_seat[i]={0,0,0,0,0,0};
 	}
 	
-	int x,y;
+	int x,y,ID,temp;;
 	for(int i = 0;i <12;i++){
-		 x=500+40*i;
-		for(int j=0;j<5;j++){
-			 y=230+45*j;
+		 x=450+40*i;
+		 temp = 50+6*i;
+		for(int j=0;j<6;j++){
+			 y=175+45*j;
+			 ID=temp+j;
 			button_seat[i].x1= x;
 			button_seat[i].y1 = y;
 		    button_seat[i].width = 35;
 			button_seat[i].height = 35;
 			button_seat[i].fillColor = 15;
 			button_seat[i].borderColor = 0; 
-			drawButton(button_seat[i],77,mapID);///////////////////ID
-
- 
-    rectangle(270, 510, 270+900, 510+300);
+			drawButton(button_seat[i],ID,mapID);///////////////////ID tu 50 - 121
+		    convertToShape(button_seat[i], shape[ID]);
+        }
+    }
+    	Button pre_next_Board[2] = {{375,290,25,25,BLUE_L,15,"<"},{957,290,25,25,BLUE_L,15,">"}};
+	for(int i = 0;i <2;i++){
+		setText(2,10,0,BLUE_L);
+		drawButton(pre_next_Board[i],ID_SEAT_MAP_PRE_BUTTON+i,mapID);///////////////////ID
+		convertToShape(pre_next_Board[i],shape[i+ID_SEAT_MAP_PRE_BUTTON]);///////////////////ID
+	}
+	
+	//================CHU THICH=====================
+	
+	setText(1,10,0,15);
+	outtextxy(1040, 200, "Chu Thich");
+    setfillstyle(1, BLUE_L);
+    bar(1015, 250, 1015+30, 250+30);
+    setText(1,11,0,15);
+	outtextxy(1053, 252, ": Ghe da duoc dat");
+	setfillstyle(1, GRAY);
+    bar(1015, 285, 1015+30, 285+30);
+	outtextxy(1053, 287, ": Ghe khong hoat dong");
+	setfillstyle(1, WHITE);
+    bar(1015, 320, 1015+30, 320+30);
+    rectangle(1015, 320, 1015+30, 320+30);
+	outtextxy(1053, 325, ": Ghe con trong");
+	
+	setText(6,10);
+    rectangle(275, 470, 1175, MAX_H); 
  
  	Button Button_Order_Cancel[2] ={{0,0,0,0,0,0,"XAC NHAN"},{0,0,0,0,0,0,"HUY"}} ;
 	for(int i = 0;i <2;i++){
-		setText(1,11,0,BLUE_L);
-		Button_Order_Cancel[i].x1 = 550 + 180*i;
-		Button_Order_Cancel[i].y1 = 525;
-		Button_Order_Cancel[i].width = 160;
-	    Button_Order_Cancel[i].height = 40;
-	    Button_Order_Cancel[i].fillColor = BLUE_L;
-	    Button_Order_Cancel[i].borderColor = 15;
-        drawButton(Button_Order_Cancel[i], 10 + i, mapID);///////////////////ID
-        convertToShape(Button_Order_Cancel[i], shape[10+i]);///////////////////ID
+	setText(1, 11, 0, BLUE_L);
+        Button_Order_Cancel[i].x1 = 565 + 180 * i;
+        Button_Order_Cancel[i].y1 = 480;
+        Button_Order_Cancel[i].width = 160;
+        Button_Order_Cancel[i].height = 40;
+        Button_Order_Cancel[i].fillColor = BLUE_L;
+        Button_Order_Cancel[i].borderColor = BLUE_L;
+        drawButton(Button_Order_Cancel[i],i+ID_CONFIRM_TICKET_BUTTON, mapID);///////////////////ID
+        convertToShape(Button_Order_Cancel[i],shape[i+ID_CONFIRM_TICKET_BUTTON]);
 	}
-	
 	Input input_page_ve[4] = {
-	{500, 610, 25, 0, 0},  // ho ten
-	{937,610,4,0,0},	//so cho
-	{447,650,20,0,0},	//cmnd
-	{914,650,4,0,0}	//phai
+	{470, 570, 25, 350, 0},  // ho ten
+	{917,570,4,70,0},	//so cho
+	{440,620,20,300,0},	//cmnd
+	{900,620,4,70,0}	//phai
 	};
 	
 	for(int i = 0; i< 4;i++){
 	input_page_ve[i].s = new char[input_page_ve[i].max+2];	
-    drawInput(input_page_ve[i], mapID, i + 12);///////////////////ID
-    convertToShape(input_page_ve[i], shape[i + 12]);///////////////////ID
+    drawInput(input_page_ve[i], mapID, i + ID_NAME_INPUT_3);///////////////////ID
+    convertToShape(input_page_ve[i], shape[i + ID_NAME_INPUT_3]);///////////////////ID
 	}
+	setText();
+	outtextxy(388,575,"HO VA TEN:");
+	outtextxy(858,575,"SO CHO:");
+	outtextxy(388,625,"CMND:");
+	outtextxy(858,625,"PHAI:");
 	
-	outtextxy(388,615,"HO VA TEN:");
-	outtextxy(858,615,"SO CHO:");
-	outtextxy(388,653,"CMND:");
-	outtextxy(858,653,"PHAI:");
-	}	
-	}
 }
+
 
