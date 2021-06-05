@@ -14,7 +14,7 @@ void checkEventMainPage(short **mapID, Shape *shape)
 {
     int x, y;
     short ID = -1, lastID = -1;
-     clearmouseclick(WM_LBUTTONDOWN);
+    clearmouseclick(WM_LBUTTONDOWN);
     while (1)
     {
         delay(DELAY_TO_CHECK_EVENT);
@@ -22,7 +22,7 @@ void checkEventMainPage(short **mapID, Shape *shape)
         lastID = ID;
         if (ismouseclick(WM_LBUTTONDOWN))
         {
-			getIDMouseClick(ID,mapID);
+        	getIDMouseClick(ID,mapID);
 			clearmouseclick(WM_LBUTTONDOWN);
 			switch (ID){
         	case 0:{
@@ -39,19 +39,17 @@ void checkEventMainPage(short **mapID, Shape *shape)
             case 2:
             {	
                 drawPageQLCB(mapID, shape);
-// 				drawPageQLV(mapID, shape, true);
                 break;
             }
             case 3:
             {	
 
-//				drawPageSeatMap(mapID, shape, true);
+				drawPageQLV(mapID, shape);
                
                 break;
             }
             case 4:
             {	
-//            	drawPageVe(mapID, shape, true);
 
                 break;
             }

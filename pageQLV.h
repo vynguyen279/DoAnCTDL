@@ -1,32 +1,39 @@
 #pragma once
 #include "reuse.h"
-#include <math.h>
+
 
 #define GRAY COLOR(156, 156, 156)
+
+
 //===============ID DSCB================
 #define ID_DSCB_BOARD_3 50
 #define ID_DSCB_PRE_BUTTON_3 5 
-#define ID_DSCB_NEXT_BUTTON_3 6
-#define ID_ENTER_BUTTON_3 7
+#define ID_DSCB_NEXT_BUTTON_3 6  
+#define ID_ENTER_BUTTON_3 8    //!
 #define ID_MA_CB_INPUT_3 30
-//===============ID DSVE================
+//===============ID DS HANH KHACH================
 #define ID_DS_VE_BOARD_3 50
-#define ID_DS_Ve_PRE_BUTTON_3 8
-#define ID_DS_Ve_NEXT_BUTTON_3 9
-#define ID_ORDER_TICKET_BUTTON_3 10
-#define ID_CANCEL_TICKET_BUTTON_3 11
-#define ID_DSCB_BOARD_BUTTON_3 12
+#define ID_DS_Ve_PRE_BUTTON_3 5
+#define ID_DS_Ve_NEXT_BUTTON_3 6
+#define ID_ORDER_TICKET_BUTTON_3 7 //!
+#define ID_CANCEL_TICKET_BUTTON_3 8
+#define ID_DSCB_BOARD_BUTTON_3 9 //!
 #define ID_NAME_INPUT_3 31
 #define ID_SEAT_NUMBER_INPUT_3 32
 #define ID_CMND_INPUT_3 33
 #define ID_GENDER_INPUT_3 34
 //===============ID SEAT MAP================
+
 #define ID_SEAT_MAP_PRE_BUTTON 13
 #define ID_SEAT_MAP_NEXT_BUTTON 14
-#define ID_CONFIRM_TICKET_BUTTON 15
-#define ID_CANCEL_BUTTON 16
+#define ID_CONFIRM_TICKET_BUTTON 15 //!
+#define ID_CANCEL_BUTTON 16 //!
 
 
+//===========================PROTOTYPE========================================
+void drawPageQLV_DSCB(short **mapID,Shape *shape);
+void drawPageQLV_DSHK(short **mapID,Shape *shape);
+void drawPageQLV_DatVe(short **mapID,Shape *shape);
 //===========================SET ID SEAT======================================
 void colorNotWorkingSeat(Button *button,Shape *shape,short **mapID){
 	int  inputSeat = 59; //dung ham get input
@@ -53,24 +60,167 @@ void colorNotWorkingSeat(Button *button,Shape *shape,short **mapID){
 		j=0;
 	}
 }
+//==========================Page QLV=======================================
 
-//==========================Page DS CB======================================
+void checkHoverPageQLV_DSHK(short &newID, short lastID, Shape *shape, short **mapID){
+    if (ismouseclick(WM_MOUSEMOVE))
+    {	
+ 			
+		int x, y;
+        getmouseclick(WM_MOUSEMOVE, x, y);
+        newID = mapID[x][y];
+        
 
-void checkHoverPageQLV(short &ID, short lastID, Shape *shape, short **mapID){
+    }
+}
+void checkHoverPageQLV_DSCB(short &newID, short lastID, Shape *shape, short **mapID){
+    if (ismouseclick(WM_MOUSEMOVE))
+    {	
+ 			
+		int x, y;
+        getmouseclick(WM_MOUSEMOVE, x, y);
+        newID = mapID[x][y];
+        
 
+    }
+}
+void checkHoverPageQLV_DatVe(short &newID, short lastID, Shape *shape, short **mapID){
+    if (ismouseclick(WM_MOUSEMOVE))
+    {	
+ 			
+		int x, y;
+        getmouseclick(WM_MOUSEMOVE, x, y);
+        newID = mapID[x][y];
+        
+
+    }
 }
 
-void drawPageQLV(short **mapID,Shape *shape,bool unlockCheck){
-	setDefaultRightFrame(mapID);	
 
-	//chuc nang phim tat
-	setText(5, 2, 0, BLUE_M);
-    setfillstyle(1, BLUE_M);
-    bar(0, 550, 250, MAX_H);
-    outtextxy(70, 610, "DELETE   : XOA");
-    rectangle(65,605,120,625);
-    outtextxy(70, 640, "F1   : HIEU CHINH");
-	rectangle(65,635,85,655);
+void checkEventPageQLV_DSHK(Shape *shape, short **mapID){
+    int x, y;
+    short ID = -1, lastID = -1;
+    clearmouseclick(WM_LBUTTONDOWN);	
+	while(true){
+		delay(DELAY_TO_CHECK_EVENT);
+        checkHoverPageQLV_DSHK(ID, lastID, shape, mapID);
+        lastID = ID;
+		if(ismouseclick(WM_LBUTTONDOWN))
+			{
+				if(ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLV){            
+            		return;
+            	}
+				switch(ID){
+					case ID_DSCB_BOARD_BUTTON_3:
+					case ID_ORDER_TICKET_BUTTON_3 :{
+\
+						return;
+					}
+					default:
+						break;
+				}
+					clearmouseclick(WM_LBUTTONDOWN);  				 
+			}
+	}	
+}
+void checkEventPageQLV_DatVe(Shape *shape, short **mapID){
+    int x, y;
+    short ID = -1, lastID = -1;
+    clearmouseclick(WM_LBUTTONDOWN);	
+	while(true){
+		delay(DELAY_TO_CHECK_EVENT);
+		checkHoverPageQLV_DatVe(ID, lastID, shape, mapID);
+        lastID = ID;
+		if(ismouseclick(WM_LBUTTONDOWN))
+			{
+				if(ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLV){            
+            		return;
+            	}
+				switch(ID){
+					case ID_CONFIRM_TICKET_BUTTON:
+					case ID_CANCEL_BUTTON :{
+						return;
+					}
+					default:
+						break;
+				} 
+					clearmouseclick(WM_LBUTTONDOWN); 
+			}
+	}
+}
+void checkEventPageQLV_DSCB(Shape *shape, short **mapID){
+    int x = 0, y = 0;
+    short ID = -1, lastID = -1;
+    clearmouseclick(WM_LBUTTONDOWN);	
+	while(true){
+		delay(DELAY_TO_CHECK_EVENT);
+        checkHoverPageQLV_DSCB(ID, lastID, shape, mapID);
+        lastID = ID;
+		if(ismouseclick(WM_LBUTTONDOWN))
+			{
+				cout << ismouseclick(WM_LBUTTONDOWN);
+				if(ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLV ){            
+            		return;
+            	}
+				switch(ID){
+					case ID_ENTER_BUTTON_3 :{
+						return;
+					}
+					default:
+						break;
+				}
+				clearmouseclick(WM_LBUTTONDOWN); 				 
+			}
+	}	
+}
+void drawPageQLV(short **mapID,Shape *shape){
+    int x, y;
+    short ID = -1, lastID = -1;
+    clearmouseclick(WM_LBUTTONDOWN);
+    drawPageQLV_DSCB(mapID,shape);
+   while (1)
+    {
+        delay(DELAY_TO_CHECK_EVENT);
+        lastID = ID;
+        
+        if (ismouseclick(WM_LBUTTONDOWN))
+        {	
+        	getIDMouseClick(ID,mapID);
+		    if(ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLV){            
+            	return;
+            } 
+			clearmouseclick(WM_LBUTTONDOWN);
+			switch (ID){
+        	case ID_DSCB_BOARD_BUTTON_3:{
+				drawPageQLV_DSCB(mapID,shape);	
+        		break;
+        	}
+            case ID_ENTER_BUTTON_3:
+            case ID_CONFIRM_TICKET_BUTTON:
+			case ID_CANCEL_BUTTON:	
+            {	
+                drawPageQLV_DSHK(mapID,shape);
+                
+                break;
+            }
+            case ID_ORDER_TICKET_BUTTON_3:
+            {	
+                drawPageQLV_DatVe(mapID, shape);
+                break;
+            }
+            default:
+                break;
+            }
+        }
+    }		
+}
+//==========================Page DS CB======================================
+
+
+
+
+void drawPageQLV_DSCB(short **mapID,Shape *shape){
+	setDefaultRightFrame(mapID);	
 
 	setText(6,10);
 	outtextxy(410,30,"DANH SACH CHUYEN BAY");
@@ -89,10 +239,10 @@ void drawPageQLV(short **mapID,Shape *shape,bool unlockCheck){
     rectangle(275, 470, 1175, MAX_H);     
 
 
-	Input input[1] = {625,569,15,250,0};
-	input[0].s = new char[input[0].max+2];	
-    drawInput(input[0], mapID,ID_MA_CB_INPUT_3);///////////////////ID
-    convertToShape(input[0], shape[ID_MA_CB_INPUT_3]);///////////////////ID
+	Input input= {625,569,15,250,0};
+	input.s = new char[input.max+2];	
+    drawInput(input, mapID,ID_MA_CB_INPUT_3);///////////////////ID
+    convertToShape(input, shape[ID_MA_CB_INPUT_3]);///////////////////ID
 	setText();
 	outtextxy(500,575,"MA CHUYEN BAY:");
 
@@ -100,21 +250,17 @@ void drawPageQLV(short **mapID,Shape *shape,bool unlockCheck){
  	setText(2, 10, 0, BLUE_L);
     drawButton(Enter_button[0], ID_ENTER_BUTTON_3 , mapID);
     convertToShape(Enter_button[0], shape[ID_ENTER_BUTTON_3]);
+    
+    checkEventPageQLV_DSCB(shape,mapID);
+    
+    delete[] input.s;
 }
 
 //===========================Page Ds Hanh Khach TrongCB==========================
 
-void drawPageQLVe(short **mapID,Shape *shape,bool unlockCheckMouse){
-		setDefaultRightFrame(mapID);	
 
-	//chuc nang phim tat
-	setText(5, 2, 0, BLUE_M);
-    setfillstyle(1, BLUE_M);
-    bar(0, 550, 250, MAX_H);
-    outtextxy(70, 610, "DELETE   : XOA");
-    rectangle(65,605,120,625);
-    outtextxy(70, 640, "F1   : HIEU CHINH");
-	rectangle(65,635,85,655);
+void drawPageQLV_DSHK(short **mapID,Shape *shape){
+	setDefaultRightFrame(mapID);	
 
 	setText(5,10);
 	outtextxy(550,0,"DANH SACH VE");
@@ -168,27 +314,23 @@ void drawPageQLVe(short **mapID,Shape *shape,bool unlockCheckMouse){
     drawInput(input_page_ve[i], mapID, i + ID_NAME_INPUT_3);///////////////////ID
     convertToShape(input_page_ve[i], shape[i + ID_NAME_INPUT_3]);///////////////////ID
 	}
-		setText();
+	setText();
 	outtextxy(388,575,"HO VA TEN:");
 	outtextxy(858,575,"SO CHO:");
 	outtextxy(388,625,"CMND:");
 	outtextxy(875,625,"PHAI:");
+	
+	checkEventPageQLV_DSHK(shape,mapID);
+	for(int i =0; i<4;i++)
+		delete[] input_page_ve[i].s;
+		
 
 }
 
 //===========================PageSeatMap===================
 
-void drawPageSeatMap(short **mapID,Shape *shape,bool unlockCheck){
-		setDefaultRightFrame(mapID);	
-
-	//chuc nang phim tat
-	setText(5, 2, 0, BLUE_M);
-    setfillstyle(1, BLUE_M);
-    bar(0, 550, 250, MAX_H);
-    outtextxy(70, 610, "DELETE   : XOA");
-    rectangle(65,605,120,625);
-    outtextxy(70, 640, "F1   : HIEU CHINH");
-	rectangle(65,635,85,655);
+void drawPageQLV_DatVe(short **mapID,Shape *shape){
+	setDefaultRightFrame(mapID);	
 
 	setText(6,10);
 	outtextxy(500,5,"SO DO CHO NGOI");
@@ -301,5 +443,10 @@ void drawPageSeatMap(short **mapID,Shape *shape,bool unlockCheck){
 	outtextxy(858,575,"SO CHO:");
 	outtextxy(388,625,"CMND:");
 	outtextxy(858,625,"PHAI:");
-
+	
+	checkEventPageQLV_DatVe(shape,mapID);
+	for(int i =0; i<4;i++)
+		delete[] input_page_ve[i].s	;
+	
+	
 }

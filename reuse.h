@@ -2,6 +2,7 @@
 #include <winbgim.h>
 #include <iostream>
 #include <cstdlib>
+#include <math.h>
 #include "io.h"
 using namespace std;
 
