@@ -59,36 +59,39 @@ void checkEventDSMBFrame(short **mapID,Shape *shape, DanhSachMayBay &dsMB,Input 
     isreturn = false;
     updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);
     outDSMB(board_DSMB, 1, 10,dsMB);
-    clearmouseclick(WM_LBUTTONDOWN);   
+    clearmouseclick(WM_LBUTTONDOWN);
+	clearmouseclick(WM_LBUTTONDBLCLK);
 	while(true){
         delay(DELAY_TO_CHECK_EVENT);
         checkHoverPageQLMB(ID, lastID, shape, mapID);
         lastID = ID;
+        if(ismouseclick(WM_LBUTTONDBLCLK) && chooseID != -1 && ID == chooseID){
+				return;
+        }
+				
         if (ismouseclick(WM_LBUTTONDOWN)) {
         	//huy chon
-        	if(chooseID != -1){
-        		setcolor(15);
-	            setfillstyle(1, 15);
-	            fillellipse(shape[chooseID%10 + 50].x1 - 13, shape[chooseID%10 + 50].y1 + 10, 5, 5);
-				chooseID = -1;	
-        	}
+			cout << ID << endl;
             if (ID >= ID_BOARD_DSMB_1)   //chon may bay
             {	
            		maxChoose = dsMB.n - 1 + ID_BOARD_DSMB_2;
+           	
             	if(ID <= maxChoose){
-	                
+
 	                if (ID != chooseID) //CHON CAI MOI
 	                {
-						setcolor(0);
-	                    setfillstyle(1, 0);
-	                    fillellipse(shape[ID%10 + 50].x1 - 13, shape[ID%10 + 50].y1 + 10, 5, 5);	                                   
+	                                   
 	                    chooseID = ID;
 	                    strcpy(input[1].s,dsMB.mayBay[chooseID - ID_BOARD_DSMB_1] -> soHieuMayBay);
 	                    input[1].lastL = strlen(input[1].s);
 	                    setText(1, 10);
+	                    setfillstyle(1,WHITE);
+						bar(input[1].x1+1,input[1].y1+1,input[1].x1 + input[1].width -1,input[1].y1+29) ;
 	                    outtextxy(input[1].x1 + 10, input[1].y1 + 5, input[1].s);
 	                }
+	                
             	}
+            	
             }
 			if(ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLCB){            
 		    	isreturn = true;
@@ -96,6 +99,30 @@ void checkEventDSMBFrame(short **mapID,Shape *shape, DanhSachMayBay &dsMB,Input 
             }
 				
         	switch(ID){
+	            case ID_BUTTON_PREBOARD_2: //PRE DSMB PAGE
+	            {
+	                if (presentPage > 1)
+	                {
+	                    presentPage--;           
+	                    updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);  
+	                    drawBoard(board_DSMB, (presentPage - 1) * 10 + ID_BOARD_DSMB_2, mapID, shape);
+	                    outDSMB(board_DSMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB); 
+	                    
+					}
+	                break;
+	            }
+				case ID_BUTTON_NEXTBOARD_2: //PRE DSMB PAGE
+	            {
+	                if (presentPage < numOfPage)
+	                {
+	                    presentPage++;           
+	                    updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);  
+	                    drawBoard(board_DSMB, (presentPage - 1) * 10 + ID_BOARD_DSMB_2, mapID, shape);
+	                    outDSMB(board_DSMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB); 
+	                    
+					}
+	                break;
+	            }         		
         		case ID_INPUT_SHMB_2:{
         			getInputPageQLCB(input[1], ID, isEnter);
         			if(!isEnter)
@@ -107,9 +134,11 @@ void checkEventDSMBFrame(short **mapID,Shape *shape, DanhSachMayBay &dsMB,Input 
         		default:
         			break;
         	}
-        	clearmouseclick(WM_LBUTTONDOWN);
         	
+			clearmouseclick(WM_LBUTTONDOWN);
+	 
         }
+        clearmouseclick(WM_LBUTTONDBLCLK);
    					
 	}
 	
