@@ -2,8 +2,12 @@
 #include "reuse.h"
 
 //====================PROTOTYPE==================
+void drawDSMBFrame(short **mapID, DanhSachMayBay &dsMB,Shape *shape,Input *input,Button *button,bool &isreturn);
+void drawDSCBFrame(short **mapID,Shape *shape,DanhSachTam &dsTmp, Board &board_DSCB,Input *inputFill, Input *input,int &numOfPage,int &presentPage);
+
+
 void addCB(Input *input,bool &isInvalid, DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
-void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *button_Add_Cancel_Update, Board &board_DSCB,Button *buttonFill,Input *inputFill,Button *pre_next_Board);
+void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *button_Add_Cancel_Update_SeeDSMB, Board &board_DSCB,Button *buttonFill,Input *inputFill,Button *pre_next_Board);
 void checkHoverPageQLCB(short &ID, short lastID, Shape *shape, short **mapID);
 void chuanHoaInputQLCB(Input &input,short inputID);
 void cancelCB(short ID,bool &isInvalid,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
@@ -17,7 +21,7 @@ void fixNgay(Input *input);
 void fixNgayFill(Input *input);
 void getCBData(Input *input,short chooseID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void getInputPageQLCB(Input &input, short &inputID, bool &isEnter);
-void lockPageQLCB(Button *pre_next_Board, Button *fill,short **mapID);
+void lockPageQLCB(Button *pre_next_Board, Button *fill,Button &seeDSMB,short **mapID);
 void makeBeautiInputNgayGioKH(Input *input);
 void makeBeautiLockInputNgayGioKH(Input *input);
 void makeBeautiFillInput(Input *input);
@@ -26,13 +30,13 @@ void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp);
 void outCB(Board &board,DanhSachTam &dsTmp, short ID);
 void outCBUpdated(Board &board,DanhSachTam &dsTmp,short ID);
 void UpdateNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp);
-void updateCB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
+void updateCB(Input *input,bool &isInvalid,short chooseID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void unChooseCB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, short **mapID);
-void unlockPageQLCB(Button *pre_next_Board, Button *fill,short **mapID);
+void unlockPageQLCB(Button *pre_next_Board, Button *fill,Button &seeDSMB,short **mapID);
 
 //================================================
 
-void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *button_Add_Cancel_Update, Board &board_DSCB,Button *buttonFill,Input *inputFill,Button *pre_next_Board){	
+void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *button_Add_Cancel_Update_SeeDSMB, Board &board_DSCB,Button *buttonFill,Input *inputFill,Button *pre_next_Board){	
 
 	DanhSachMayBay dsMB;
 	layDSMayBay(dsMB);
@@ -46,15 +50,12 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
     bool unlockChoose = true;                                       //khi dang update thi se khong cho chon may bay nua
     bool isEnter = false;                                           //check enter khi dang input
     bool isFill = false;
+    bool isreturn = false;                                          //return khi dang xem DSMB
     int numOfPage = (dsTmp.n - 1) / 10 + 1, presentPage = 1; 		//quan ly so trang
     short maxChoose = 0;                                              //khong cho chon vao o khong co may bay
     UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
-
-	drawBoard(board_DSCB,ID_BOARD_DSCB_2,mapID,shape);
+    
 	outDSCB(board_DSCB, 1, 10,dsTmp);
-
-
-
 	clearmouseclick(WM_LBUTTONDOWN);
 	while(true){
 		delay(DELAY_TO_CHECK_EVENT);      
@@ -70,9 +71,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
             {	
                 maxChoose = dsTmp.n - 1 + ID_BOARD_DSCB_2 ;
             	if(ID <= maxChoose){
-            	
-		            setcolor(0);
-		            setfillstyle(1, 0);
+        
 		            if (ID != chooseID && unlockChoose) //CHON CAI MOI
 		            {
 		            	//to  
@@ -89,28 +88,21 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 						chooseID = ID;   
 		                getCBData(input,chooseID,dsCB,dsTmp);	                	
 		                drawInputPageQLCB(input,mapID,false);
-		                lockPageQLCB(pre_next_Board,buttonFill,mapID);	
+		                lockPageQLCB(pre_next_Board,buttonFill,button_Add_Cancel_Update_SeeDSMB[3],mapID);	
 		                    
 		            }
 		            else if (chooseID != -1 && ID == chooseID && unlockChoose) //NHAP VAO CAI DANG CHON DE HUY
 		            { 
 						unChooseCB(input,chooseID,unlockChoose,shape,mapID);
-						unlockPageQLCB(pre_next_Board,buttonFill,mapID);
+						unlockPageQLCB(pre_next_Board,buttonFill,button_Add_Cancel_Update_SeeDSMB[3],mapID);
 		            }
             	}
             }
 			//end xu ly chon			
-		    if(ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLCB){            
-				clearDSMB(dsMB);
-				clearDSCB(dsCB);
-				clearDSTmp(dsTmp);
-				clearDSTmp(dsFill);
-				clearDSTmp(dsDefault);
-            	return;
-            }		
+		
 			
 			switch (ID){
-            case ID_BUTTON_PREBOARD_DSCB_2: //PRE PAGE
+            case ID_BUTTON_PREBOARD_2: //PRE PAGE
             {
                 if (presentPage > 1)
                 {
@@ -122,7 +114,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
             	}
                 break;
             }
-            case ID_BUTTON_NEXTBOARD_DSCB_2:  //NEXT PAGE
+            case ID_BUTTON_NEXTBOARD_2:  //NEXT PAGE
             {
                 if (presentPage < numOfPage)
                 {
@@ -239,31 +231,40 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 				
 				break;
 			}
+			case ID_BUTTON_SEEDSMB_2:{  //XEM DSMB
+			
+				drawDSMBFrame(mapID,dsMB,shape,input,button_Add_Cancel_Update_SeeDSMB,isreturn);
+			}
+			case ID_BUTTON_CLOSEDSMB_2:{  //DONG DSMB
+				drawDSCBFrame(mapID,shape,dsTmp,board_DSCB,inputFill,input,numOfPage,presentPage);
+				
+				break;
+			}						
 			case ID_BUTTON_ACPCANCEL_CB_2:{  //XAC NHAN HUY
 				cancelCB(chooseID,isInvalid,dsCB,dsTmp);		
                 if(isInvalid){
 				  		                
                     outCBUpdated(board_DSCB,dsTmp,chooseID);                  
-		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
+		            unlockPageQLCB(pre_next_Board,buttonFill,button_Add_Cancel_Update_SeeDSMB[3],mapID);
 					unChooseCB(input,chooseID,unlockChoose,shape,mapID);  		            
                     resetButtonFrame(mapID); 
 		            for(int i = 0; i < 3; i++){
-						drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
+						drawButton(button_Add_Cancel_Update_SeeDSMB[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
 		            }                    					                    	
 				}				
 				break;
 			}			
 			case ID_BUTTON_ACPUPDATE_CB_2:{  //LUU CAP NHAT
 				
-				updateCB(input,isInvalid,chooseID,dsMB,dsCB,dsTmp);
+				updateCB(input,isInvalid,chooseID,dsCB,dsTmp);
                 if(isInvalid){
  		            
 		            outCBUpdated(board_DSCB,dsTmp,chooseID);
-		            unlockPageQLCB(pre_next_Board,buttonFill,mapID);
+		            unlockPageQLCB(pre_next_Board,buttonFill,button_Add_Cancel_Update_SeeDSMB[3],mapID);
 					unChooseCB(input,chooseID,unlockChoose,shape,mapID);     
                     resetButtonFrame(mapID);
   		            for(int i = 0; i < 3; i++){
-						drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
+						drawButton(button_Add_Cancel_Update_SeeDSMB[i], ID_BUTTON_ADD_CB_2 +i,mapID);	
 		            }  						                    	
 				}
 				break;
@@ -274,7 +275,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
                 
                 resetButtonFrame(mapID);
 				for(int i = 0; i <3;i++)
-					drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 +i,mapID);
+					drawButton(button_Add_Cancel_Update_SeeDSMB[i], ID_BUTTON_ADD_CB_2 +i,mapID);
 				getCBData(input,chooseID,dsCB,dsTmp);				            
                 if(chooseID != -1)
                     getCBData(input,chooseID,dsCB,dsTmp);
@@ -285,20 +286,24 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 			case ID_INPUT_FILLTIMED_2:{  //FILL DAY
 				getInputPageQLCB(inputFill[0],ID,isEnter);
 				if(inputFill[0].lastL * inputFill[1].lastL * inputFill[2].lastL !=0)   //fix lai ngay trong fill neu nguoi dung nhap nam nhuan
-					fixNgayFill(inputFill);		
-				break;
+					fixNgayFill(inputFill);
+				if (!isEnter)
+                    break;				
+			
 			}
 			case ID_INPUT_FILLTIMEM_2:{  //FILL MONTH
 				getInputPageQLCB(inputFill[1],ID,isEnter);
 				if(inputFill[0].lastL * inputFill[1].lastL * inputFill[2].lastL !=0)   
 					fixNgayFill(inputFill);				
-				break;
+				if (!isEnter)
+                    break;
 			}
 			case ID_INPUT_FILLTIMEY_2:{  //FILL YEAR
 				getInputPageQLCB(inputFill[2],ID,isEnter);
 				if(inputFill[0].lastL * inputFill[1].lastL * inputFill[2].lastL !=0)   
 					fixNgayFill(inputFill);					
-				break;
+				if (!isEnter)
+                    break;
 			}
 			case ID_INPUT_FILLDESTINATION_2:{  //FILL DESTINATION
 				getInputPageQLCB(inputFill[3],ID,isEnter);
@@ -370,8 +375,14 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *butto
 
 			}
 
-
-		
+		    if((ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLCB) || isreturn){            
+				clearDSMB(dsMB);
+				clearDSCB(dsCB);
+				clearDSTmp(dsTmp);
+				clearDSTmp(dsFill);
+				clearDSTmp(dsDefault);
+            	return;
+            }		
             if(ID >= ID_BUTTON_CANCEL_CB_2 && ID <= ID_BUTTON_UNUPDATE_CB_2){ //fix loi hover
 				ID = -1;
 				lastID = -1;
@@ -389,9 +400,8 @@ void drawPageQLCB(short **mapID,Shape *shape){
 	outtextxy(410,-10,"DANH SACH CHUYEN BAY");
 	Button pre_next_Board[2] = {{640,50,25,25,BLUE_L,15,"<"},{720,50,25,25,BLUE_L,15,">"}};
 	for(int i = 0;i <2;i++){
-		setText(2,10,0,BLUE_L);
-		drawButton(pre_next_Board[i],ID_BUTTON_PREBOARD_DSCB_2+i,mapID);
-		convertToShape(pre_next_Board[i],shape[i+ID_BUTTON_PREBOARD_DSCB_2]);
+		drawButton(pre_next_Board[i],ID_BUTTON_PREBOARD_2+i,mapID);
+		convertToShape(pre_next_Board[i],shape[i+ID_BUTTON_PREBOARD_2]);
 	}
 
 	//FILL
@@ -420,21 +430,22 @@ void drawPageQLCB(short **mapID,Shape *shape){
 	outtextxy(506,101,"SAN BAY DEN:");		
 		
 	Board board_DSCB = {275,130,10,30,5,{125,125,180,350,120},{"MA CB","SO HIEU MB","NGAY GIO KHOI HANH","SAN BAY DEN","TRANG THAI"}};
-	
+	drawBoard(board_DSCB,ID_BOARD_DSCB_2,mapID,shape);	
 	setcolor(0);
     rectangle(275, 470, 1175, MAX_H);  
     
-	Button button_Add_Cancel_Update[4] ={{0,0,0,0,0,0,"THEM CB"},{0,0,0,0,0,0,"HUY CB"},{0,0,0,0,0,0,"CAP NHAT"}};
-	for(int i = 0;i <3;i++){
-		setText(1,11,0,BLUE_L);
-		button_Add_Cancel_Update[i].x1 = 455 + 180*i;
-		button_Add_Cancel_Update[i].y1 = 480;
-		button_Add_Cancel_Update[i].width = 160;
-	    button_Add_Cancel_Update[i].height = 40;
-	    button_Add_Cancel_Update[i].fillColor = BLUE_L;
-	    button_Add_Cancel_Update[i].borderColor = WHITE;
-        drawButton(button_Add_Cancel_Update[i], ID_BUTTON_ADD_CB_2 + i, mapID);
-        convertToShape(button_Add_Cancel_Update[i], shape[i+ID_BUTTON_ADD_CB_2]);
+	Button button_Add_Cancel_Update_SeeDSMB[4] ={{0,0,0,0,0,0,"THEM CB"},{0,0,0,0,0,0,"HUY CB"},{0,0,0,0,0,0,"CAP NHAT"},{971,570,100,30,BLUE_L,BLUE_L,"XEM DSMB"}};
+	for(int i = 0;i <4;i++){
+		if(i < 3){
+		button_Add_Cancel_Update_SeeDSMB[i].x1 = 455 + 180*i;
+		button_Add_Cancel_Update_SeeDSMB[i].y1 = 480;
+		button_Add_Cancel_Update_SeeDSMB[i].width = 160;
+	    button_Add_Cancel_Update_SeeDSMB[i].height = 40;
+	    button_Add_Cancel_Update_SeeDSMB[i].fillColor = BLUE_L;
+	    button_Add_Cancel_Update_SeeDSMB[i].borderColor = WHITE;			
+		}
+        drawButton(button_Add_Cancel_Update_SeeDSMB[i], ID_BUTTON_ADD_CB_2 + i, mapID);
+        convertToShape(button_Add_Cancel_Update_SeeDSMB[i], shape[i+ID_BUTTON_ADD_CB_2]);
 	}
 	
 	Input input[9] = {
@@ -461,7 +472,7 @@ void drawPageQLCB(short **mapID,Shape *shape){
 	drawInputPageQLCB(input,mapID,true);
 	
 	
-	checkEventPageQLCB(mapID,shape,input,button_Add_Cancel_Update,board_DSCB,buttonFill,inputFill,pre_next_Board);
+	checkEventPageQLCB(mapID,shape,input,button_Add_Cancel_Update_SeeDSMB,board_DSCB,buttonFill,inputFill,pre_next_Board);
 	for (int i = 0; i < 9; i++)
 	    delete[] input[i].s;		
 }
@@ -887,11 +898,12 @@ void drawInputPageQLCB(Input *input,short **mapID,bool unlockInput ){
 
 
 
-void unlockPageQLCB(Button *pre_next_Board, Button *fill,short **mapID){
-	drawButton(pre_next_Board[0],ID_BUTTON_PREBOARD_DSCB_2,mapID);
-	drawButton(pre_next_Board[1],ID_BUTTON_NEXTBOARD_DSCB_2,mapID);
+void unlockPageQLCB(Button *pre_next_Board, Button *fill,Button &seeDSMB,short **mapID){
+	drawButton(pre_next_Board[0],ID_BUTTON_PREBOARD_2,mapID);
+	drawButton(pre_next_Board[1],ID_BUTTON_NEXTBOARD_2,mapID);
 	drawButton(fill[0],ID_BUTTON_FILL_CB_2,mapID);
-	drawButton(fill[3],ID_BUTTON_UNFILL_CB_2,mapID);	
+	drawButton(fill[3],ID_BUTTON_UNFILL_CB_2,mapID);
+	drawButton(seeDSMB,ID_BUTTON_SEEDSMB_2,mapID);	
 }
 
 
@@ -924,7 +936,7 @@ void unChooseCB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, 
 	drawInputPageQLCB(input,mapID,true);
 } 
 
-void updateCB(Input *input,bool &isInvalid,short ID,DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
+void updateCB(Input *input,bool &isInvalid,short ID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp){
 	char alert[255];
 	NgayThangNam dtUpdate = newNgayThangNam(atoi(input[2].s), atoi(input[3].s), atoi(input[4].s), atoi(input[5].s), atoi(input[6].s));
 	isInvalid = capNhatNgayThangNam(dsCB, dsTmp.cb[ID - ID_BOARD_DSCB_2], dtUpdate, alert);
@@ -992,12 +1004,12 @@ void makeBeautiInputNgayGioKH(Input *input){
 		outtextxy(input[i].x1 + 7,input[i].y1 + 5,input[i].s);
 	}
 }
-void lockPageQLCB(Button *pre_next_Board, Button *fill,short **mapID){
+void lockPageQLCB(Button *pre_next_Board, Button *fill, Button &seeDSMB,short **mapID){
 	drawLockButton(pre_next_Board[0],mapID);
 	drawLockButton(pre_next_Board[1],mapID);
 	drawLockButton(fill[0],mapID);
 	drawLockButton(fill[3],mapID);
-	
+	drawLockButton(seeDSMB,mapID);
 	
 }
 

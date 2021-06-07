@@ -41,7 +41,6 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
     short maxChoose = 0;                                              //khong cho chon vao o khong co may bay
     updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);
     
-    drawBoard(board_DSMB, ID_BOARD_DSMB_1, mapID, shape);
     outDSMB(board_DSMB, 1, 10,dsMB);
     
     clearmouseclick(WM_LBUTTONDOWN);   
@@ -50,8 +49,7 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
         delay(DELAY_TO_CHECK_EVENT);
         checkHoverPageQLMB(ID, lastID, shape, mapID);
         lastID = ID;
-        if(kbhit)     //NUOT PHIM DE KHONG BI LOI KHI AN NHIEU LAN PHIM TAT
-			while (kbhit())	char c = getch();  
+ 
 
         if (ismouseclick(WM_LBUTTONDOWN))
         {
@@ -63,8 +61,6 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
             {	
            		maxChoose = dsMB.n - 1 + ID_BOARD_DSMB_1;
             	if(ID <= maxChoose){
-	                setcolor(0);
-	                setfillstyle(1, 0);
 	                if (ID != chooseID && unlockChoose) //CHON CAI MOI
 	                {
 	                    setcolor(0);
@@ -284,7 +280,7 @@ void drawPageQLMB(short **mapID, Shape *shape){
     }
 
     Board board_DSMB = {275, 130, 10, 30, 4, {50, 300, 400, 150}, {"STT", "SO HIEU", "LOAI", "SO CHO"}};
-
+    drawBoard(board_DSMB, ID_BOARD_DSMB_1, mapID, shape);
     
     setcolor(0);
     rectangle(275, 470, 1175, MAX_H);    

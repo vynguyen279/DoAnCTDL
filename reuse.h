@@ -42,8 +42,9 @@ using namespace std;
 #define ID_INPUT_LMB_1 33
 #define ID_BOARD_DSMB_1 50 
 
-#define ID_BUTTON_PREBOARD_DSCB_2 5
-#define ID_BUTTON_NEXTBOARD_DSCB_2 6
+#define ID_BUTTON_PREBOARD_2 5
+#define ID_BUTTON_NEXTBOARD_2 6
+
 #define ID_BUTTON_FILL_CB_2 7
 #define ID_BUTTON_UNFILLTIME_CB_2 8
 #define ID_BUTTON_UNFILLDESTINATION_CB_2 9
@@ -51,10 +52,12 @@ using namespace std;
 #define ID_BUTTON_ADD_CB_2 11
 #define ID_BUTTON_CANCEL_CB_2 12
 #define ID_BUTTON_UPDATE_CB_2 13
-#define ID_BUTTON_ACPCANCEL_CB_2 14
-#define ID_BUTTON_UNCANCEL_CB_2 15
-#define ID_BUTTON_ACPUPDATE_CB_2 16
-#define ID_BUTTON_UNUPDATE_CB_2 17
+#define ID_BUTTON_SEEDSMB_2 14
+#define ID_BUTTON_CLOSEDSMB_2 15
+#define ID_BUTTON_ACPCANCEL_CB_2 16
+#define ID_BUTTON_UNCANCEL_CB_2 17
+#define ID_BUTTON_ACPUPDATE_CB_2 18
+#define ID_BUTTON_UNUPDATE_CB_2 19
 #define ID_INPUT_FILLTIMED_2 30
 #define ID_INPUT_FILLTIMEM_2 31
 #define ID_INPUT_FILLTIMEY_2 32
@@ -69,6 +72,7 @@ using namespace std;
 #define ID_INPUT_STATUS_2 41
 #define ID_INPUT_DESTINATION_2 42
 #define ID_BOARD_DSCB_2 50
+#define ID_BOARD_DSMB_2 50
 /************************************************
 khai bao o nho cho input nhieu hon maxkitu + 1 de lam con tro nhap nhay nhung van chi duoc nhap maxkitu
 

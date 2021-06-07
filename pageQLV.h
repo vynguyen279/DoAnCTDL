@@ -1,10 +1,6 @@
 #pragma once
 #include "reuse.h"
 
-
-#define GRAY COLOR(156, 156, 156)
-
-
 //===============ID DSCB================
 #define ID_DSCB_BOARD_3 50
 #define ID_DSCB_PRE_BUTTON_3 5 
@@ -36,7 +32,7 @@ void drawPageQLV_DSHK(short **mapID,Shape *shape);
 void drawPageQLV_DatVe(short **mapID,Shape *shape);
 //===========================SET ID SEAT======================================
 void colorNotWorkingSeat(Button *button,Shape *shape,short **mapID){
-	int  inputSeat = 59; //dung ham get input
+	int  inputSeat = 10; //dung ham get input
 	int So_ghe_khong_hd = 72-inputSeat; 
 	float n = So_ghe_khong_hd/6.0;
 	int j = ceil(n)*6 - So_ghe_khong_hd;
@@ -370,6 +366,7 @@ void drawPageQLV_DatVe(short **mapID,Shape *shape){
     for(int i = 0;i<72;i++){
       	button_seat[i]={0,0,0,0,0,0};
 	}
+	
 
 	int x,y,ID,temp;;
 	for(int i = 0;i <12;i++){
@@ -410,7 +407,7 @@ void drawPageQLV_DatVe(short **mapID,Shape *shape){
     bar(1015, 320, 1015+30, 320+30);
     rectangle(1015, 320, 1015+30, 320+30);
 	outtextxy(1053, 325, ": Ghe con trong");
-
+	
 	setText(6,10);
     rectangle(275, 470, 1175, MAX_H); 
 
