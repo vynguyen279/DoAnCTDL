@@ -5,7 +5,7 @@
 void addMB(Input *input,bool &isInvalid,short ID,DanhSachMayBay &dsMB);
 void chuanHoaInputQLMB(Input &input, short inputID);
 void checkHoverPageQLMB(short &newID, short lastID, Shape *shape, short **mapID);
-void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *button_Add_Del_Update, Board &board_DSMB,Button *pre_next_Board);
+void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *mainButton, Board &BOARDMB,Button *pre_next);
 void delMB(Input *input,bool &isInvalid,short ID,DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB);
 void drawUpdateMBFrame(Input *input,short **mapID,Shape *shape,DanhSachChuyenBay &dsCB);
 void drawDelMBFrame(short **mapID, Shape *shape, Input *input);
@@ -13,19 +13,19 @@ void drawPageQLMB(short **mapID,Shape *shape);
 void drawPageQLMB(short **mapID, Shape *shape);
 void getMBData(Input *input,short ID,short **mapID,DanhSachMayBay &dsMB);
 void getInputPageQLMB(Input &input, short &inputID, bool &isEnter);
-void lockPageQLMB(Button *pre_next_Board,short **mapID);
+void lockPageQLMB(Button *pre_next,short **mapID);
 void outMBUpdated(Board &board,DanhSachMayBay &dsMB,short chooseID)	;
 void outDSMB(Board &board, int startMB, int endMB,DanhSachMayBay &dsMB);
 void outMB(Board &board,DanhSachMayBay &dsMB, short ID);
 void updateNumOfBoardDSMB(int &numOfPage, int &presentPage,DanhSachMayBay &dsMB);
 void updateMB(Input *input,bool &isInvalid,short ID,DanhSachMayBay &dsMB);
-void unlockPageQLMB(Button *pre_next_Board,short **mapID);
+void unlockPageQLMB(Button *pre_next,short **mapID);
 void unChooseMB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, short **mapID);
 		 
 
 
 //==========================================================
-void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *button_Add_Del_Update, Board &board_DSMB,Button *pre_next_Board)
+void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *mainButton, Board &boardMB,Button *pre_next)
 {
 		
     DanhSachMayBay dsMB;
@@ -41,7 +41,7 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
     short maxChoose = 0;                                              //khong cho chon vao o khong co may bay
     updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);
     
-    outDSMB(board_DSMB, 1, 10,dsMB);
+    outDSMB(boardMB, 1, 10,dsMB);
     
     clearmouseclick(WM_LBUTTONDOWN);   
     while (true)
@@ -57,9 +57,9 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
 				outAlert(WHITE,"");
 			}        	
             
-            if (ID >= ID_BOARD_DSMB_1)   //chon may bay
+            if (ID >= ID_BOARD)   //chon may bay
             {	
-           		maxChoose = dsMB.n - 1 + ID_BOARD_DSMB_1;
+           		maxChoose = dsMB.n - 1 + ID_BOARD;
             	if(ID <= maxChoose){
 	                if (ID != chooseID && unlockChoose) //CHON CAI MOI
 	                {
@@ -75,14 +75,14 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
 	                    }                                   
 	                    chooseID = ID;
 	                    getMBData(input,chooseID,mapID,dsMB);
-	                    lockPageQLMB(pre_next_Board,mapID);
+	                    lockPageQLMB(pre_next,mapID);
 	                    for(int i  = 0; i < 3; i++)
 	                        drawLockInput(input[i],mapID);
 	                }
 	                else if (chooseID != -1 && ID == chooseID && unlockChoose) //NHAP VAO CAI DANG CHON DE HUY
 	                { 
 						unChooseMB(input,chooseID,unlockChoose,shape,mapID);
-						unlockPageQLMB(pre_next_Board,mapID);
+						unlockPageQLMB(pre_next,mapID);
 
 	                }
             	}
@@ -102,8 +102,8 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
                 {
                     presentPage--;           
                     updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);  
-                    drawBoard(board_DSMB, (presentPage - 1) * 10 + ID_BOARD_DSMB_1, mapID, shape);
-                    outDSMB(board_DSMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB); 
+                    drawBoard(boardMB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
+                    outDSMB(boardMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB); 
                     
 				}
                    
@@ -117,8 +117,8 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
                 {
                     presentPage++;           
                     updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);  
-                    drawBoard(board_DSMB, (presentPage - 1) * 10 + ID_BOARD_DSMB_1, mapID, shape);
-                    outDSMB(board_DSMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB);                 										
+                    drawBoard(boardMB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
+                    outDSMB(boardMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB);                 										
 				}                       
 
                 break;
@@ -132,12 +132,12 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
                 	
                     updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);
 					if(presentPage == numOfPage){  //neu cung trang thi in ra cb moi them vao cuoi ds
-						outMB(board_DSMB,dsMB,dsMB.n-1);
+						outMB(boardMB,dsMB,dsMB.n-1);
 					}
 					else{	
 						presentPage = numOfPage;
-	                    drawBoard(board_DSMB, (presentPage - 1) * 10 + ID_BOARD_DSMB_1, mapID, shape);
-	                    outDSMB(board_DSMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB);
+	                    drawBoard(boardMB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
+	                    outDSMB(boardMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB);
 	                    updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);	
 					}
 					for(int i = 0 ; i<3; i++){
@@ -198,17 +198,17 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
             { 
 				delMB(input,isInvalid,chooseID,dsMB,dsCB);
 				if(isInvalid){
-					unlockPageQLMB(pre_next_Board,mapID);
+					unlockPageQLMB(pre_next,mapID);
 					unChooseMB(input,chooseID,unlockChoose,shape,mapID);  		            
 					updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);
 					if (presentPage > numOfPage)
                     	presentPage--;
                     updateNumOfBoardDSMB(numOfPage, presentPage,dsMB);
-					drawBoard(board_DSMB, (presentPage - 1) * 10 + ID_BOARD_DSMB_1, mapID, shape);
-	                outDSMB(board_DSMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB);
+					drawBoard(boardMB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
+	                outDSMB(boardMB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsMB);
 	                resetButtonFrame(mapID);
 					for(int i = 0 ; i < 3; i++)
-						drawButton(button_Add_Del_Update[i], ID_BUTTON_ADD_1 +i,mapID);	
+						drawButton(mainButton[i], ID_BUTTON_ADD_1 +i,mapID);	
 					
 						    	
 				}
@@ -221,13 +221,13 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
  				updateMB(input,isInvalid,chooseID, dsMB);
                 if (isInvalid)
                 {
-                    outMBUpdated(board_DSMB,dsMB,chooseID);  		            
-		            outMBUpdated(board_DSMB,dsMB,chooseID);
-		            unlockPageQLMB(pre_next_Board,mapID);
+                    outMBUpdated(boardMB,dsMB,chooseID);  		            
+		            outMBUpdated(boardMB,dsMB,chooseID);
+		            unlockPageQLMB(pre_next,mapID);
 					unChooseMB(input,chooseID,unlockChoose,shape,mapID);					
 					resetButtonFrame(mapID);
 		            for(int i = 0; i < 3; i++){
-						drawButton(button_Add_Del_Update[i], ID_BUTTON_ADD_1 +i,mapID);	
+						drawButton(mainButton[i], ID_BUTTON_ADD_1 +i,mapID);	
 		            }				    
                 }
                 break;
@@ -240,7 +240,7 @@ void checkEventPageQLMB(short **mapID, Shape *shape, Input *input, Button *butto
                 unlockChoose = true;
                 for (int i = 0; i < 3; i++)
                 {
-                    drawButton(button_Add_Del_Update[i], ID_BUTTON_ADD_1 + i, mapID);                
+                    drawButton(mainButton[i], ID_BUTTON_ADD_1 + i, mapID);                
                     if (chooseID == -1)    
                         drawInput(input[i], mapID, ID_INPUT_SHMB_1 + i);
                     else if(chooseID != -1)
@@ -271,31 +271,31 @@ void drawPageQLMB(short **mapID, Shape *shape){
     setText(6, 10);
     outtextxy(455, 30, "DANH SACH MAY BAY");
 
-    Button pre_next_Board[2] = {{640, 90, 25, 25, BLUE_L, 15, "<"}, {720, 90, 25, 25, BLUE_L, 15, ">"}};
+    Button pre_next[2] = {{640, 90, 25, 25, BLUE_L, 15, "<"}, {720, 90, 25, 25, BLUE_L, 15, ">"}};
     for (int i = 0; i < 2; i++)
     {
     
-        drawButton(pre_next_Board[i], ID_BUTTON_PREBOARD_DSMB_1 + i, mapID);
-        convertToShape(pre_next_Board[i], shape[ID_BUTTON_PREBOARD_DSMB_1 +i]);
+        drawButton(pre_next[i], ID_BUTTON_PRE + i, mapID);
+        convertToShape(pre_next[i], shape[ID_BUTTON_PRE +i]);
     }
 
-    Board board_DSMB = {275, 130, 10, 30, 4, {50, 300, 400, 150}, {"STT", "SO HIEU", "LOAI", "SO CHO"}};
-    drawBoard(board_DSMB, ID_BOARD_DSMB_1, mapID, shape);
+    Board boardMB = {275, 130, 10, 30, 4, {50, 300, 400, 150}, {"STT", "SO HIEU", "LOAI", "SO CHO"}};
+    drawBoard(boardMB, ID_BOARD, mapID, shape);
     
     setcolor(0);
     rectangle(275, 470, 1175, MAX_H);    
     
-    Button button_Add_Del_Update[3] = {{0, 0, 0, 0, 0, 0, "THEM"}, {0, 0, 0, 0, 0, 0, "XOA"}, {0, 0, 0, 0, 0, 0, "CAP NHAT"}};
+    Button mainButton[3] = {{0, 0, 0, 0, 0, 0, "THEM"}, {0, 0, 0, 0, 0, 0, "XOA"}, {0, 0, 0, 0, 0, 0, "CAP NHAT"}};
     for (int i = 0; i < 3; i++)
     {
-        button_Add_Del_Update[i].x1 = 455 + 180 * i;
-        button_Add_Del_Update[i].y1 = 480;
-        button_Add_Del_Update[i].width = 160;
-        button_Add_Del_Update[i].height = 40;
-        button_Add_Del_Update[i].fillColor = BLUE_L;
-        button_Add_Del_Update[i].borderColor = 15;
-        drawButton(button_Add_Del_Update[i], i + ID_BUTTON_ADD_1, mapID);
-        convertToShape(button_Add_Del_Update[i], shape[i + ID_BUTTON_ADD_1]);
+        mainButton[i].x1 = 455 + 180 * i;
+        mainButton[i].y1 = 480;
+        mainButton[i].width = 160;
+        mainButton[i].height = 40;
+        mainButton[i].fillColor = BLUE_L;
+        mainButton[i].borderColor = 15;
+        drawButton(mainButton[i], i + ID_BUTTON_ADD_1, mapID);
+        convertToShape(mainButton[i], shape[i + ID_BUTTON_ADD_1]);
     }
     setText();
     outtextxy(385, 575, "SO HIEU:");
@@ -309,7 +309,7 @@ void drawPageQLMB(short **mapID, Shape *shape){
         convertToShape(input[i], shape[i + ID_INPUT_SHMB_1]);
     }
     
-    	checkEventPageQLMB(mapID, shape, input, button_Add_Del_Update, board_DSMB,pre_next_Board);
+    	checkEventPageQLMB(mapID, shape, input, mainButton, boardMB,pre_next);
     	for(int i = 0;i<3;i++)
     		delete[] input[i].s;
 }
@@ -405,9 +405,9 @@ void getInputPageQLMB(Input &input, short &inputID, bool &isEnter)
     }
 }
 
-void lockPageQLMB(Button *pre_next_Board,short **mapID){
-	drawLockButton(pre_next_Board[0],mapID);
-	drawLockButton(pre_next_Board[1],mapID);
+void lockPageQLMB(Button *pre_next,short **mapID){
+	drawLockButton(pre_next[0],mapID);
+	drawLockButton(pre_next[1],mapID);
 }
 
  void unChooseMB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, short **mapID){
@@ -424,12 +424,12 @@ void lockPageQLMB(Button *pre_next_Board,short **mapID){
 	
 }  
 			 
-void unlockPageQLMB(Button *pre_next_Board,short **mapID){
-	drawButton(pre_next_Board[0],ID_BUTTON_PREBOARD_DSMB_1,mapID);
-	drawButton(pre_next_Board[1],ID_BUTTON_NEXTBOARD_DSMB_1,mapID);
+void unlockPageQLMB(Button *pre_next,short **mapID){
+	drawButton(pre_next[0],ID_BUTTON_PRE,mapID);
+	drawButton(pre_next[1],ID_BUTTON_NEXT,mapID);
 }
 void outMBUpdated(Board &board,DanhSachMayBay &dsMB,short chooseID){
-	short ID=chooseID - ID_BOARD_DSCB_2;
+	short ID=chooseID - ID_BOARD;
     short x1 = board.x1,
 	 y1 = (ID%10 + 1) * board.heightOfLine + board.y1, 
 	 x2 = x1, 
@@ -489,7 +489,7 @@ void addMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB)
     strcpy(newMB.soHieuMayBay, input[0].s);
     newMB.soCho = atoi(input[1].s);
     strcpy(newMB.loaiMayBay, input[2].s);
-	short ID=chooseID - ID_BOARD_DSMB_1;//lay ra vi tri cua MB trong ds
+	short ID=chooseID - ID_BOARD;//lay ra vi tri cua MB trong ds
 	char alert[255];
     isInvalid = themMayBayHopLe(newMB, dsMB,alert);
 	if(isInvalid) {
@@ -518,7 +518,7 @@ void drawDelMBFrame(short **mapID, Shape *shape, Input *input)
 void delMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB,DanhSachChuyenBay &dsCB)
 {			
     
-	short ID=chooseID - ID_BOARD_DSMB_1;//lay ra vi tri cua MB trong ds
+	short ID=chooseID - ID_BOARD;//lay ra vi tri cua MB trong ds
 	char alert[255];
     isInvalid = xoaMayBayHopLe(input[0].s, dsMB, dsCB,ID,alert);
 	if(isInvalid) {
@@ -552,7 +552,7 @@ void drawUpdateMBFrame(Input *input,short **mapID,Shape *shape,DanhSachChuyenBay
 }
 void updateMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB)
 {	
-	short ID=chooseID - ID_BOARD_DSMB_1;//lay ra vi tri cua MB trong ds
+	short ID=chooseID - ID_BOARD;//lay ra vi tri cua MB trong ds
 	char alert[255];
 	isInvalid = capNhatMayBay(input[2].s, atoi(input[1].s),dsMB,ID,alert);
 	if(isInvalid) {
@@ -565,7 +565,7 @@ void updateMB(Input *input,bool &isInvalid,short chooseID,DanhSachMayBay &dsMB)
 
 void getMBData(Input *input,short chooseID,short **mapID,DanhSachMayBay &dsMB)
 {
-	short ID=chooseID - ID_BOARD_DSMB_1; //lay ra vi tri cua MB trong ds
+	short ID=chooseID - ID_BOARD; //lay ra vi tri cua MB trong ds
     strcpy(input[0].s,dsMB.mayBay[ID]->soHieuMayBay);
     itoa(dsMB.mayBay[ID]->soCho, input[1].s, 10);
     strcpy(input[2].s,dsMB.mayBay[ID]->loaiMayBay);

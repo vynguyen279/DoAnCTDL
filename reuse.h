@@ -26,10 +26,10 @@ using namespace std;
 #define ID_BUTTON_PAGE_QLCB 2
 #define ID_BUTTON_PAGE_QLV 3
 #define ID_BUTTON_PAGE4 4
+#define ID_BUTTON_PRE 5
+#define ID_BUTTON_NEXT 6
+#define ID_BOARD 50 
 
-
-#define ID_BUTTON_PREBOARD_DSMB_1 5
-#define ID_BUTTON_NEXTBOARD_DSMB_1 6
 #define ID_BUTTON_ADD_1 7
 #define ID_BUTTON_DEL_1 8
 #define ID_BUTTON_UPDATE_1 9
@@ -40,10 +40,7 @@ using namespace std;
 #define ID_INPUT_SHMB_1 31 
 #define ID_INPUT_SOCHO_1 32
 #define ID_INPUT_LMB_1 33
-#define ID_BOARD_DSMB_1 50 
 
-#define ID_BUTTON_PREBOARD_2 5
-#define ID_BUTTON_NEXTBOARD_2 6
 
 #define ID_BUTTON_FILL_CB_2 7
 #define ID_BUTTON_UNFILLTIME_CB_2 8
@@ -71,8 +68,7 @@ using namespace std;
 #define ID_INPUT_MINUTE_2 40
 #define ID_INPUT_STATUS_2 41
 #define ID_INPUT_DESTINATION_2 42
-#define ID_BOARD_DSCB_2 50
-#define ID_BOARD_DSMB_2 50
+
 /************************************************
 khai bao o nho cho input nhieu hon maxkitu + 1 de lam con tro nhap nhay nhung van chi duoc nhap maxkitu
 
@@ -280,12 +276,12 @@ void drawInput(Input &input, short **mapID, short ID)
     	input.s[0] = '\0';
 }
 
+
 void getIDMouseClick(short &ID, short **mapID)
-{
-    int x, y;
-    getmouseclick(WM_LBUTTONDOWN, x, y);
-    ID = mapID[x][y];
+{   
+	ID = mapID[mousex()][mousey()]; 
 }
+
 
 void drawLockInput(Input &input, short **mapID)
 {
