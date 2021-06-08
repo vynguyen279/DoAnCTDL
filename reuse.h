@@ -18,7 +18,7 @@ using namespace std;
 #define MAX_W 1200
 #define MAX_H 700
 #define DELAY_TO_CHECK_EVENT 0.0001 
-#define MAX_SHAPE 100
+#define MAX_SHAPE 150 
 #define DEFAULT_ID -1
 
 #define ID_BUTTON_PAGE_MAIN 0

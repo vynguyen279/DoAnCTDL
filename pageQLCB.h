@@ -439,7 +439,8 @@ void drawPageQLCB_DSCB(short **mapID,Shape *shape){
     rectangle(275, 470, 1175, MAX_H);  
     
 	Button mainButton[4] ={{0,0,0,0,0,0,"THEM CB"},{0,0,0,0,0,0,"HUY CB"},{0,0,0,0,0,0,"CAP NHAT"},{971,570,100,30,BLUE_L,BLUE_L,"XEM DSMB"}};
-	for(int i = 0;i <5;i++){
+
+	for(int i = 0;i <4;i++){
 		if(i < 3){
 		mainButton[i].x1 = 455 + 180*i;
 		mainButton[i].y1 = 480;
