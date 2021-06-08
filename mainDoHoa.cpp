@@ -80,12 +80,12 @@ void checkEventDSMBFrame(short **mapID,Shape *shape, DanhSachMayBay &dsMB,Input 
 	                {
 	                                   
 	                    chooseID = ID;
-	                    strcpy(input[1].s,dsMB.mayBay[chooseID - ID_BOARD] -> soHieuMayBay);
-	                    input[1].lastL = strlen(input[1].s);
+	                    strcpy(inputSHMB.s,dsMB.mayBay[chooseID - ID_BOARD] -> soHieuMayBay);
+	                    inputSHMB.lastL = strlen(inputSHMB.s);
 	                    setText(1, 10);
 	                    setfillstyle(1,WHITE);
-						bar(input[1].x1+1,input[1].y1+1,input[1].x1 + input[1].width -1,input[1].y1+29) ;
-	                    outtextxy(input[1].x1 + 10, input[1].y1 + 5, input[1].s);
+						bar(inputSHMB.x1+1,inputSHMB.y1+1,inputSHMB.x1 + inputSHMB.width -1,inputSHMB.y1+29) ;
+	                    outtextxy(inputSHMB.x1 + 10, inputSHMB.y1 + 5, inputSHMB.s);
 	                }
 	                
             	}
@@ -121,7 +121,7 @@ void checkEventDSMBFrame(short **mapID,Shape *shape, DanhSachMayBay &dsMB,Input 
 	                break;
 	            }         		
         		case ID_INPUT_SHMB_2:{
-        			getInputPageQLCB(input[1], ID, isEnter);
+        			getInputPageQLCB(inputSHMB, ID, isEnter);
         			if(!isEnter)
         			break;
         		}
