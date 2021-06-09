@@ -22,8 +22,9 @@ void checkEventMainPage(short **mapID, Shape *shape)
         lastID = ID;
         if (ismouseclick(WM_LBUTTONDOWN))
         {
+        		
         	getIDMouseClick(ID,mapID);
-			clearmouseclick(WM_LBUTTONDOWN);
+			clearmouseclick(WM_LBUTTONDOWN);	
 			switch (ID){
         	case 0:{
             	setDefaultRightFrame(mapID);

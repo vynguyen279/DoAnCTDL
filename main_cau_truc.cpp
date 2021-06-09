@@ -1,5 +1,9 @@
 #include <iostream>
+<<<<<<< HEAD
 #include <string.h>
+=======
+#include <cstring>
+>>>>>>> abd78d59b6c4551c38855fe5079385bb1708d456
 #include <stdlib.h>
 #include <stdio.h>
 #include "xu_ly_may_bay.h"

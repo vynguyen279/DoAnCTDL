@@ -5,7 +5,7 @@
 #include <math.h>
 #include "io.h"
 using namespace std;
-
+//============DUNG CHUNG==============
 #define BLUE_M COLOR(51,187,219)
 #define BLUE_L COLOR(163,232,255)
 #define BLUE_D COLOR(101,204,206)
@@ -18,33 +18,32 @@ using namespace std;
 #define MAX_W 1200
 #define MAX_H 700
 #define DELAY_TO_CHECK_EVENT 0.0001 
-#define MAX_SHAPE 100
+#define MAX_SHAPE 150 
 #define DEFAULT_ID -1
 
+#define ID_BUTTON_PRE 5
+#define ID_BUTTON_NEXT 6
+#define ID_BOARD 50 
+//============MAIN PAGE==============
 #define ID_BUTTON_PAGE_MAIN 0
 #define ID_BUTTON_PAGE_QLMB 1
 #define ID_BUTTON_PAGE_QLCB 2
 #define ID_BUTTON_PAGE_QLV 3
 #define ID_BUTTON_PAGE4 4
-
-
-#define ID_BUTTON_PREBOARD_DSMB_1 5
-#define ID_BUTTON_NEXTBOARD_DSMB_1 6
+//============PAGE QLMB==============
 #define ID_BUTTON_ADD_1 7
 #define ID_BUTTON_DEL_1 8
 #define ID_BUTTON_UPDATE_1 9
-#define ID_BUTTON_ACPDEL_1 10
-#define ID_BUTTON_UNDEL_1 11
-#define ID_BUTTON_ACPUPDATE_1 12
-#define ID_BUTTON_UNUPDATE_1 13
+#define ID_BUTTON_THONGKE_1 10
+#define ID_BUTTON_CLOSETHONGKE_1 11
+#define ID_BUTTON_ACPDEL_1 12
+#define ID_BUTTON_UNDEL_1 13
+#define ID_BUTTON_ACPUPDATE_1 14
+#define ID_BUTTON_UNUPDATE_1 15
 #define ID_INPUT_SHMB_1 31 
 #define ID_INPUT_SOCHO_1 32
 #define ID_INPUT_LMB_1 33
-#define ID_BOARD_DSMB_1 50 
-
-#define ID_BUTTON_PREBOARD_2 5
-#define ID_BUTTON_NEXTBOARD_2 6
-
+//============PAGE QLCB==============
 #define ID_BUTTON_FILL_CB_2 7
 #define ID_BUTTON_UNFILLTIME_CB_2 8
 #define ID_BUTTON_UNFILLDESTINATION_CB_2 9
@@ -71,8 +70,7 @@ using namespace std;
 #define ID_INPUT_MINUTE_2 40
 #define ID_INPUT_STATUS_2 41
 #define ID_INPUT_DESTINATION_2 42
-#define ID_BOARD_DSCB_2 50
-#define ID_BOARD_DSMB_2 50
+
 /************************************************
 khai bao o nho cho input nhieu hon maxkitu + 1 de lam con tro nhap nhay nhung van chi duoc nhap maxkitu
 
@@ -149,7 +147,7 @@ void outAlert(int color, char *alert){
     setfillstyle(1, WHITE);
     bar(280, 530, 1175, 565);
     outtextxy(725-strlen(alert)*4,540,alert);
-    if(alert!="")
+    if(strlen(alert) != 0)
 	putpixel(725,540,BLACK);	   
 }
 
@@ -280,12 +278,12 @@ void drawInput(Input &input, short **mapID, short ID)
     	input.s[0] = '\0';
 }
 
+
 void getIDMouseClick(short &ID, short **mapID)
-{
-    int x, y;
-    getmouseclick(WM_LBUTTONDOWN, x, y);
-    ID = mapID[x][y];
+{   
+	ID = mapID[mousex()][mousey()]; 
 }
+
 
 void drawLockInput(Input &input, short **mapID)
 {
