@@ -75,16 +75,6 @@ bool ktTonTaiCMNDTrongDSVe(DanhSachVe &dsVe, char* CMND) {
 	return false;
 }
 
-bool ktSoVeTrung(DanhSachVe &dsVe, int soVe) {
-	return dsVe.CMND[soVe - 1] != NULL;
-}
-
-bool soVeHopLe(int soVe, DanhSachVe &dsVe) {
-	if(!ktSoVeTrung(dsVe, soVe) && soVe <= dsVe.soLuongVe && soVe >= 1)
-		return true;
-	return false;
-}
-
 void themVe(int soVe, char *CMND, DanhSachVe &dsVe) {
 	dsVe.CMND[soVe - 1] = new char[MAXCMND];
 	strcpy(dsVe.CMND[soVe - 1], CMND);
@@ -105,10 +95,6 @@ bool capNhatDanhSachVe(ChuyenBay *cb, char* CMND, int soVeMoi, char* strErr) {
 	int viTri = timKiemVe(CMND, cb->dsVe);
 	if(viTri == -1) {
 		strcpy(strErr,"SO CMND KHONG TON TAI TRONG DANH SACH VE!");
-		return false;
-	}
-	if(!soVeHopLe(soVeMoi, cb->dsVe)) {
-		strcpy(strErr,"SO VE KHONG HOP LE!");
 		return false;
 	}
 	delete[] cb->dsVe.CMND[viTri];
@@ -174,8 +160,6 @@ void themChuyenBayCoThuTu(NodeChuyenBay *nodeCB, DanhSachChuyenBay &dsCB) {
 		nodeCB->next = nodeChay->next;
 	nodeChay->next = nodeCB;
 }
-
-
 
 ///
 

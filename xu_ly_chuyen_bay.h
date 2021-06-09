@@ -249,15 +249,9 @@ DanhSachTam dsCBvoiNgayKhoiHanhVaSanBayDenConVe(char *sanBayDen, NgayThangNam ng
 	return dsTmp;
 }
 
-bool themVeVaoChuyenBay(char *CMND, int soVe, ChuyenBay *cb, char* strErr) {
-	if(!soVeHopLe(soVe, cb->dsVe)) {
-		strcpy(strErr, "SO VE KHONG HOP LE!");
-		return false;
-	}
+void themVeVaoChuyenBay(char *CMND, int soVe, ChuyenBay *cb) {
 	themVe(soVe, CMND, cb->dsVe);
 	capNhatTrangThaiHetVe(*cb);
-	strcpy(strErr, "THEM VE THANH CONG!");
-	return true;
 }
 
 void xuatDSCB(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB) {
@@ -270,28 +264,6 @@ void xuatDSCB(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB) {
 		xuatDSVe(nodeChuyenBay->chuyenBay.dsVe);
 		std::cout << std::endl;
 	}
-}
-
-bool dsHanhKhachThuoc1CB(DanhSachChuyenBay &dsCB,DanhSachHanhKhach &dsHK, char* maCB, ListHanhKhachThongKe &listTK, char* strErr) {
-	strcpy(strErr, "");
-	ChuyenBay *cb = timKiemChuyenBay(maCB, dsCB);
-	if(cb == NULL) {
-		strcpy(strErr, "CHUYEN BAY KHONG TON TAI!");
-		return false;
-	}
-	if(soVeDaDat(cb->dsVe) == 0) {
-		strcpy(strErr, "DANH SACH VE RONG!");
-		return false;
-	}
-	HanhKhach *hk;
-	listTK.hanhKhachTK = new HanhKhachThongKe[cb->dsVe.soLuongVe];
-	for(int i = 0; i < cb->dsVe.soLuongVe; i++) {
-		if(cb->dsVe.CMND[i] != NULL) {
-			hk = timKiemHanhKhach(dsHK, cb->dsVe.CMND[i]);
-			themVaoListHKTK(newHanhKhachThongKe(*hk, i + 1), listTK);
-		}
-	}
-	return true;
 }
 
 bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt, char* strErr) {
@@ -331,13 +303,6 @@ bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt
 			}
 		}
 	}
-	// Lam cho danh sach sau khi cap nhap co thu tu
-	NodeChuyenBay* nodeChay = dsCB;
-	while(nodeChay->next != NULL && ktDt2LonHonDt(nodeChay->next->chuyenBay.ngayKhoiHanh, cb->ngayKhoiHanh))
-		nodeChay = nodeChay->next;
-	ChuyenBay cbTmp = *cb;
-	*cb = nodeChay->chuyenBay;
-	nodeChay->chuyenBay = cbTmp;
 	strcpy(strErr, "CAP NHAT THANH CONG!");
 	return true;
 }

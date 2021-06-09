@@ -6,7 +6,7 @@
 void themHanhKhach(DanhSachHanhKhach &dsHK, NodeHanhKhach* nodeHK, HashTableCustomer &table) {
 	if(dsHK == NULL) {
 		dsHK = nodeHK;
-		insertItemInHashTable(table, &(nodeHK->hanhKhach));
+		insertHashTableCustomer(table, &(nodeHK->hanhKhach));
 		return;
 	}
 	NodeHanhKhach* nodeChay = dsHK;
@@ -23,7 +23,7 @@ void themHanhKhach(DanhSachHanhKhach &dsHK, NodeHanhKhach* nodeHK, HashTableCust
 	else if(strcmp(nodeTruoc->hanhKhach.CMND, nodeHK->hanhKhach.CMND) == -1)
 		nodeTruoc->phai = nodeHK;
 
-	insertItemInHashTable(table, &(nodeHK->hanhKhach));
+	insertHashTableCustomer(table, &(nodeHK->hanhKhach));
 }
 
 void xoaGoc(DanhSachHanhKhach &dsHK) {
@@ -79,10 +79,10 @@ void xoaNodeKhongPhaiGoc(DanhSachHanhKhach &dsHK, char* CMND) {
 		NodeHanhKhach* nodeTruoc = NULL;
 
 		// Tim node co so CMND can xoa
-		while(nodeChay != NULL && strcmp(nodeChay->hanhKhach.CMND, CMND) != 0) {
+		while(nodeChay != NULL && stricmp(nodeChay->hanhKhach.CMND, CMND) != 0) {
 			nodeTruoc = nodeChay;
-			if(strcmp(nodeChay->hanhKhach.CMND, CMND) == 1) nodeChay = nodeChay->trai;
-			else if(strcmp(nodeChay->hanhKhach.CMND, CMND) == -1) nodeChay = nodeChay->phai;
+			if(stricmp(nodeChay->hanhKhach.CMND, CMND) == 1) nodeChay = nodeChay->trai;
+			else if(stricmp(nodeChay->hanhKhach.CMND, CMND) == -1) nodeChay = nodeChay->phai;
 		}
 
 		if(nodeChay == NULL) {
@@ -94,11 +94,11 @@ void xoaNodeKhongPhaiGoc(DanhSachHanhKhach &dsHK, char* CMND) {
 		if(nodeChay->trai == NULL && nodeChay->phai == NULL) {
 			// Kiem tra xoa node trai hay node phai cua node truoc
 			// Xoa node trai cua node truoc
-			if(strcmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == 1) {
+			if(stricmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == 1) {
 				nodeTruoc->trai = NULL;
 			}
 			// Xoa node phai cua node truoc
-			else if(strcmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == -1) {
+			else if(stricmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == -1) {
 				nodeTruoc->phai = NULL;
 			}
 			delete nodeChay;
@@ -109,11 +109,11 @@ void xoaNodeKhongPhaiGoc(DanhSachHanhKhach &dsHK, char* CMND) {
 			if(nodeChay->trai != NULL) {
 				// Kiem tra xoa node trai hay node phai cua node truoc
 				// Xoa node ben trai node truoc
-				if(strcmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == 1) {
+				if(stricmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == 1) {
 					nodeTruoc->trai = nodeChay->trai;
 				}
 				// Xoa node ben phai node truoc
-				else if(strcmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == -1) {
+				else if(stricmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == -1) {
 					nodeTruoc->phai = nodeChay->trai;
 				}
 			}
@@ -121,11 +121,11 @@ void xoaNodeKhongPhaiGoc(DanhSachHanhKhach &dsHK, char* CMND) {
 			else if(nodeChay->phai != NULL) {
 				// Kiem tra xoa node trai hay node phai cua node truoc
 				// Xoa node ben trai cua node truoc
-				if(strcmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == 1) {
+				if(stricmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == 1) {
 					nodeTruoc->trai = nodeChay->phai;
 				}
 				// Xoa node ben phai cua node truoc
-				else if(strcmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == -1) {
+				else if(stricmp(nodeTruoc->hanhKhach.CMND, nodeChay->hanhKhach.CMND) == -1) {
 					nodeTruoc->phai = nodeChay->phai;
 				}
 			}
@@ -166,7 +166,7 @@ void xoaHanhKhach(DanhSachHanhKhach &dsHK, char* CMND, HashTableCustomer &table)
 		std::cout << "DANH SACH RONG!\n";
 		return;
 	}
-	if(strcmp(dsHK->hanhKhach.CMND, CMND) == 0) {
+	if(stricmp(dsHK->hanhKhach.CMND, CMND) == 0) {
 		xoaGoc(dsHK);
 	} else {
 		xoaNodeKhongPhaiGoc(dsHK, CMND);
@@ -175,20 +175,17 @@ void xoaHanhKhach(DanhSachHanhKhach &dsHK, char* CMND, HashTableCustomer &table)
 }
 
 HanhKhach* timKiemHanhKhach(DanhSachHanhKhach &dsHK, char* CMND) {
-	NodeHanhKhach* nodeChay = dsHK;
-	if(nodeChay == NULL) {
-		std::cout << "DANH SACH HANH KHACH RONG!\n";
-		return NULL;
-	}
-
-	while(nodeChay != NULL && strcmp(nodeChay->hanhKhach.CMND, CMND) != 0) {
-		if(strcmp(nodeChay->hanhKhach.CMND, CMND) == 1)
-			nodeChay = nodeChay->trai;
-		else if(strcmp(nodeChay->hanhKhach.CMND, CMND) == -1)
-			nodeChay = nodeChay->phai;
-	}
-	if(nodeChay != NULL) {
-		return &(nodeChay->hanhKhach);
+	if(dsHK != NULL) {
+		NodeHanhKhach* nodeChay = dsHK;
+		while(nodeChay != NULL && stricmp(nodeChay->hanhKhach.CMND, CMND) != 0) {
+			if(stricmp(nodeChay->hanhKhach.CMND, CMND) == 1)
+				nodeChay = nodeChay->trai;
+			else if(stricmp(nodeChay->hanhKhach.CMND, CMND) == -1)
+				nodeChay = nodeChay->phai;
+		}
+			
+		if(nodeChay != NULL)
+			return &(nodeChay->hanhKhach);
 	}
 	return NULL;
 }

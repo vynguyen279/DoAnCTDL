@@ -10,6 +10,8 @@
 #define MINSOCHO 20
 #define MAXSOCHO 300
 #define MAXTMP 1000
+#define MAXHASHCUSTOMER 1009
+
 
 // DIST thoi gian chech lech giua 2 chuyen bay (5h)
 #define DIST 5
@@ -28,4 +30,3 @@
 #define C 86969 /* yet another prime */
 #define FIRSTH 37 /* also prime */
 #define PRIME 7
-

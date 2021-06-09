@@ -5,28 +5,29 @@
 
 struct Item {
 	char soHieu[MAXSOHIEU];
-	int soLanTH = -1;
+	int soLanTH;
 };
 
 typedef Item HashTable[MAXHASH];
 
 void initHashTable(HashTable table) {
-	for(int i = 0; i < MAXHASH; i++)
+	for(int i = 0; i < MAXHASH; i++) {
 		strcpy(table[i].soHieu, "");
+		table[i].soLanTH = 0;
+	} 
+		
 }
 
 Item newItem(char *soHieu) {
 	Item item;
 	strcpy(item.soHieu, soHieu);
-	item.soLanTH = 0;
 	return item;
 }
-
 
 void insertHashTable(HashTable table, char* soHieu) {
 	int index = hash(soHieu);
 	int x = 0;
-	while(table[index].soLanTH != -1)
+	while(stricmp(table[index].soHieu, "") != 0)
 		index = (index + probing(x++)) % MAXHASH;
 	table[index] = newItem(soHieu);
 }
@@ -95,7 +96,9 @@ void thongKeMBThucHienCB(HashTable &table, DanhSachChuyenBay &dsCB, DanhSachMayB
 	dsMBToHashTable(dsMB, table);
 	NodeChuyenBay* node = dsCB;
 	for(; node != NULL; node = node->next) {
-		if(node->chuyenBay.trangThai == HOANTAT)
+		if(node->chuyenBay.trangThai == 3) {
 			table[searchItem(node->chuyenBay.soHieuMayBay, table)].soLanTH++;
+		}
+	}
 	quick_sort(table, 0, MAXHASH - 1);
 }

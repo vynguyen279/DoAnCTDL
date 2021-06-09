@@ -8,7 +8,7 @@ void initHashTableCustomer(HashTableCustomer &table) {
 	for(int i = 0;  i < MAXHASHCUSTOMER; i++) table[i] = NULL;
 }
 
-void insertItemInHashTable(HashTableCustomer &table, HanhKhach* hk) {
+void insertHashTableCustomer(HashTableCustomer &table, HanhKhach* hk) {
 	int index = hash(hk->CMND);
 	int x = 0;
 	while(table[index] != NULL)
@@ -33,8 +33,3 @@ void printHashTableCustomer(DanhSachVe &dsVe, HashTableCustomer &table) {
 	}
 }
 
-void clearHashTableCustomer(HashTableCustomer &table) {
-	for(int i = 0; i < MAXHASHCUSTOMER; i++)
-		if(table[i] != NULL)
-			table[i] = NULL;
-}
