@@ -16,14 +16,6 @@ void insertItemInHashTable(HashTableCustomer &table, HanhKhach* hk) {
 	table[index] = hk;
 }
 
-void TryHashDSHK(DanhSachHanhKhach &dsHK, HashTableCustomer &table) {
-	if(dsHK != NULL) {
-		TryHashDSHK(dsHK->trai, table);
-		insertItemInHashTable(table, &(dsHK->hanhKhach));
-		TryHashDSHK(dsHK->phai, table);
-	}
-}
-
 int searchItemCustomer(char* CMND, HashTableCustomer &table) {
 	int index = hash(CMND);
 	int x = 0;
@@ -39,11 +31,6 @@ void printHashTableCustomer(DanhSachVe &dsVe, HashTableCustomer &table) {
 			table[searchItemCustomer(dsVe.CMND[i], table)]->toString();
 		}
 	}
-}
-
-void hashDSHKToHashTable(DanhSachHanhKhach &dsHK, HashTableCustomer &table) {
-	initHashTableCustomer(table);
-	TryHashDSHK(dsHK, table);
 }
 
 void clearHashTableCustomer(HashTableCustomer &table) {

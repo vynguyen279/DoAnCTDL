@@ -95,9 +95,7 @@ void thongKeMBThucHienCB(HashTable &table, DanhSachChuyenBay &dsCB, DanhSachMayB
 	dsMBToHashTable(dsMB, table);
 	NodeChuyenBay* node = dsCB;
 	for(; node != NULL; node = node->next) {
-		if(node->chuyenBay.trangThai == 3) {
+		if(node->chuyenBay.trangThai == HOANTAT)
 			table[searchItem(node->chuyenBay.soHieuMayBay, table)].soLanTH++;
-		}
-	}
 	quick_sort(table, 0, MAXHASH - 1);
 }
