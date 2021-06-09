@@ -272,28 +272,6 @@ void xuatDSCB(DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB) {
 	}
 }
 
-bool dsHanhKhachThuoc1CB(DanhSachChuyenBay &dsCB,DanhSachHanhKhach &dsHK, char* maCB, ListHanhKhachThongKe &listTK, char* strErr) {
-	strcpy(strErr, "");
-	ChuyenBay *cb = timKiemChuyenBay(maCB, dsCB);
-	if(cb == NULL) {
-		strcpy(strErr, "CHUYEN BAY KHONG TON TAI!");
-		return false;
-	}
-	if(soVeDaDat(cb->dsVe) == 0) {
-		strcpy(strErr, "DANH SACH VE RONG!");
-		return false;
-	}
-	HanhKhach *hk;
-	listTK.hanhKhachTK = new HanhKhachThongKe[cb->dsVe.soLuongVe];
-	for(int i = 0; i < cb->dsVe.soLuongVe; i++) {
-		if(cb->dsVe.CMND[i] != NULL) {
-			hk = timKiemHanhKhach(dsHK, cb->dsVe.CMND[i]);
-			themVaoListHKTK(newHanhKhachThongKe(*hk, i + 1), listTK);
-		}
-	}
-	return true;
-}
-
 bool capNhatNgayThangNam(DanhSachChuyenBay &dsCB, ChuyenBay *cb, NgayThangNam dt, char* strErr) {
 	if(cb->trangThai == HUYCHUYEN) {
 		strcpy(strErr, "CHUYEN BAY DA BI HUY!");

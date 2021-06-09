@@ -4,10 +4,11 @@
 #include <cstring>
 #include "xu_ly_may_bay.h"
 #include "xu_ly_chuyen_bay.h"
+#include "hash_table_hanh_khach.h"
 
 
 /*************************************************************************************
- *					 		Xu ly danh sach may bay									 *
+ *					          	    	Xu ly danh sach may bay									               *
  *************************************************************************************/
 
 void luuDSMayBay(DanhSachMayBay &dsMB) {
@@ -16,7 +17,7 @@ void luuDSMayBay(DanhSachMayBay &dsMB) {
 		std::cout << "LOI FILE!!\n";
 		return;
 	}
-	
+
 	for(int i = 0; i < dsMB.n; i++)
 		f.write((char*)(dsMB.mayBay[i]), sizeof(MayBay));
 	f.close();
@@ -35,7 +36,7 @@ void layDSMayBay(DanhSachMayBay &dsMB) {
 }
 
 /*************************************************************************************
- *								Xu ly danh sach ve									 *
+ *																Xu ly danh sach ve																 *
  *************************************************************************************/
 
 
@@ -71,7 +72,7 @@ void layDSVe(DanhSachVe &dsVe, std::fstream &f) {
 
 
 /*************************************************************************************
- *						Xu ly danh sach chuyen bay									 *
+ *														Xu ly danh sach chuyen bay														 *
  *************************************************************************************/
 
 
@@ -96,18 +97,18 @@ void layDSChuyenBay(DanhSachChuyenBay &dsCB) {
 	if(f.fail()) {
 		std::cout << "LOI FILE!\n"; return;
 	}
-	
-	ChuyenBay cb;		
+
+	ChuyenBay cb;
 	while(f.read((char*) &cb, sizeof(ChuyenBay))) {
 		layDSVe(cb.dsVe, f);
 		capNhatTrangThaiHoanTat(cb);
-		themChuyenBay(newNodeChuyenBay(cb), dsCB);		
+		themChuyenBay(newNodeChuyenBay(cb), dsCB);
 	}
 	f.close();
 }
 
 /*************************************************************************************
- *						Xu ly danh sach hanh khach									 *
+ *															Xu ly danh sach hanh khach													 *
  *************************************************************************************/
 
 void TRY(DanhSachHanhKhach dsHK, std::fstream &f) {
@@ -128,15 +129,13 @@ void luuDSHK(DanhSachHanhKhach &dsHK) {
 	f.close();
 }
 
-void layDSHK(DanhSachHanhKhach &dsHK) {
+void layDSHK(DanhSachHanhKhach &dsHK, HashTableCustomer &table) {
 	std::fstream f;
 	f.open("danh_sach_hanh_khach.txt", std::ios::in | std::ios::binary);
 	if(f.fail()) {
 		std::cout << "LOI FILE!\n"; return;
 	}
 	HanhKhach hk;
-	while(f.read((char*)&hk, sizeof(HanhKhach))) {
-		themHanhKhach(dsHK, hk);
-	}
+	while(f.read((char*)&hk, sizeof(HanhKhach)))
+		themHanhKhach(dsHK, newNodeHanhKhach(hk), table);
 }
-

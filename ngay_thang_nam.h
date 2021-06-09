@@ -1,6 +1,7 @@
 #pragma once
 #include <ctime>
 #include <stdio.h>
+#include <stdlib.h>
 #include "configure.h"
 
 struct NgayThangNam{
