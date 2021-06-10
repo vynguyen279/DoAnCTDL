@@ -70,6 +70,17 @@ using namespace std;
 #define ID_INPUT_MINUTE_2 40
 #define ID_INPUT_STATUS_2 41
 #define ID_INPUT_DESTINATION_2 42
+//============PAGE QLV==============
+#define ID_BUTTON_FILL_3 7
+#define ID_BUTTON_UNFILLTIME_3 8
+#define ID_BUTTON_UNFILLDESTINATION_3 9
+#define ID_BUTTON_UNFILL_3 10
+#define ID_BUTTON_DATVE_3 11
+#define ID_BUTTON_DSHK_3 12 
+#define ID_INPUT_FILLTIMED_3 30
+#define ID_INPUT_FILLTIMEM_3 31
+#define ID_INPUT_FILLTIMEY_3 32
+#define ID_INPUT_FILLDESTINATION_3 33
 
 /************************************************
 khai bao o nho cho input nhieu hon maxkitu + 1 de lam con tro nhap nhay nhung van chi duoc nhap maxkitu

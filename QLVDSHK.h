@@ -70,7 +70,7 @@ void drawPageQLV_DSHK(short **mapID,Shape *shape){
 
 	setText(5,10);
 	outtextxy(550,0,"DANH SACH VE");
-	Button pre_next_Board[2] = {{640, 90, 25, 25, BLUE_L, 15, "<"}, {720, 90, 25, 25, BLUE_L, 15, ">"}};
+	Button pre_next_Board[2] = {{640, 90, 25, 25, BLUE_L, BLUE_L, "<"}, {720, 90, 25, 25, BLUE_L, BLUE_L, ">"}};
     for (int i = 0; i < 2; i++)
     {
         setText(2, 10, 0, BLUE_L);
@@ -97,15 +97,15 @@ void drawPageQLV_DSHK(short **mapID,Shape *shape){
 	setcolor(0);
     rectangle(275, 470, 1175, MAX_H);  
 
-	Button Button_Order_Cancel[3] ={{0,0,0,0,0,0,"DAT VE"},{0,0,0,0,0,0,"HUY VE"},{0,0,0,0,0,0,"DS CHUYEN BAY"}} ;
+	Button Button_Order_Cancel[3] ={
+	{0, 0,160,40,BLUE_L,BLUE_L,"DAT VE"},
+	{0, 0,160,40,BLUE_L,BLUE_L,"HUY VE"},
+	{0, 0,160,40,BLUE_L,BLUE_L,"DS CHUYEN BAY"}
+	} ;
 	for(int i = 0;i <3;i++){
 		setText(1,11,0,BLUE_L);
 		Button_Order_Cancel[i].x1 = 475 + 180*i;
 		Button_Order_Cancel[i].y1 = 480;
-		Button_Order_Cancel[i].width = 160;
-	    Button_Order_Cancel[i].height = 40;
-	    Button_Order_Cancel[i].fillColor = BLUE_L;
-	    Button_Order_Cancel[i].borderColor = BLUE_L;
         drawButton(Button_Order_Cancel[i], ID_ORDER_TICKET_BUTTON_3 + i, mapID);///////////////////ID
         convertToShape(Button_Order_Cancel[i], shape[ID_ORDER_TICKET_BUTTON_3+i]);///////////////////ID
 	}

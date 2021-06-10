@@ -129,7 +129,7 @@ void drawPageQLMB_ThongKe(short **mapID, Shape *shape){
     setText(6, 10);
     outtextxy(455, 30, "THONG KE TAN XUAT");
 	
-    Button pre_next[2] = {{640, 90, 25, 25, BLUE_L, 15, "<"}, {720, 90, 25, 25, BLUE_L, 15, ">"}};
+    Button pre_next[2] = {{640, 90, 25, 25, BLUE_L, BLUE_L, "<"}, {720, 90, 25, 25, BLUE_L, BLUE_L, ">"}};
     for (int i = 0; i < 2; i++)
     {
     
@@ -140,7 +140,7 @@ void drawPageQLMB_ThongKe(short **mapID, Shape *shape){
     Board boardTK = {275, 130, 10, 30, 2, {600, 300}, {"SO HIEU MAY BAY", "SO LUOT THUC HIEN CHUYEN BAY"}};
     drawBoard(boardTK, ID_BOARD, mapID, shape);
     
-    Button mainButton = {620, 560, 160, 40, BLUE_L, WHITE, "QUAN LY MAY BAY"};
+    Button mainButton = {620, 560, 160, 40, BLUE_L, BLUE_L, "QUAN LY MAY BAY"};
     drawButton(mainButton,ID_BUTTON_CLOSETHONGKE_1, mapID);
     convertToShape(mainButton, shape[ID_BUTTON_CLOSETHONGKE_1]);
     

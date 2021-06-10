@@ -25,7 +25,7 @@ void makeBeautiFillInput(Input *input);
 void outDSCB(Board &board, int startCB, int endCB,DanhSachTam &dsTmp);
 void outCB(Board &board,DanhSachTam &dsTmp, short ID);
 void outCBUpdated(Board &board,DanhSachTam &dsTmp,short ID);
-void UpdateNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp);
+void updateNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp);
 void updateCB(Input *input,bool &isInvalid,short chooseID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
 void unChooseCB(Input *input, short &chooseID,bool &unlockChoose, Shape *shape, short **mapID);
 void unlockPageQLCB(Button *pre_next, Button *fill,Button &seeDSMB,short **mapID);
@@ -47,7 +47,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
     bool isFill = false;                                            //quan ly fill
     int numOfPage = (dsTmp.n - 1) / 10 + 1, presentPage = 1; 		//quan ly so trang
     short maxChoose = 0;                                            //khong cho chon vao o khong co may bay
-    UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+    updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
     
 	outDSCB(boardCB, 1, 10,dsTmp);
 	clearmouseclick(WM_LBUTTONDOWN);
@@ -105,7 +105,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
                 if (presentPage > 1)
                 {
                     presentPage--;         			               
-                   	UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+                   	updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
                     drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
                     outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
                     
@@ -118,7 +118,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
                 {
                 	
                     presentPage++;  	                			               
-                   	UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);					         					                                       
+                   	updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);					         					                                       
                     drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
                     outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
 				}
@@ -130,7 +130,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 				presentPage = 1;
 				isFill = true;
 				dsTmp = dsFill;
-                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
+                updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
                 outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);	
 											
@@ -142,7 +142,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 				presentPage = 1;
 				isFill = false;
 				dsTmp = dsDefault;	
-                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
+                updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
                 outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
 				for(int i = 0; i <4; i++){
@@ -187,7 +187,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 							makeBeautiFillInput(inputFill);							
 						}
 												 		                
-		                UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+		                updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
 		                
 						if(presentPage == numOfPage){  //neu cung trang thi in ra cb moi them vao cuoi ds
 							outCB(boardCB,dsTmp,dsTmp.n -1);
@@ -196,7 +196,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 		                    presentPage = numOfPage; 
 		                	drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
 		                    outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
-							UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);							
+							updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);							
 						} 	  				
 
 						for(int i = 0; i < 9; i++)
@@ -396,13 +396,15 @@ void drawPageQLCB_DSCB(short **mapID,Shape *shape){
 	
 	setText(6,10);
 	outtextxy(410,-10,"DANH SACH CHUYEN BAY");
-	Button pre_next[2] = {{640,50,25,25,BLUE_L,15,"<"},{720,50,25,25,BLUE_L,15,">"}};
+	Button pre_next[2] = {{640,50,25,25,BLUE_L,BLUE_L,"<"},{720,50,25,25,BLUE_L,BLUE_L,">"}};
 	for(int i = 0;i <2;i++){
 		drawButton(pre_next[i],ID_BUTTON_PRE+i,mapID);
 		convertToShape(pre_next[i],shape[i+ID_BUTTON_PRE]);
 	}
 
-
+	setText();
+	outtextxy(275,80,"NGAY GIO K.H:");	
+	outtextxy(506,101,"SAN BAY DEN:");	
 	Input inputFill[4] = {
 	{275,97,2,45,0},	//ngay
 	{325,97,2,45,0},	//thang
@@ -423,30 +425,36 @@ void drawPageQLCB_DSCB(short **mapID,Shape *shape){
 	convertToShape(buttonFill[i],shape[i+ID_BUTTON_FILL_CB_2]);	
 	}
 	makeBeautiFillInput(inputFill);
-	setText();
-	outtextxy(275,80,"NGAY GIO K.H:");	
-	outtextxy(506,101,"SAN BAY DEN:");		
+	
 		
 	Board boardCB = {275,130,10,30,5,{125,125,180,350,120},{"MA CB","SO HIEU MB","NGAY GIO KHOI HANH","SAN BAY DEN","TRANG THAI"}};
 	drawBoard(boardCB,ID_BOARD,mapID,shape);	
 	setcolor(0);
     rectangle(275, 470, 1175, MAX_H);  
     
-	Button mainButton[4] ={{0,0,0,0,0,0,"THEM CB"},{0,0,0,0,0,0,"HUY CB"},{0,0,0,0,0,0,"CAP NHAT"},{971,570,100,30,BLUE_L,BLUE_L,"XEM DSMB"}};
+	Button mainButton[4] ={
+	{0, 0,160,40,BLUE_L,BLUE_L,"THEM CB"},
+	{0, 0,160,40,BLUE_L,BLUE_L,"HUY CB"},
+	{0, 0,160,40,BLUE_L,BLUE_L,"CAP NHAT"},
+	{971,570,100,30,BLUE_L,BLUE_L,"XEM DSMB"}
+	};
 
 	for(int i = 0;i <4;i++){
 		if(i < 3){
 		mainButton[i].x1 = 455 + 180*i;
-		mainButton[i].y1 = 480;
-		mainButton[i].width = 160;
-	    mainButton[i].height = 40;
-	    mainButton[i].fillColor = BLUE_L;
-	    mainButton[i].borderColor = WHITE;			
+		mainButton[i].y1 = 480;			
 		}
         drawButton(mainButton[i], ID_BUTTON_ADD_CB_2 + i, mapID);
         convertToShape(mainButton[i], shape[i+ID_BUTTON_ADD_CB_2]);
 	}
-	
+
+
+	setText();
+	outtextxy(400,575,"MA CB:");
+	outtextxy(720,575,"SO HIEU:");
+	outtextxy(352,610,"NGAY GIO K.H:");	
+	outtextxy(755,610,"TRANG THAI:");
+	outtextxy(350,645,"SAN BAY DEN:");	
 	Input input[9] = {
 	{450,570,15,190,0},  // ma cb
 	{780,570,15,190,0},	//so hieu
@@ -458,12 +466,6 @@ void drawPageQLCB_DSCB(short **mapID,Shape *shape){
 	{845,605,10,125,0},	//trang thai
 	{450,640,40,520,0},	//san bay den
 	};	
-	setText();
-	outtextxy(400,575,"MA CB:");
-	outtextxy(720,575,"SO HIEU:");
-	outtextxy(352,610,"NGAY GIO K.H:");	
-	outtextxy(755,610,"TRANG THAI:");
-	outtextxy(350,645,"SAN BAY DEN:");
 	for(int i = 0; i< 9;i++){
 	input[i].s = new char[input[i].max+2];	
 	convertToShape(input[i],shape[i+ID_INPUT_MCB_2]);
@@ -472,8 +474,12 @@ void drawPageQLCB_DSCB(short **mapID,Shape *shape){
 	
 	
 	checkEventPageQLCB(mapID,shape,input,mainButton,boardCB,buttonFill,inputFill,pre_next);
-	for (int i = 0; i < 9; i++)
-	    delete[] input[i].s;		
+	for (int i = 0; i < 9; i++){
+		if(i<4)
+			delete[] inputFill[i].s;
+		delete[] input[i].s;
+	}
+	    		
 }
 
 
@@ -577,7 +583,7 @@ void drawDSMBFrame(short **mapID, DanhSachMayBay &dsMB,Shape *shape,Input *input
     setText(6, 10);
     outtextxy(455, 30, "DANH SACH MAY BAY");
 
-    Button pre_next[2] = {{640, 90, 25, 25, BLUE_L, 15, "<"}, {720, 90, 25, 25, BLUE_L, 15, ">"}};
+    Button pre_next[2] = {{640, 90, 25, 25, BLUE_L, BLUE_L, "<"}, {720, 90, 25, 25, BLUE_L, BLUE_L, ">"}};
     for (int i = 0; i < 2; i++)
     {
     
@@ -844,7 +850,7 @@ void drawDSCBFrame(short **mapID,Shape *shape,DanhSachTam &dsTmp, Board &boardCB
 	makeBeautiFillInput(inputFill);
 
 	
-   	UpdateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
+   	updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);
     drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
     outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
     
@@ -862,7 +868,7 @@ void drawDSCBFrame(short **mapID,Shape *shape,DanhSachTam &dsTmp, Board &boardCB
 	drawInputPageQLCB(input,mapID,true);	
 }
 
-void UpdateNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp){
+void updateNumOfBoardDSCB(int &numOfPage, int presentPage,DanhSachTam &dsTmp){
 
     numOfPage = (dsTmp.n - 1) / 10 + 1;
     char toChar[5];
