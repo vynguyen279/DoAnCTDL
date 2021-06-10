@@ -44,10 +44,10 @@ using namespace std;
 #define ID_INPUT_SOCHO_1 32
 #define ID_INPUT_LMB_1 33
 //============PAGE QLCB==============
-#define ID_BUTTON_FILL_CB_2 7
-#define ID_BUTTON_UNFILLTIME_CB_2 8
-#define ID_BUTTON_UNFILLDESTINATION_CB_2 9
-#define ID_BUTTON_UNFILL_CB_2 10
+#define ID_BUTTON_FILL_2 7
+#define ID_BUTTON_UNFILLTIME_2 8
+#define ID_BUTTON_UNFILLPLACE_2 9
+#define ID_BUTTON_UNFILL_2 10
 #define ID_BUTTON_ADD_CB_2 11
 #define ID_BUTTON_CANCEL_CB_2 12
 #define ID_BUTTON_UPDATE_CB_2 13
@@ -57,10 +57,10 @@ using namespace std;
 #define ID_BUTTON_UNCANCEL_CB_2 17
 #define ID_BUTTON_ACPUPDATE_CB_2 18
 #define ID_BUTTON_UNUPDATE_CB_2 19
-#define ID_INPUT_FILLTIMED_2 30
-#define ID_INPUT_FILLTIMEM_2 31
-#define ID_INPUT_FILLTIMEY_2 32
-#define ID_INPUT_FILLDESTINATION_2 33
+#define ID_INPUT_FILLDAY_2 30
+#define ID_INPUT_FILLMONTH_2 31
+#define ID_INPUT_FILLYEAR_2 32
+#define ID_INPUT_FILLPLACE_2 33
 #define ID_INPUT_MCB_2 34
 #define ID_INPUT_SHMB_2 35
 #define ID_INPUT_DAY_2 36
@@ -71,16 +71,9 @@ using namespace std;
 #define ID_INPUT_STATUS_2 41
 #define ID_INPUT_DESTINATION_2 42
 //============PAGE QLV==============
-#define ID_BUTTON_FILL_3 7
-#define ID_BUTTON_UNFILLTIME_3 8
-#define ID_BUTTON_UNFILLDESTINATION_3 9
-#define ID_BUTTON_UNFILL_3 10
-#define ID_BUTTON_DATVE_3 11
+#define ID_BUTTON_STARTDATVE_3 11
 #define ID_BUTTON_DSHK_3 12 
-#define ID_INPUT_FILLTIMED_3 30
-#define ID_INPUT_FILLTIMEM_3 31
-#define ID_INPUT_FILLTIMEY_3 32
-#define ID_INPUT_FILLDESTINATION_3 33
+
 
 /************************************************
 khai bao o nho cho input nhieu hon maxkitu + 1 de lam con tro nhap nhay nhung van chi duoc nhap maxkitu

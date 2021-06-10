@@ -78,40 +78,7 @@ void outCB_conve(Board &board,DanhSachTam &dsTmp, short ID){
     }
 } 
 
-void checkHoverPageQLV_DSCB(short &newID, short lastID, Shape *shape, short **mapID)
-{
-	
-    if (ismouseclick(WM_MOUSEMOVE))
-    {	
- 			
-		int x, y;
-        getmouseclick(WM_MOUSEMOVE, x, y);
-        newID = mapID[x][y];
-        short ID = newID;
-        
-        if(ID >= 60) //HOVER CHO BOARD
-           	ID = ID%10 + 50;	
-		if(lastID >= 60)
-		   lastID = lastID%10 + 50;
-		   
-        //IN HOVER: MOI HOVER DEU MAU DEN
-        if (ID > 0 && ID != lastID)
-        {
-            setcolor(BLACK);
-            rectangle(shape[ID].x1, shape[ID].y1, shape[ID].x1 + shape[ID].width, shape[ID].y1 + shape[ID].height);
-        }
-        //OUT HOVER :VOI INPUT SE TO LAI MAU DEN, VOI BUTTON SE TO LAI MAU BLUE_L
-        if (ID != lastID && lastID > 0)
-        {
-            if (lastID >= ID_MA_CB_INPUT_3)
-                setcolor(WHITE);
-            else
-                setcolor(BLUE_L);
-            rectangle(shape[lastID].x1, shape[lastID].y1, shape[lastID].x1 + shape[lastID].width, shape[lastID].y1 + shape[lastID].height);
-        }
 
-    }
-}
 
 
 //==========================Page DS CB======================================

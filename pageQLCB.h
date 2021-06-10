@@ -17,13 +17,9 @@ void drawPageQLCB(short **mapID,Shape *shape){
         lastID = ID;
          if(ismouseclick(WM_LBUTTONDBLCLK)){
         	getIDMouseClick(ID,mapID);
-			clearmouseclick(WM_LBUTTONDBLCLK);
-        	if(ID >= ID_BOARD){
-				ID -= ID_BOARD;
-				drawPageQLV_DatVe(mapID,shape);	
-			}	
+	
         }       
-        if (ismouseclick(WM_LBUTTONDOWN))
+        if (ismouseclick(WM_LBUTTONDOWN) || ismouseclick(WM_LBUTTONDBLCLK))
         {
 				
         	getIDMouseClick(ID,mapID);
@@ -31,12 +27,17 @@ void drawPageQLCB(short **mapID,Shape *shape){
 		    if(ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLCB){          
             	return;
             }
-			clearmouseclick(WM_LBUTTONDOWN);	 
+			clearmouseclick(WM_LBUTTONDOWN);
+			clearmouseclick(WM_LBUTTONDBLCLK);	 
 			if(ID == ID_CONFIRM_TICKET_BUTTON || ID == ID_CANCEL_BUTTON)
             {	
                 drawPageQLCB_DSCB(mapID,shape);
             
             }
+        	if(ID >= ID_BOARD){
+				ID -= ID_BOARD;
+				drawPageQLV_DatVe(mapID,shape);	
+			}    
         }
 
     }		

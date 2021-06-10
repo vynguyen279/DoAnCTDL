@@ -13,7 +13,7 @@ void drawPageQLCB_DSCB(short **mapID,Shape *shape);
 void drawInputPageQLCB(Input *input,short **mapID,bool unlockInput );
 void drawUpdateCBFrame(Input *input,short **mapID,Shape *shape);
 void drawCancelCBFrame(short **mapID, Shape *shape);
-void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &dsFill);
+void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &dsFillTmp);
 void fixNgay(Input *input);
 void fixNgayFill(Input *input);
 void getCBData(Input *input,short chooseID,DanhSachChuyenBay &dsCB,DanhSachTam &dsTmp);
@@ -37,9 +37,10 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 	layDSMayBay(dsMB);
 	DanhSachChuyenBay dsCB = NULL;
 	layDSChuyenBay(dsCB);
-	DanhSachTam dsFill; 
-	DanhSachTam dsDefault = dsNode2DsTmp(dsCB);
-	DanhSachTam dsTmp = dsDefault;                                  
+ 
+	DanhSachTam dsCBTmp = dsNode2DsTmp(dsCB);
+	DanhSachTam dsTmp = dsCBTmp; 
+	DanhSachTam dsFillTmp;	                                 
     short ID = -1, lastID = -1, chooseID = -1;
     bool isInvalid = true;                                          //check xem du lieu can them,xoa,sua co hop le hay k
     bool unlockChoose = true;                                       //khi dang update hay del thi k cho chon may bay
@@ -124,12 +125,12 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 				}
                 break;
             }
-			case ID_BUTTON_FILL_CB_2:{  //FILL
-				fillCB(inputFill,isInvalid,dsCB,dsFill);
+			case ID_BUTTON_FILL_2:{  //FILL
+				fillCB(inputFill,isInvalid,dsCB,dsFillTmp);
 				if(isInvalid){
 				presentPage = 1;
 				isFill = true;
-				dsTmp = dsFill;
+				dsTmp = dsFillTmp;
                 updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
                 outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);	
@@ -137,52 +138,52 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 				}
 				break;
 			}
-			case ID_BUTTON_UNFILL_CB_2:{  //UNFILL
+			case ID_BUTTON_UNFILL_2:{  //UNFILL
 				if(isFill){
 				presentPage = 1;
 				isFill = false;
-				dsTmp = dsDefault;	
+				dsTmp = dsCBTmp;	
                 updateNumOfBoardDSCB(numOfPage, presentPage,dsTmp);                   
                 drawBoard(boardCB, (presentPage - 1) * 10 + ID_BOARD, mapID, shape);
                 outDSCB(boardCB, 10 * (presentPage - 1) + 1, 10 * (presentPage),dsTmp);
 				for(int i = 0; i <4; i++){
 					inputFill[i].lastL = 0;
-					drawInput(inputFill[i],mapID,ID_INPUT_FILLTIMED_2 + i);
+					drawInput(inputFill[i],mapID,ID_INPUT_FILLDAY_2 + i);
 				}
 				makeBeautiFillInput(inputFill);								
 				}
 
 				break;
 			}
-			case ID_BUTTON_UNFILLTIME_CB_2:{  // UNFILLTIME
+			case ID_BUTTON_UNFILLTIME_2:{  // UNFILLTIME
 				for(int i = 0; i < 3; i++){					
 					inputFill[i].lastL = 0;
 				}
 				makeBeautiFillInput(inputFill);	
 				break;
 			}
-			case ID_BUTTON_UNFILLDESTINATION_CB_2:{  //UNFILLDES
+			case ID_BUTTON_UNFILLPLACE_2:{  //UNFILLDES
 				if(inputFill[3].lastL != 0)
 				{
 					inputFill[3].lastL = 0;
-					drawInput(inputFill[3],mapID,ID_INPUT_FILLDESTINATION_2);
+					drawInput(inputFill[3],mapID,ID_INPUT_FILLPLACE_2);
 				}
 				break;
 			}            
 			case ID_BUTTON_ADD_CB_2: //THEM CB
 			{		
 
-                    addCB(input,isInvalid,dsMB,dsCB,dsDefault); 
+                    addCB(input,isInvalid,dsMB,dsCB,dsCBTmp); 
 										                                 
                     if(isInvalid){
-                    	dsTmp = dsDefault;
+                    	dsTmp = dsCBTmp;
 						if(isFill){ 
 							//huy fill
 							isFill = false;
 							presentPage = 1;	
 							for(int i = 0; i <4; i++){
 								inputFill[i].lastL = 0;
-								drawInput(inputFill[i],mapID,ID_INPUT_FILLTIMED_2 + i);
+								drawInput(inputFill[i],mapID,ID_INPUT_FILLDAY_2 + i);
 							}
 							makeBeautiFillInput(inputFill);							
 						}
@@ -281,7 +282,7 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 				break;
 			}
 						
-			case ID_INPUT_FILLTIMED_2:{  //FILL DAY
+			case ID_INPUT_FILLDAY_2:{  //FILL DAY
 				getInputPageQLCB(inputFill[0],ID,isEnter);
 				if(inputFill[0].lastL * inputFill[1].lastL * inputFill[2].lastL !=0)   //fix lai ngay trong fill neu la nam nhuan
 					fixNgayFill(inputFill);
@@ -289,21 +290,21 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
                     break;				
 			
 			}
-			case ID_INPUT_FILLTIMEM_2:{  //FILL MONTH
+			case ID_INPUT_FILLMONTH_2:{  //FILL MONTH
 				getInputPageQLCB(inputFill[1],ID,isEnter);
 				if(inputFill[0].lastL * inputFill[1].lastL * inputFill[2].lastL !=0)   
 					fixNgayFill(inputFill);				
 				if (!isEnter)
                     break;
 			}
-			case ID_INPUT_FILLTIMEY_2:{  //FILL YEAR
+			case ID_INPUT_FILLYEAR_2:{  //FILL YEAR
 				getInputPageQLCB(inputFill[2],ID,isEnter);
 				if(inputFill[0].lastL * inputFill[1].lastL * inputFill[2].lastL !=0)   
 					fixNgayFill(inputFill);					
 				if (!isEnter)
                     break;
 			}
-			case ID_INPUT_FILLDESTINATION_2:{  //FILL DESTINATION
+			case ID_INPUT_FILLPLACE_2:{  //FILL DESTINATION
 				getInputPageQLCB(inputFill[3],ID,isEnter);
 				break;
 			}																		            
@@ -376,8 +377,9 @@ void checkEventPageQLCB(short **mapID, Shape *shape, Input *input, Button *mainB
 		    if((ID>=ID_BUTTON_PAGE_MAIN && ID<=ID_BUTTON_PAGE4 && ID != ID_BUTTON_PAGE_QLCB)){            
 				clearDSMB(dsMB);
 				clearDSCB(dsCB);
-				clearDSTmp(dsFill);
-				clearDSTmp(dsDefault);
+				clearDSTmp(dsFillTmp);
+				clearDSTmp(dsCBTmp);
+				clearDSTmp(dsTmp);
             	return;
             }		
             if(ID >= ID_BUTTON_CANCEL_CB_2 && ID <= ID_BUTTON_UNUPDATE_CB_2){ //FIX LOI HOVER
@@ -419,10 +421,10 @@ void drawPageQLCB_DSCB(short **mapID,Shape *shape){
 	};
 	for(int i = 0; i< 4;i++){
 	inputFill[i].s = new char[inputFill[i].max+2];	
-	drawInput(inputFill[i],mapID,i+ID_INPUT_FILLTIMED_2);
-	convertToShape(inputFill[i],shape[i+ID_INPUT_FILLTIMED_2]);	
-	drawButton(buttonFill[i],ID_BUTTON_FILL_CB_2 + i,mapID);
-	convertToShape(buttonFill[i],shape[i+ID_BUTTON_FILL_CB_2]);	
+	drawInput(inputFill[i],mapID,i+ID_INPUT_FILLDAY_2);
+	convertToShape(inputFill[i],shape[i+ID_INPUT_FILLDAY_2]);	
+	drawButton(buttonFill[i],ID_BUTTON_FILL_2 + i,mapID);
+	convertToShape(buttonFill[i],shape[i+ID_BUTTON_FILL_2]);	
 	}
 	makeBeautiFillInput(inputFill);
 	
@@ -614,7 +616,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
 	int paddingLeft = 7;
 	if(isEnter){ //INHOVER
 		setcolor(BLACK);
-        if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLTIMEY_2 && inputID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC          
+        if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLYEAR_2 && inputID >= ID_INPUT_FILLDAY_2)){  //NGAY GIO CO KIEU HOVER KHAC          
             rectangle(input.x1 + 1, input.y1 + 28, input.x1 + input.width -1, input.y1+29);       	  
 		}
         else        
@@ -640,7 +642,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
 
 	        //OUTHOVER
 			setcolor(WHITE);
-		    if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLTIMEY_2 && inputID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC          
+		    if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLYEAR_2 && inputID >= ID_INPUT_FILLDAY_2)){  //NGAY GIO CO KIEU HOVER KHAC          
 		        rectangle(input.x1 + 1, input.y1 + 28, input.x1 + input.width - 1, input.y1+29);       	  
 			}
 		    else        
@@ -661,7 +663,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
                 
                 //OUTHOVER
 				setcolor(WHITE);
-			    if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLTIMEY_2 && inputID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC          
+			    if((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) || (inputID <= ID_INPUT_FILLYEAR_2 && inputID >= ID_INPUT_FILLDAY_2)){  //NGAY GIO CO KIEU HOVER KHAC          
 			        rectangle(input.x1 + 1, input.y1 + 28, input.x1 + input.width - 1, input.y1+29);       	  
 				}
 			    else        
@@ -676,7 +678,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
             }
             if (('a' <= c && c <= 'z' || '0' <= c && c <= '9' || (c == ' ' && input.s[input.lastL - 1] != ' ' && input.lastL != 0)) && input.lastL < input.max)
             {
-                if ((((inputID == ID_INPUT_MCB_2 ||inputID == ID_INPUT_SHMB_2)  && c != ' ') || inputID == ID_INPUT_DESTINATION_2 || inputID == ID_INPUT_FILLDESTINATION_2)&& input.lastL < input.max - 1 )
+                if ((((inputID == ID_INPUT_MCB_2 ||inputID == ID_INPUT_SHMB_2)  && c != ' ') || inputID == ID_INPUT_DESTINATION_2 || inputID == ID_INPUT_FILLPLACE_2)&& input.lastL < input.max - 1 )
                 { //may bay,so hieu,san bay den
                     if ('a' <= c && c <= 'z')
                     {
@@ -691,7 +693,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
                         input.s[input.lastL + 1] = '\0';
                     }
                 }
-                else if (((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) ||(ID_INPUT_FILLTIMED_2 <= inputID && inputID <= ID_INPUT_FILLTIMEY_2))  && '0' <= c && c <= '9')
+                else if (((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2) ||(ID_INPUT_FILLDAY_2 <= inputID && inputID <= ID_INPUT_FILLYEAR_2))  && '0' <= c && c <= '9')
                 { //ngay-thang-nam
                     
                         input.s[input.lastL] = c;
@@ -724,7 +726,7 @@ void getInputPageQLCB(Input &input, short &inputID, bool &isEnter)
     }
 }
 
-void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &dsFill){
+void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &dsFillTmp){
 	bool isFillTime = true;
 	bool isFillDestination = true;
 	for(int i = 0; i<3;i++){
@@ -736,19 +738,19 @@ void fillCB(Input *input,bool &isInvalid,DanhSachChuyenBay &dsCB, DanhSachTam &d
 		
 	if(isFillTime && isFillDestination){ //thoi gian va dia diem		
 		NgayThangNam dtFill = newNgayThangNam(atoi(input[0].s), atoi(input[1].s), atoi(input[2].s));
-        dsFill = dsCBvoiNgayKhoiHanhVaSanBayDen(input[3].s, dtFill,dsCB);
+        dsFillTmp = dsCBvoiNgayKhoiHanhVaSanBayDen(input[3].s, dtFill,dsCB);
 		isInvalid = true;
 	}
 	else if(isFillDestination){//dia diem	
 	
-		dsFill=dsCBvoiSanBayDen(input[3].s,dsCB);
+		dsFillTmp=dsCBvoiSanBayDen(input[3].s,dsCB);
 
 		isInvalid = true;
 	}
 	else if(isFillTime){ //thoi gian
 		
 		NgayThangNam dtFill = newNgayThangNam(atoi(input[0].s), atoi(input[1].s), atoi(input[2].s));	
-		dsFill = dsCBvoiNgayKhoiHanh(dtFill, dsCB);
+		dsFillTmp = dsCBvoiNgayKhoiHanh(dtFill, dsCB);
 		isInvalid = true;
 		
 	}
@@ -843,8 +845,8 @@ void drawDSCBFrame(short **mapID,Shape *shape,DanhSachTam &dsTmp, Board &boardCB
 	outtextxy(506,101,"SAN BAY DEN:");	
 	
 	for(int i = 0; i< 4;i++){
-	drawInput(inputFill[i],mapID,i+ID_INPUT_FILLTIMED_2);
-	drawButton(buttonFill[i],ID_BUTTON_FILL_CB_2 + i,mapID);
+	drawInput(inputFill[i],mapID,i+ID_INPUT_FILLDAY_2);
+	drawButton(buttonFill[i],ID_BUTTON_FILL_2 + i,mapID);
 	}
 	
 	makeBeautiFillInput(inputFill);
@@ -900,7 +902,7 @@ void checkHoverPageQLCB(short &newID, short lastID, Shape *shape, short **mapID)
 		if(lastID >= 60)
 		   lastID = lastID%10 + 50;
 		   
-        if((ID_INPUT_DAY_2 <= ID && ID <= ID_INPUT_MINUTE_2) || (ID <= ID_INPUT_FILLTIMEY_2 && ID >= ID_INPUT_FILLTIMED_2)){  //NGAY GIO CO KIEU HOVER KHAC
+        if((ID_INPUT_DAY_2 <= ID && ID <= ID_INPUT_MINUTE_2) || (ID <= ID_INPUT_FILLYEAR_2 && ID >= ID_INPUT_FILLDAY_2)){  //NGAY GIO CO KIEU HOVER KHAC
             setcolor(BLACK);
             rectangle(shape[ID].x1, shape[ID].y1+shape[ID].height, shape[ID].x1 + shape[ID].width, shape[ID].y1+shape[ID].height - 1);       	  
 		}
@@ -912,13 +914,13 @@ void checkHoverPageQLCB(short &newID, short lastID, Shape *shape, short **mapID)
         //OUT HOVER :VOI INPUT SE TO LAI MAU DEN, VOI BUTTON SE TO LAI MAU BLUE_L
         if (ID != lastID && lastID > 0)
         {	
-	        if((ID_INPUT_DAY_2 <= lastID && lastID <= ID_INPUT_MINUTE_2) || (lastID <= ID_INPUT_FILLTIMEY_2 && lastID >= ID_INPUT_FILLTIMED_2)){ //NGAY GIO CO KIEU HOVER KHAC
+	        if((ID_INPUT_DAY_2 <= lastID && lastID <= ID_INPUT_MINUTE_2) || (lastID <= ID_INPUT_FILLYEAR_2 && lastID >= ID_INPUT_FILLDAY_2)){ //NGAY GIO CO KIEU HOVER KHAC
 	            setcolor(WHITE);
 	            rectangle(shape[lastID].x1, shape[lastID].y1+shape[lastID].height, shape[lastID].x1 + shape[lastID].width, shape[lastID].y1+shape[lastID].height - 1);     	
 			}
 			else{
 				
-				if(lastID>=ID_INPUT_FILLTIMED_2)
+				if(lastID>=ID_INPUT_FILLDAY_2)
 					setcolor(WHITE);      	
 	            else
 	                setcolor(BLUE_L);
@@ -999,7 +1001,7 @@ void fixNgay(Input *input){   //fix ngay sao cho phu hop voi nam do
 
 void chuanHoaInputQLCB(Input &input,short inputID){
    //sua lai ngay thang gio phut neu chi co 1 ki tu
-    if (((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2 && inputID != ID_INPUT_YEAR_2) ||(ID_INPUT_FILLTIMED_2 <= inputID && inputID < ID_INPUT_FILLTIMEY_2)) && input.lastL == 1  )
+    if (((ID_INPUT_DAY_2 <= inputID && inputID <= ID_INPUT_MINUTE_2 && inputID != ID_INPUT_YEAR_2) ||(ID_INPUT_FILLDAY_2 <= inputID && inputID < ID_INPUT_FILLYEAR_2)) && input.lastL == 1  )
     {
         input.lastL = 2;
         input.s[1] = input.s[0];
@@ -1007,7 +1009,7 @@ void chuanHoaInputQLCB(Input &input,short inputID){
         input.s[2] = '\0';
     }
     //gioi han ngay
-    if((inputID == ID_INPUT_DAY_2 || inputID == ID_INPUT_FILLTIMED_2) && input.lastL > 0){
+    if((inputID == ID_INPUT_DAY_2 || inputID == ID_INPUT_FILLDAY_2) && input.lastL > 0){
     	if(atoi(input.s) == 0 ){
     		 input.s[1] ='1';
     	}
@@ -1017,7 +1019,7 @@ void chuanHoaInputQLCB(Input &input,short inputID){
     	}            		
     }
     //gioi han thang
-    if((inputID == ID_INPUT_MONTH_2 ||inputID == ID_INPUT_FILLTIMEM_2) && input.lastL > 0){
+    if((inputID == ID_INPUT_MONTH_2 ||inputID == ID_INPUT_FILLMONTH_2) && input.lastL > 0){
     	if(atoi(input.s) == 0){
     		 input.s[1] ='1';
     	}       
@@ -1078,8 +1080,8 @@ void drawInputPageQLCB(Input *input,short **mapID,bool unlockInput ){
 void unlockPageQLCB(Button *pre_next, Button *fill,Button &seeDSMB,short **mapID){
 	drawButton(pre_next[0],ID_BUTTON_PRE,mapID);
 	drawButton(pre_next[1],ID_BUTTON_NEXT,mapID);
-	drawButton(fill[0],ID_BUTTON_FILL_CB_2,mapID);
-	drawButton(fill[3],ID_BUTTON_UNFILL_CB_2,mapID);
+	drawButton(fill[0],ID_BUTTON_FILL_2,mapID);
+	drawButton(fill[3],ID_BUTTON_UNFILL_2,mapID);
 	drawButton(seeDSMB,ID_BUTTON_SEEDSMB_2,mapID);	
 }
 
