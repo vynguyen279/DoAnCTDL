@@ -25,9 +25,8 @@ void insertHashTable(HashTable table, char* soHieu) {
 	table[index] = newItem(soHieu);
 }
 
-void printHashTable(HashTable table) {
-	for(int i = 0; i < MAXHASH; i++)
-		if(table[i].soLanTH != -1)
+void printHashTable(HashTable table, DanhSachMayBay &dsMB) {
+	for(int i = 0; i < dsMB.n; i++)
 			std::cout << "So hieu: " << table[i].soHieu << " - index: " << i << " - so lan th: " << table[i].soLanTH << std::endl;
 }
 

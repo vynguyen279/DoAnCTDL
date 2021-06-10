@@ -19,17 +19,17 @@ void insertHashTableCustomer(HashTableCustomer &table, HanhKhach* hk) {
 int searchItemCustomer(char* CMND, HashTableCustomer &table) {
 	int index = hash(CMND);
 	int x = 0;
-	while(strcmp(table[index]->CMND, CMND) != 0)
+	while(table[index] != NULL && strcmp(table[index]->CMND, CMND) != 0) 
 		index = (index + probing(x++)) % MAXHASHCUSTOMER;
 	return index;
 }
 
 void printHashTableCustomer(DanhSachVe &dsVe, HashTableCustomer &table) {
-	for(int i = 0; i < dsVe.soLuongVe; i++) {
-		if(dsVe.CMND[i] != NULL) {
-			std::cout << "SO VE: " << i + 1 << " ";
-			table[searchItemCustomer(dsVe.CMND[i], table)]->toString();
-		}
+	for(int i = 0; i < dsVe.n; i++) {
+		std::cout << "SO VE: " << dsVe.ve[i].soVe << std::endl;
+		table[searchItemCustomer(dsVe.ve[i].CMND, table)]->toString();
+		std::cout << std::endl;
 	}
+	
 }
 

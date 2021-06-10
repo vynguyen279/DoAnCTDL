@@ -41,33 +41,18 @@ void layDSMayBay(DanhSachMayBay &dsMB) {
 
 
 void luuDSVe(DanhSachVe &dsVe, std::fstream &f) {
-	int soLuongVeDaDat = soVeDaDat(dsVe);
-	int soVe;
 	f.write((char*) &(dsVe.soLuongVe), sizeof(int));
-	f.write((char*) &soLuongVeDaDat, sizeof(int));
-	char tmp[13];
-	for(int i = 0; i < dsVe.soLuongVe; i++) {
-		if(dsVe.CMND[i] != NULL){
-			soVe = i + 1;
-			f.write((char*) &soVe, sizeof(int));
-			f.write(dsVe.CMND[i], sizeof(tmp));
-		}
-	}
+	f.write((char*) &(dsVe.n), sizeof(int));
+	for(int i = 0; i < dsVe.n; i++)
+		f.write((char*) &(dsVe.ve[i]), sizeof(Ve));
 }
 
 void layDSVe(DanhSachVe &dsVe, std::fstream &f) {
-	int soLuongVeDaDat;
-	int soVe;
-	char CMND[13];
 	f.read((char*) &(dsVe.soLuongVe), sizeof(int));
-	f.read((char*) &soLuongVeDaDat, sizeof(int));
-	dsVe.CMND = new char*[dsVe.soLuongVe];
-	initDSVe(dsVe);
-	for(int i = 0; i < soLuongVeDaDat; i++) {
-		f.read((char*) &soVe, sizeof(int));
-		f.read(CMND, sizeof(CMND));
-		themVe(soVe, CMND, dsVe);
-	}
+	f.read((char*) &(dsVe.n), sizeof(int));
+	dsVe.ve = new Ve[dsVe.soLuongVe];
+	for(int i = 0; i < dsVe.n; i++)
+		f.read((char*) &(dsVe.ve[i]), sizeof(Ve));
 }
 
 
@@ -138,5 +123,5 @@ void layDSHK(DanhSachHanhKhach &dsHK, HashTableCustomer &table) {
 	HanhKhach hk;
 	while(f.read((char*)&hk, sizeof(HanhKhach)))
 		themHanhKhach(dsHK, newNodeHanhKhach(hk), table);
-		
+	f.close();	
 }

@@ -6,9 +6,15 @@
 #include <cstring>
 #include <string>
 
+struct Ve {
+	char CMND[MAXCMND];
+	int soVe;
+};
+
 struct DanhSachVe {
 	int soLuongVe = 0;
-	char **CMND = NULL;
+	int n = 0;
+	Ve *ve;
 };
 
 struct ChuyenBay{
@@ -40,54 +46,39 @@ typedef NodeChuyenBay* DanhSachChuyenBay;
  *									Xu ly Ve										 *
  *************************************************************************************/
 
-void initDSVe(DanhSachVe &dsVe) {
-	for(int i = 0; i < dsVe.soLuongVe; i++)
-		dsVe.CMND[i] = NULL;
-}
-
-int soVeDaDat(DanhSachVe &dsVe) {
-	int cnt = 0;
-	for(int i = 0; i < dsVe.soLuongVe; i++)
-		if(dsVe.CMND[i] != NULL) cnt++;
-	return cnt;
-}
-
-int soVeConTrong(DanhSachVe &dsVe) {
-	int cnt = 0;
-	for(int i = 0; i < dsVe.soLuongVe; i++)
-		if(dsVe.CMND[i] == NULL) cnt++;
-	return cnt;
+Ve newVe(int soVe, char* CMND) {
+	Ve ve;
+	ve.soVe = soVe;
+	strcpy(ve.CMND, CMND);
+	return ve;
 }
 
 void xuatDSVe(DanhSachVe &dsVe) {
-	if(soVeDaDat(dsVe) == 0) {
+	if(dsVe.n == 0) {
 		std::cout << "DANH SACH VE RONG!\n"; 
 		return;
 	}
-	for(int i = 0; i < dsVe.soLuongVe; i++)
-		if(dsVe.CMND[i] != NULL)
-			std::cout << "SO VE: " << i + 1 << " - CMND: " << dsVe.CMND[i] << std::endl;
+	for(int i = 0; i < dsVe.n; i++)
+		std::cout << "SO VE: " << dsVe.ve[i].soVe << " - CMND: " << dsVe.ve[i].CMND << std::endl;
 }
 
-bool ktTonTaiCMNDTrongDSVe(DanhSachVe &dsVe, char* CMND) {
-	for(int i = 0; i < dsVe.soLuongVe; i++) 
-		if(dsVe.CMND[i] != NULL && strcmp(dsVe.CMND[i], CMND) == 0) return true;
-	return false;
+void themVe(Ve ve, DanhSachVe &dsVe) {
+	dsVe.ve[dsVe.n++] = ve;
 }
 
-void themVe(int soVe, char *CMND, DanhSachVe &dsVe) {
-	dsVe.CMND[soVe - 1] = new char[MAXCMND];
-	strcpy(dsVe.CMND[soVe - 1], CMND);
+void xoaVe(DanhSachVe &dsVe, int ID) {
+	for(int i = ID; i < dsVe.n; i++)
+		dsVe.ve[i] = dsVe.ve[i + 1];
+	dsVe.n--;
 }
 
 int timKiemVe(char* CMND, DanhSachVe &dsVe) {
-	for(int i = 0; i < dsVe.soLuongVe; i++)
-		if(dsVe.CMND[i] != NULL && strcmp(dsVe.CMND[i], CMND) == 0) 
-			return i;
+	for(int i = 0; i < dsVe.n; i++)
+		if(strcmp(dsVe.ve[i].CMND, CMND) == 0) return i;
 	return -1;
 }
 
-bool capNhatDanhSachVe(ChuyenBay *cb, char* CMND, int soVeMoi, char* strErr) {	
+bool capNhatVe(ChuyenBay *cb, char* CMND, int soVeMoi, char* strErr) {	
 	if(cb->trangThai == HETVE) {
 		strcpy(strErr,"CHUYEN BAY HET VE, KHONG THE THAY DOI SO GHE!");
 		return false;
@@ -97,19 +88,14 @@ bool capNhatDanhSachVe(ChuyenBay *cb, char* CMND, int soVeMoi, char* strErr) {
 		strcpy(strErr,"SO CMND KHONG TON TAI TRONG DANH SACH VE!");
 		return false;
 	}
-	delete[] cb->dsVe.CMND[viTri];
-	cb->dsVe.CMND[viTri] = NULL;
-	themVe(soVeMoi, CMND, cb->dsVe);
+	// soVeMoi luon luon hop le
+	cb->dsVe.ve[viTri].soVe = soVeMoi;
 	strcpy(strErr, "CAP NHAT VE THANH CONG!");
 	return true;
 }
 
 void clearDSVe(DanhSachVe &dsVe) {
-	for(int i = 0; i < dsVe.soLuongVe; i++) {
-		if(dsVe.CMND[i] != NULL)
-			delete []dsVe.CMND[i];
-	}
-	delete []dsVe.CMND;
+	delete []dsVe.ve;
 }
 
 /*************************************************************************************

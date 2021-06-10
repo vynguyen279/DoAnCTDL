@@ -166,12 +166,13 @@ void xoaHanhKhach(DanhSachHanhKhach &dsHK, char* CMND, HashTableCustomer &table)
 		std::cout << "DANH SACH RONG!\n";
 		return;
 	}
+	table[searchItemCustomer(CMND, table)] = NULL;
 	if(strcmp(dsHK->hanhKhach.CMND, CMND) == 0) {
 		xoaGoc(dsHK);
 	} else {
 		xoaNodeKhongPhaiGoc(dsHK, CMND);
 	}
-	table[searchItemCustomer(CMND, table)] = NULL;
+	
 }
 
 HanhKhach* timKiemHanhKhach(DanhSachHanhKhach &dsHK, char* CMND) {
