@@ -47,14 +47,30 @@ int searchItem(char* soHieu, HashTable table) {
 	return index;
 }
 
-void quick_sort_so_hieu(HashTable table, int left, int right) {
+bool sortSoHieu1(Item item, Item pivot) {
+	return (strcmp(item.soHieu, pivot.soHieu) == -1 || item.soLanTH > pivot.soLanTH);
+}
+
+bool sortSoHieu2(Item item, Item pivot) {
+	return (strcmp(item.soHieu, pivot.soHieu) == 1 || item.soLanTH < pivot.soLanTH);
+}
+
+bool sortSoLanTHCB1(Item item, Item pivot) {
+	return item.soLanTH > pivot.soLanTH;
+}
+
+bool sortSoLanTHCB2(Item item, Item pivot) {
+	return item.soLanTH < pivot.soLanTH;
+}
+
+void my_sort(HashTable &table, int left, int right, bool (*condiFunct1) (Item, Item), bool (*condiFunct2) (Item, Item)) {
 	Item pivot = table[(left + right)/2];
 	Item itemTmp;
 	int i = left;
 	int j = right;
-	while(i <= j) {
-		while(strcmp(table[i].soHieu, pivot.soHieu) == -1 || table[i].soLanTH > pivot.soLanTH) i++;
-		while(strcmp(table[j].soHieu, pivot.soHieu) == 1 || table[j].soLanTH < pivot.soLanTH) j--;
+	while( i <= j ) {
+		while(condiFunct1(table[i], pivot)) i++;
+		while(condiFunct2(table[j], pivot)) j--;
 		if(i <= j) {
 			itemTmp = table[i];
 			table[i] = table[j];
@@ -62,27 +78,8 @@ void quick_sort_so_hieu(HashTable table, int left, int right) {
 			i++; j--;
 		}
 	}
-	if(left < j) quick_sort_so_hieu(table, left, j);
-	if(right > i) quick_sort_so_hieu(table, i, right);
-}
-
-void quick_sort(HashTable table, int left, int right) {
-	int pivot = table[(left + right)/2].soLanTH;
-	Item itemTmp;
-	int i = left;
-	int j = right;
-	while(i <= j) {
-		while(table[i].soLanTH > pivot) i++;
-		while(table[j].soLanTH < pivot) j--;
-		if(i <= j) {
-			itemTmp = table[i];
-			table[i] = table[j];
-			table[j] = itemTmp;
-			i++; j--;
-		}
-	}
-	if(left < j) quick_sort(table, left, j);
-	if(right > i) quick_sort(table, i, right);
+	if(left < j) my_sort(table, left, j, condiFunct1, condiFunct2);
+	if(i < right) my_sort(table, i, right, condiFunct1, condiFunct2);
 }
 
 void thongKeMBThucHienCB(HashTable &table, DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB) {
@@ -90,9 +87,9 @@ void thongKeMBThucHienCB(HashTable &table, DanhSachChuyenBay &dsCB, DanhSachMayB
 	NodeChuyenBay* node = dsCB;
 	srand(time(NULL));
 	for(; node != NULL; node = node->next)
-		if(node->chuyenBay.trangThai == 3)
+		if(node->chuyenBay.trangThai == HOANTAT)
 			table[searchItem(node->chuyenBay.soHieuMayBay, table)].soLanTH++;
-	quick_sort(table, 0, MAXHASH - 1);
-	quick_sort_so_hieu(table, 0, dsMB.n - 1);
+	my_sort(table, 0, MAXHASH - 1, sortSoLanTHCB1, sortSoLanTHCB2);
+	my_sort(table, 0, dsMB.n - 1, sortSoHieu1, sortSoHieu2);
 }
 
