@@ -3,9 +3,6 @@
 #include "chuyen_bay.h"
 #include "hash_table.h"
 
-#include <stdlib.h>
-#include <ctime>
-
 struct Item {
 	char soHieu[MAXSOHIEU];
 	int soLanTH = -1;
@@ -85,7 +82,6 @@ void my_sort(HashTable &table, int left, int right, bool (*condiFunct1) (Item, I
 void thongKeMBThucHienCB(HashTable &table, DanhSachChuyenBay &dsCB, DanhSachMayBay &dsMB) {
 	dsMBToHashTable(dsMB, table);
 	NodeChuyenBay* node = dsCB;
-	srand(time(NULL));
 	for(; node != NULL; node = node->next)
 		if(node->chuyenBay.trangThai == HOANTAT)
 			table[searchItem(node->chuyenBay.soHieuMayBay, table)].soLanTH++;
