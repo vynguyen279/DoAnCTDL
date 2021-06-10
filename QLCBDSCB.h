@@ -1,6 +1,6 @@
 #pragma once
 #include "reuse.h" 
-//=================================================
+//====================PROTOTYPE==================
 void checkEventDSMBFrame(short **mapID,Shape *shape, DanhSachMayBay &dsMB,Input &inputSHMB,Board &boardMB,Button *pre_next,Button &buttonCloseDSMB);
 void drawDSMBFrame(short **mapID, DanhSachMayBay &dsMB,Shape *shape,Input *input, Button *button);
 void drawDSCBFrame(short **mapID,Shape *shape,DanhSachTam &dsTmp, Board &boardCB,Input *inputFill, Input *input,int &numOfPage,int &presentPage, Button *pre_next,Button *buttonFill,Button *mainButton);

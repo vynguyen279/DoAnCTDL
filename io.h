@@ -4,7 +4,7 @@
 #include <cstring>
 #include "xu_ly_may_bay.h"
 #include "xu_ly_chuyen_bay.h"
-
+#include "hash_table.h" 
 
 /*************************************************************************************
  *					 		Xu ly danh sach may bay									 *
