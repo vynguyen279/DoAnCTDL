@@ -5,22 +5,21 @@
 
 struct Item {
 	char soHieu[MAXSOHIEU];
-	int soLanTH;
+	int soLanTH = -1;
 };
 
 typedef Item HashTable[MAXHASH];
 
 void initHashTable(HashTable table) {
-	for(int i = 0; i < MAXHASH; i++) {
+	for(int i = 0; i < MAXHASH; i++)
 		strcpy(table[i].soHieu, "");
-		table[i].soLanTH = 0;
-	} 
 		
 }
 
 Item newItem(char *soHieu) {
 	Item item;
 	strcpy(item.soHieu, soHieu);
+	item.soLanTH = 0;
 	return item;
 }
 
@@ -34,7 +33,7 @@ void insertHashTable(HashTable table, char* soHieu) {
 
 void printHashTable(HashTable table) {
 	for(int i = 0; i < MAXHASH; i++)
-		if(table[i].soLanTH != -1)
+		if(strcmp(table[i].soHieu, "") != 0)
 			std::cout << "So hieu: " << table[i].soHieu << " - index: " << i << " - so lan th: " << table[i].soLanTH << std::endl;
 }
 
