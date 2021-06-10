@@ -19,7 +19,7 @@ void insertHashTableCustomer(HashTableCustomer &table, HanhKhach* hk) {
 int searchItemCustomer(char* CMND, HashTableCustomer &table) {
 	int index = hash(CMND);
 	int x = 0;
-	while(stricmp(table[index]->CMND, CMND) != 0)
+	while(strcmp(table[index]->CMND, CMND) != 0)
 		index = (index + probing(x++)) % MAXHASHCUSTOMER;
 	return index;
 }

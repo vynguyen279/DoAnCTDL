@@ -52,7 +52,7 @@ bool kt2CBHonNhauDISTGio(DanhSachChuyenBay &dsCB, char* CMND, ChuyenBay cb, char
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		if(
-			stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0
+			strcmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0
 			&& nodeChay->chuyenBay.trangThai != HUYCHUYEN
 			&& nodeChay->chuyenBay.trangThai != HOANTAT
 		) {
@@ -74,8 +74,8 @@ bool kt2CBTrenMBHonNhauDISTGio(ChuyenBay cb, DanhSachChuyenBay &dsCB, char* strE
 	NodeChuyenBay *nodeChay = dsCB;
 	for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 		if(
-            stricmp(nodeChay->chuyenBay.soHieuMayBay, cb.soHieuMayBay) == 0 
-			&& stricmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0 
+            strcmp(nodeChay->chuyenBay.soHieuMayBay, cb.soHieuMayBay) == 0 
+			&& strcmp(nodeChay->chuyenBay.maChuyenBay, cb.maChuyenBay) != 0 
 			&& nodeChay->chuyenBay.trangThai != HUYCHUYEN
 			&& nodeChay->chuyenBay.trangThai != HOANTAT
         ) {
@@ -161,11 +161,11 @@ DanhSachTam dsCBvoiSanBayDen(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
 	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
-	if(stricmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmp(dsCB);
+	if(strcmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmp(dsCB);
 	else {
 		for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 			capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
-			if(stricmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0) 
+			if(strcmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0) 
 				themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
 		}
 	}
@@ -213,11 +213,11 @@ DanhSachTam dsCBvoiSanBayDenConVe(char *sanBayDen, DanhSachChuyenBay &dsCB) {
 	DanhSachTam dsTmp;
 	initDanhSachTam(dsTmp);
 	NodeChuyenBay *nodeChay = dsCB;
-	if(stricmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmpConVe(dsCB);
+	if(strcmp(sanBayDen, "ALL") == 0) dsTmp = dsNode2DsTmpConVe(dsCB);
 	else {
 		for(; nodeChay != NULL; nodeChay = nodeChay->next) {
 			capNhatTrangThaiHoanTat(nodeChay->chuyenBay);
-			if(stricmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0 && nodeChay->chuyenBay.trangThai == CONVE) 
+			if(strcmp(sanBayDen, nodeChay->chuyenBay.sanBayDen) == 0 && nodeChay->chuyenBay.trangThai == CONVE) 
 				themPhanTuVaoDSTmp(&(nodeChay->chuyenBay), dsTmp);
 		}
 	}

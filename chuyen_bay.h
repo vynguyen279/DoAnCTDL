@@ -71,7 +71,7 @@ void xuatDSVe(DanhSachVe &dsVe) {
 
 bool ktTonTaiCMNDTrongDSVe(DanhSachVe &dsVe, char* CMND) {
 	for(int i = 0; i < dsVe.soLuongVe; i++) 
-		if(dsVe.CMND[i] != NULL && stricmp(dsVe.CMND[i], CMND) == 0) return true;
+		if(dsVe.CMND[i] != NULL && strcmp(dsVe.CMND[i], CMND) == 0) return true;
 	return false;
 }
 
@@ -82,7 +82,7 @@ void themVe(int soVe, char *CMND, DanhSachVe &dsVe) {
 
 int timKiemVe(char* CMND, DanhSachVe &dsVe) {
 	for(int i = 0; i < dsVe.soLuongVe; i++)
-		if(dsVe.CMND[i] != NULL && stricmp(dsVe.CMND[i], CMND) == 0) 
+		if(dsVe.CMND[i] != NULL && strcmp(dsVe.CMND[i], CMND) == 0) 
 			return i;
 	return -1;
 }
@@ -165,7 +165,7 @@ void themChuyenBayCoThuTu(NodeChuyenBay *nodeCB, DanhSachChuyenBay &dsCB) {
 
 ChuyenBay* timKiemChuyenBay(char* maChuyenBay, DanhSachChuyenBay &dsCB) {
 		for(NodeChuyenBay *nodeChay = dsCB; nodeChay != NULL ; nodeChay = nodeChay->next) 
-			if(stricmp(nodeChay->chuyenBay.maChuyenBay, maChuyenBay) == 0)
+			if(strcmp(nodeChay->chuyenBay.maChuyenBay, maChuyenBay) == 0)
 				return &(nodeChay->chuyenBay);
 	return NULL;
 }
