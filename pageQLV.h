@@ -38,10 +38,16 @@ void drawPageQLV(short **mapID,Shape *shape){
                 break;
             }
             case ID_BUTTON_STARTDATVE_3:
+	    case ID_CONFIRM_TICKET_BUTTON:
+            case ID_CANCEL_BUTTON:
             {	
                 drawPageQLV_DatVe(mapID, shape);
                 break;
             }
+	    case ID_DATVE_SEATMAP_BUTTON:{
+            drawConfirmSeatMap(mapID, shape);
+		break;
+	    }
             default:
                 break;
             }
